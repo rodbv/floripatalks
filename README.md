@@ -169,14 +169,6 @@ Se você encontrar problemas ou tiver dúvidas:
 2. Revise a [documentação do django-allauth](https://django-allauth.readthedocs.io/)
 3. Abra uma issue neste repositório
 
-## 🔗 Relacionado
-
-- Como o nome FloripaTalks reflete a proposta de conexão na comunidade local
-- Quais temas e atividades estão previstos para os próximos encontros do FloripaTalks
-- Como posso participar ou contribuir com as discussões do FloripaTalks
-- Quais benefícios o FloripaTalks oferece para quem busca networking na região
-- De que maneira o FloripaTalks incentiva a troca de ideias e inovação entre os participantes
-
 ---
 
-**Desenvolvido com ❤️ para a comunidade Python de Florianópolis**
+**Desenvolvido com ❤️ para a comunidade Python Floripa**
