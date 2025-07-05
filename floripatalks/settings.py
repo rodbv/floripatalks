@@ -10,6 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+# TODO: Configure production database settings
+# TODO: Set up Redis for caching
+# TODO: Configure email backend for production
+# TODO: Set up static file serving for production
+# TODO: Configure logging for production
+# TODO: Add security headers
+# TODO: Set up monitoring and analytics
+
 import os
 from pathlib import Path
 
@@ -21,15 +29,13 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError(
-        "DJANGO_SECRET_KEY environment variable not set. Please set it in your .env file."
+        "SECRET_KEY environment variable not set. Please set it in your .env file."
     )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -41,6 +47,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "core",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -53,7 +60,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     "django_extensions",
-    "core",
 ]
 
 MIDDLEWARE = [
@@ -85,14 +91,23 @@ TEMPLATES = [
     },
 ]
 
-# Allauth settings
-ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
-ACCOUNT_LOGIN_METHODS = ["email"]
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# Allauth settings - Google OAuth only
+ACCOUNT_EMAIL_VERIFICATION = "none"  # No email verification required
+ACCOUNT_EMAIL_REQUIRED = True  # Email still required from Google
+ACCOUNT_USERNAME_REQUIRED = False  # Username not required
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # Use email for authentication
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 ACCOUNT_PASSWORD_MIN_LENGTH = 8
+
+# Disable regular signup - only allow social accounts
+ACCOUNT_SIGNUP_ENABLED = False
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# Use custom adapter to disable local signup
+ACCOUNT_ADAPTER = "core.adapter.NoNewUsersAccountAdapter"
 
 # Authentication redirects
 LOGIN_REDIRECT_URL = "/"

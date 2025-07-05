@@ -1,0 +1,21 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <div style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+    <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 40px 32px; min-width: 350px; max-width: 90vw; text-align: center;">
+      <h1 style="margin-bottom: 24px; color: #3c4858;">Sign In Via Google</h1>
+      <p style="margin-bottom: 24px; color: #555;">You are about to sign in using a third-party account from Google.</p>
+      <form method="post" action="" style="margin-bottom: 24px;">
+        {% csrf_token %}
+        <button type="submit" style="display:inline-block; background:#4285F4; color:white; padding:10px 20px; border-radius:4px; text-decoration:none; font-weight:bold; font-size:16px;">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" style="height:20px; vertical-align:middle; margin-right:8px;">
+          Continue with Google
+        </button>
+      </form>
+      <div style="margin-top: 24px;">
+        <a href="/accounts/login/" style="color: #4285F4; text-decoration: underline;">Back to login</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

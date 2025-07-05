@@ -16,24 +16,14 @@
         <p>{% trans "Sign in with" %}</p>
         {% include "socialaccount/snippets/provider_list.html" with process="login" %}
     </div>
-
-    <div style="text-align: center; margin: 20px 0;">
-        <p>{% trans "or" %}</p>
-    </div>
     {% endif %}
 
-    <form class="login" method="POST" action="{% url 'account_login' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-        {% endif %}
-        <button class="primaryAction" type="submit" style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; margin: 10px 0;">{% trans "Sign In" %}</button>
-    </form>
-
+    <div style="margin-top: 20px; text-align: center;">
+        <p>{% blocktrans %}Don't have an account? <a href="{{ signup_url }}">Sign up</a>{% endblocktrans %}</p>
+    </div>
+, a
     <div style="margin-top: 20px; text-align: center;">
         <p><a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></p>
-        <p>{% blocktrans %}Don't have an account? <a href="{{ signup_url }}">Sign up</a>{% endblocktrans %}</p>
     </div>
 </div>
 {% endblock %}

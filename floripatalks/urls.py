@@ -20,6 +20,14 @@ from django.urls import include, path
 
 from core.views import home
 
+# TODO: Add Event URLs (list, detail, create, update, delete)
+# TODO: Add Talk URLs (list, detail, create, update, delete)
+# TODO: Add Vote URLs (create, delete)
+# TODO: Add Speaker URLs (list, detail, create, update)
+# TODO: Add Dashboard URL
+# TODO: Add API URLs for future REST API
+# TODO: Add HTMX URLs for dynamic interactions
+
 urlpatterns = [
     path("", home, name="home"),
     path("admin/", admin.site.urls),
