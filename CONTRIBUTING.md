@@ -1,6 +1,6 @@
 # Contribuindo para FloripaTalks
 
-[![Test Workflow](https://github.com/rodbv/floripatalks/actions/workflows/test.yml/badge.svg)](https://github.com/rodbv/floripatalks/actions/workflows/test.yml)
+[![Unit Tests](https://github.com/rodbv/floripatalks/actions/workflows/test.yml/badge.svg)](https://github.com/rodbv/floripatalks/actions/workflows/test.yml)
 
 Muito obrigado por querer contribuir com o FloripaTalks! Siga as orientações abaixo para garantir que sua contribuição seja bem-vinda e fácil de revisar.
 
