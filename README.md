@@ -1,5 +1,7 @@
 # 🎤 FloripaTalks
 
+[![Test Workflow](https://github.com/rodrigo/floripatalks/actions/workflows/test.yml/badge.svg)](https://github.com/rodrigo/floripatalks/actions/workflows/test.yml)
+
 FloripaTalks é uma plataforma open source criada para facilitar a sugestão, votação e organização de tópicos de palestras nos eventos da comunidade Python Floripa. Com uma interface simples e colaborativa, qualquer pessoa pode propor novos temas, votar nos tópicos que gostaria de ver no evento e se voluntariar para palestrar — ou indicar alguém da comunidade para compartilhar conhecimento.
 
 O projeto foi desenvolvido usando Django e HTMX, garantindo robustez no backend e uma experiência dinâmica no frontend.
