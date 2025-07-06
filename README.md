@@ -27,7 +27,7 @@ O FloripaTalks nasceu para tornar o processo de escolha de palestras mais partic
 - **Autenticação**: django-allauth com Google OAuth
 - **Banco de Dados**: SQLite (desenvolvimento), PostgreSQL pronto
 - **Gerenciador de Pacotes**: uv
-- **Desenvolvimento**: django-extensions, ipdb
+- **Desenvolvimento**: django-extensions, ipdb, pytest
 
 ## 📋 Pré-requisitos
 

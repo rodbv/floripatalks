@@ -2,8 +2,8 @@
     // Format and fix Python files with Ruff on save
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-        "source.fixAll": true,
-        "source.organizeImports": true
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
     },
     "python.formatting.provider": "none",
     "ruff.enable": true,

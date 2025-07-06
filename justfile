@@ -13,6 +13,10 @@ dev:
 run:
     uv run python manage.py runserver_plus
 
+# Run manage.py
+manage *args:
+    uv run python manage.py {{args}}
+
 # Shell with all models pre-loaded
 shell:
     uv run python manage.py shell_plus
