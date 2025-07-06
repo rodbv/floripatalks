@@ -79,44 +79,6 @@ uv run python manage.py runserver
 
 Acesse `http://localhost:8000` para ver a aplicação!
 
-## 🛠️ Desenvolvimento
-
-### Usando o Justfile
-Este projeto inclui um `justfile` com comandos Django comuns:
-
-```bash
-# Iniciar servidor de desenvolvimento
-just run
-
-# Servidor de desenvolvimento básico
-just dev
-
-# Shell Django com todos os modelos pré-carregados
-just shell
-
-# Criar superusuário
-just superuser
-
-# Criar e aplicar migrações
-just makemigrations
-just migrate
-
-# Executar testes
-just test
-
-# Verificar problemas
-just check
-```
-
-### Comandos Disponíveis
-- `just run` - Iniciar servidor Django aprimorado com django-extensions
-- `just dev` - Iniciar servidor Django básico
-- `just shell` - Shell Django com todos os modelos pré-carregados
-- `just superuser` - Criar usuário admin
-- `just migrate` - Aplicar migrações do banco
-- `just check` - Verificar problemas do Django
-- `just clean` - Limpar arquivos de cache Python
-
 ## 🔧 Configuração
 
 ### Variáveis de Ambiente
@@ -143,19 +105,7 @@ As seguintes variáveis de ambiente podem ser definidas no seu arquivo `.env`:
 
 ## 🤝 Como Contribuir
 
-Este projeto é open source e toda contribuição é muito bem-vinda!
-
-1. Faça um fork do repositório
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
-
-### Diretrizes de Contribuição
-- Mantenha o código limpo e bem documentado
-- Adicione testes para novas funcionalidades
-- Siga as convenções de código do projeto
-- Atualize a documentação quando necessário
+Consulte o arquivo [CONTRIBUTING.md](CONTRIBUTING.md) para diretrizes de contribuição, ambiente de desenvolvimento, comandos úteis e instruções de internacionalização (i18n).
 
 ## 📝 Licença
 

@@ -2,12 +2,15 @@
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class AppUser(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True)
-    linkedin_url = models.URLField(max_length=255, blank=True, null=True)
-    avatar = models.URLField(max_length=500, blank=True, null=True)
+    date_of_birth = models.DateField(_("Date of birth"), null=True, blank=True)
+    linkedin_url = models.URLField(
+        _("LinkedIn URL"), max_length=255, blank=True, null=True
+    )
+    avatar = models.URLField(_("Avatar URL"), max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.email or self.username
