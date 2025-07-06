@@ -59,7 +59,7 @@ graph-models:
 
 # Run tests
 test:
-    uv run python manage.py test
+    uv run ptw
 
 # Run tests with coverage
 test-cov:
