@@ -109,15 +109,18 @@ UI components MUST be created using Django-Cotton following these best practices
 
 ### VI. uv Dependency Management
 
-Python dependencies MUST be managed using `uv`:
+Python dependencies and commands MUST be managed using `uv`:
 
 - Use `uv` for installing, updating, and managing packages
 - Maintain `pyproject.toml` as the source of truth for dependencies
 - Use `uv.lock` for reproducible builds (commit lock file to version control)
 - Run `uv sync` to ensure development environment matches dependencies
 - Use `uv add <package>` and `uv remove <package>` for dependency changes
+- **Use `uv run <command>` for ALL Python/Django commands** (e.g., `uv run python manage.py migrate`, `uv run pytest`, `uv run django-admin`)
+- Do NOT activate virtual environments manually - `uv run` handles this automatically
+- Do NOT use `source .venv/bin/activate` - always use `uv run` instead
 
-**Rationale**: `uv` provides fast, reliable Python package management with better performance than pip and built-in virtual environment management. It ensures consistent environments across development and CI/CD.
+**Rationale**: `uv` provides fast, reliable Python package management with better performance than pip and built-in virtual environment management. It ensures consistent environments across development and CI/CD. Using `uv run` for all commands eliminates the need to manually manage virtual environments and ensures consistent execution contexts.
 
 ### VII. justfile Task Automation
 

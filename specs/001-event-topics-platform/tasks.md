@@ -37,7 +37,7 @@
 - [x] T005 [P] Add django-htmx using `uv add django-htmx` for Django HTMX integration helpers
 - [x] T006 [P] Add pytest and pytest-django using `uv add pytest pytest-django` for testing
 - [x] T007 [P] Run `uv sync` to install all dependencies and generate `uv.lock` file
-- [ ] T008 Create Django project structure: run `django-admin startproject floripatalks` to create project root with `manage.py`
+- [x] T008 Create Django project structure: run `django-admin startproject floripatalks` to create project root with `manage.py`
 
 ### Django Apps and Structure
 
