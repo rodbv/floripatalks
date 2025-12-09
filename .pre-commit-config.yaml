@@ -1,0 +1,57 @@
+# Pre-commit hooks configuration for FloripaTalks
+# Install: uv run pre-commit install
+# Run manually: uv run pre-commit run --all-files
+
+repos:
+  # Local ruff (installed via uv)
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (linting)
+        entry: uv run ruff check
+        language: system
+        types: [python]
+        args: [--fix, --exit-non-zero-on-fix]
+        pass_filenames: true
+
+      - id: ruff-format
+        name: ruff (formatting)
+        entry: uv run ruff format
+        language: system
+        types: [python]
+        args: [--check]
+        pass_filenames: true
+
+  # Django-specific checks
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: 1.16.0
+    hooks:
+      - id: django-upgrade
+        args: [--target-version, "5.0"]
+
+  # General file checks (auto-fix when possible)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--unsafe]  # Allow custom tags
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-case-conflict
+      - id: check-docstring-first
+
+  # Sort Python imports (if needed, ruff handles this but keeping as backup)
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=100]

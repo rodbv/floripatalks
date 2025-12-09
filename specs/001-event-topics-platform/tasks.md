@@ -44,32 +44,32 @@
 - [x] T009 [P] Create Django app `events`: run `python manage.py startapp events` in project root
 - [x] T010 [P] Create Django app `accounts`: run `python manage.py startapp accounts` in project root
 - [x] T011 [P] Create Django app `core`: run `python manage.py startapp core` in project root
-- [ ] T012 [P] Setup Django settings structure: create `floripatalks/settings/` directory with `__init__.py`, `base.py`, `development.py`, `production.py`
-- [ ] T013 [P] Configure `floripatalks/urls.py` with app routing: include `events.urls`, `accounts.urls`
-- [ ] T014 [P] Create `tests/` directory structure: `tests/unit/`, `tests/integration/`, `tests/conftest.py` with `__init__.py` files
+- [x] T012 [P] Setup Django settings structure: create `floripatalks/settings/` directory with `__init__.py`, `base.py`, `development.py`, `production.py`
+- [x] T013 [P] Configure `floripatalks/urls.py` with app routing: include `events.urls`, `accounts.urls`
+- [x] T014 [P] Create `tests/` directory structure: `tests/unit/`, `tests/integration/`, `tests/conftest.py` with `__init__.py` files
 
 ### Static Files and Assets
 
-- [ ] T015 [P] Setup static files configuration in `floripatalks/settings/base.py`: `STATIC_URL`, `STATICFILES_DIRS`, `STATIC_ROOT`
-- [ ] T016 [P] Create static files directories: `static/js/`, `static/css/pure-css/`
-- [ ] T017 [P] Download HTMX latest version to `static/js/htmx.min.js` (from https://htmx.org/)
-- [ ] T018 [P] Download AlpineJS latest version to `static/js/alpine.min.js` (from https://alpinejs.dev/)
-- [ ] T019 [P] Download Pure CSS latest version to `static/css/pure-css/pure-min.css` (from https://purecss.io/)
+- [x] T015 [P] Setup static files configuration in `floripatalks/settings/base.py`: `STATIC_URL`, `STATICFILES_DIRS`, `STATIC_ROOT`
+- [x] T016 [P] Create static files directories: `static/js/`, `static/css/pure-css/`
+- [x] T017 [P] Download HTMX latest version to `static/js/htmx.min.js` (from https://htmx.org/)
+- [x] T018 [P] Download AlpineJS latest version to `static/js/alpine.min.js` (from https://alpinejs.dev/)
+- [x] T019 [P] Download Pure CSS latest version to `static/css/pure-css/pure-min.css` (from https://purecss.io/)
 
 ### Development Tools
 
 - [x] T020 [P] Create `justfile` with common tasks: `just test` (run pytest), `just dev` (runserver), `just migrate`, `just lint`, `just format`
-- [ ] T021 [P] Create `.gitignore` for Python/Django project (include `.venv/`, `.uv/`, `uv.lock`, `db.sqlite3`, `__pycache__/`, etc.)
+- [x] T021 [P] Create `.gitignore` for Python/Django project (include `.venv/`, `.uv/`, `uv.lock`, `db.sqlite3`, `__pycache__/`, etc.)
 
 ### Pre-commit Hooks
 
-- [ ] T022 [P] Install prek or rustyhook: `cargo install prek` or `cargo install rustyhook` (Rust-based pre-commit runner)
-- [ ] T023 [P] Create `.pre-commit-config.yaml` with hooks: ruff (formatting/linting), mypy (type checking), security scanning
-- [ ] T024 [P] Initialize pre-commit: run `prek install` or `rustyhook install` to setup git hooks
+- [x] T022 [P] Install pre-commit: `uv add --dev pre-commit ruff`
+- [x] T023 [P] Create `.pre-commit-config.yaml` with hooks: ruff (formatting/linting, line length 100), Django checks, auto-fix enabled
+- [x] T024 [P] Initialize pre-commit: run `pre-commit install` to setup git hooks
 
 ### GitHub Actions CI/CD
 
-- [ ] T025 [P] Create `.github/workflows/ci.yml` with workflow to:
+- [x] T025 [P] Create `.github/workflows/ci.yml` with workflow to:
   - Run on push and pull requests
   - Setup Python 3.12+ with uv
   - Install dependencies with `uv sync`
@@ -88,7 +88,7 @@
 - [ ] T026 Create custom User model in `accounts/models.py` inheriting from `AbstractUser` with UUID v7 primary key
 - [ ] T027 [P] Create User migration: `accounts/migrations/0001_initial.py` (MUST be first migration)
 - [ ] T028 [P] Configure django-allauth for Google and LinkedIn SSO in `floripatalks/settings/base.py`
-- [ ] T029 [P] Setup database configuration: PostgreSQL (production), SQLite (development) in `floripatalks/settings/base.py`
+- [ ] T029 [P] Setup database configuration: SQLite for all environments (development and production) in `floripatalks/settings/base.py`
 - [ ] T030 [P] Configure django-htmx in `floripatalks/settings/base.py`: add `django_htmx` to `INSTALLED_APPS`
 - [ ] T031 [P] Configure django-cotton in `floripatalks/settings/base.py`: add `cotton` to `INSTALLED_APPS`
 - [ ] T032 [P] Create base templates directory: `templates/base.html` with HTMX and AlpineJS includes
@@ -525,4 +525,3 @@ With multiple developers:
 - Custom user model MUST be created before first migration
 - **All tasks MUST have GitHub issues before work begins**
 - **Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}`** (e.g., `123-view-topics-list`)
-

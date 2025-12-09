@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    {styling}
+</head>
+
+<body>
+    <div class="score">{points}</div>
+
+    <div class="title">
+        <h1>{title}</h1>
+    </div>
+
+    <div class="background">
+        <h2>Background</h2>
+        <p>
+            {background}
+        </p>
+    </div>
+    </section>
+
+    <div class="setup">
+        <h2>Setup</h2>
+        <p>
+            {setup}
+        </p>
+    </div>
+
+    <div class="objective">
+        <h2>Objective</h2>
+        <p>
+            {objective}
+        </p>
+    </div>
+
+    <div class="scoring">
+        <h2>Scoring</h2>
+        <p>
+            {scoring}
+        </p>
+    </div>
+
+    <div class="diagrams">
+        <h2>Diagrams</h2>
+        <p>
+            {diagrams}
+        </p>
+    </div>
+
+    <div class="notes">
+        <h2>Notes - (do not print)</h2>
+        <p>
+            {notes}
+        </p>
+    </div>
+</body>
+
+</html>

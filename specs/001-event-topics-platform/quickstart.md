@@ -168,4 +168,3 @@ This guide provides a quick overview of how to get started with the Event Topics
 - Focus indicators visible
 - Color contrast meets standards
 - All interactive elements accessible
-

@@ -1,14 +1,14 @@
 <!--
 Sync Impact Report:
 Version Change: 1.4.0 → 1.5.0 (added GitHub issues and branch naming requirements)
-Modified Principles: 
+Modified Principles:
   - Development Workflow (expanded with GitHub issues and branch naming)
-Added Sections: 
+Added Sections:
   - GitHub Issues and Branch Naming (added to Development Workflow)
 Removed Sections: None
 Templates Requiring Updates:
   - .specify/templates/plan-template.md (✅ no changes needed)
-  - .specify/templates/spec-template.md (✅ no changes needed)
+  - .specify/templates/spec-template.md (✅ no changes. NM needed)
   - .specify/templates/tasks-template.md (✅ no changes needed)
 Follow-up TODOs: None
 -->
@@ -28,7 +28,7 @@ Follow-up TODOs: None
 - **Package Manager**: uv
 - **Task Runner**: justfile
 - **CI/CD**: GitHub Actions
-- **Pre-commit**: Rust-based tools (prek/rustyhook)
+- **Pre-commit**: pre-commit framework
 
 **Development Methodology**: Test-Driven Development (TDD)
 
@@ -47,6 +47,19 @@ All features MUST be developed using Test-Driven Development methodology. The Re
 **Rationale**: TDD ensures code reliability, facilitates refactoring, provides living documentation, and prevents regressions. Tests serve as a safety net for future changes.
 
 **Enforcement**: Tests MUST be written before implementation code. Pull requests without corresponding tests will be rejected.
+
+### I-A. Type Annotations
+
+All Python code MUST use type annotations:
+
+- Functions and methods MUST have type hints for parameters and return values
+- Class attributes SHOULD have type hints
+- Use `typing` module for complex types (Optional, List, Dict, etc.)
+- Use modern Python 3.12+ syntax when available (e.g., `list[str]` instead of `List[str]`)
+- Type annotations help with IDE support, static analysis, and code documentation
+- Pre-commit hooks will check type annotations via ruff
+
+**Rationale**: Type annotations improve code readability, enable better IDE support, catch type-related errors early, and make the codebase more maintainable. They serve as inline documentation and help with static analysis tools.
 
 ### II. Django Framework
 
@@ -153,17 +166,19 @@ The CI workflow MUST:
 
 **Rationale**: Automated testing in CI ensures code quality, prevents regressions, and provides confidence in merges. Early detection of issues reduces debugging time and maintains codebase health.
 
-### IX. Pre-commit Hooks with Rust
+### IX. Pre-commit Hooks
 
-Code quality checks MUST be enforced via pre-commit hooks using Rust-based tools:
+Code quality checks MUST be enforced via pre-commit hooks:
 
-- Use Rust-based pre-commit runners (e.g., `prek` or `rustyhook`) for performance
+- Use `pre-commit` (Python-based) for hook management
+- Install with: `uv add --dev pre-commit` or `pip install pre-commit`
 - Configure hooks for: code formatting, linting, type checking, security scanning
+- Initialize with: `pre-commit install`
 - Ensure hooks run quickly to not impede development workflow
 - All hooks MUST pass before commits are accepted
 - Document hook configuration and requirements
 
-**Rationale**: Rust-based pre-commit tools offer superior performance compared to Python-based alternatives. Pre-commit hooks catch issues early, enforce code standards, and maintain codebase consistency without requiring manual intervention.
+**Rationale**: Pre-commit hooks catch issues early, enforce code standards, and maintain codebase consistency without requiring manual intervention. The standard `pre-commit` framework is well-maintained, widely used, and integrates seamlessly with Python projects.
 
 ### X. N+1 Query Prevention with DTOs
 
@@ -252,6 +267,55 @@ All implementation tasks MUST be tracked via GitHub issues:
 
 **Rationale**: GitHub issues provide traceability, discussion context, and project management visibility. Standardized branch naming makes it easy to identify which issue a branch addresses and maintains consistency across the team. The `speckit` label helps identify issues that were automatically generated from the specification process.
 
+### Git Operations and Version Control
+
+AI agents and automated tools MUST NOT perform git commits or pushes automatically:
+
+- **NEVER commit changes automatically** - Always allow the developer to review diffs first
+- **NEVER push to remote automatically** - Developer must explicitly request push operations
+- Changes should be staged and ready for review, but commits must be initiated by the developer
+- This ensures developers maintain control over version control history and can review changes before committing
+
+**Rationale**: Developers need to review code changes, understand diffs, and maintain control over git history. Automatic commits can create messy history, make it harder to track changes, and prevent proper code review. This principle ensures developers have full visibility and control over version control operations.
+
+### Task Implementation Workflow with Human Review
+
+All task implementation MUST follow a strict workflow with mandatory human review:
+
+- **Implementation Phase**: AI agent implements the task with tests (following TDD)
+- **Review Phase**: Developer manually reviews the implementation, tests, and diffs
+- **Commit Phase**: Developer commits and pushes changes when satisfied
+- **Completion Phase**: Developer notifies the AI agent that the task is complete
+- **Task Progression**: AI agent MUST NOT proceed to the next task until explicitly notified by the developer
+- **No Automatic Progression**: AI agents MUST NEVER automatically mark tasks as complete or move to the next task
+
+**Workflow Steps**:
+1. AI implements task with tests
+2. AI waits for developer review
+3. Developer reviews, commits, and pushes (if satisfied)
+4. Developer explicitly notifies AI: "task done" or "próxima task" or similar
+5. Only then does AI mark task complete and proceed to next task
+
+**Rationale**: Human review is essential for code quality, understanding, and maintaining control over the development process. Automatic task progression can lead to issues being overlooked, poor code quality, and loss of developer agency. This workflow ensures every change is consciously reviewed and approved before moving forward.
+
+### Commit Message Format
+
+Commit messages MUST be concise and follow a consistent format:
+
+- **Format**: `<type>: <subject>` (max 50 chars for subject)
+- **Total length**: Maximum 200 characters (including subject and body)
+- **Types**: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `style`
+- **Style**: Imperative mood ("Add feature" not "Added feature")
+- **Body**: Optional, wrap at 72 chars, keep total under 200 chars
+
+**Examples**:
+- `feat: Add HTMX infinite scroll`
+- `fix: Resolve static files warning`
+- `docs: Update constitution with uv run rule`
+- `refactor: Split settings into base/dev/prod`
+
+**Rationale**: Concise commit messages improve readability in git history and make it easier to understand changes at a glance. The 200-character limit ensures messages remain focused and scannable.
+
 ### Code Review Requirements
 
 - All code changes MUST be reviewed via pull request
@@ -302,4 +366,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.5.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.5.1 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09

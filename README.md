@@ -45,4 +45,3 @@ Contribuições são bem-vindas! Por favor, leia o Código de Conduta antes de c
 ---
 
 **Nota**: Este é um projeto experimental em desenvolvimento ativo. A documentação e funcionalidades podem mudar.
-

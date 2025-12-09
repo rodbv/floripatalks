@@ -45,4 +45,3 @@ disponível em https://www.contributor-covenant.org/version/2/1/code_of_conduct.
 
 Para obter respostas a perguntas comuns sobre este código de conduta, consulte
 https://www.contributor-covenant.org/faq
-

@@ -35,4 +35,3 @@
 - All user stories are independently testable and prioritized
 - Success criteria are measurable and technology-agnostic
 - Assumptions are documented for planning phase
-

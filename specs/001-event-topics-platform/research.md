@@ -14,7 +14,7 @@ All technical decisions align with the constitution and existing specifications.
 
 **Decision**: Use django-allauth for Google and LinkedIn SSO authentication
 
-**Rationale**: 
+**Rationale**:
 - django-allauth is the standard Django library for social authentication
 - Supports Google and LinkedIn OAuth2 out of the box
 - Handles token management, user creation, and session management
@@ -227,6 +227,23 @@ static/
 - CDN (unpkg, jsDelivr): Rejected - external dependency, potential outages, privacy concerns
 - npm package: Rejected - adds complexity, static files simpler for this use case
 
+### Type Annotations
+
+**Decision**: Use Python type annotations throughout the codebase
+
+**Rationale**:
+- Improves code readability and IDE support
+- Enables static type checking with ruff
+- Serves as inline documentation
+- Catches type-related errors early
+- Required by constitution (Principle I-A)
+
+**Implementation**:
+- All functions and methods must have type hints
+- DTOs (dataclasses) must have type annotations for all fields
+- Use modern Python 3.12+ syntax (`list[str]` instead of `List[str]`)
+- Pre-commit hooks enforce type annotations via ruff
+
 ## No Additional Research Needed
 
 All technology choices are:
@@ -241,4 +258,3 @@ Proceed to Phase 1: Design & Contracts to create:
 - Data model with entities and relationships
 - HTMX view contracts (not REST API)
 - Quickstart guide
-
