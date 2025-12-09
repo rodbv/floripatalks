@@ -8,7 +8,7 @@ Added Sections:
 Removed Sections: None
 Templates Requiring Updates:
   - .specify/templates/plan-template.md (✅ no changes needed)
-  - .specify/templates/spec-template.md (✅ no changes needed)
+  - .specify/templates/spec-template.md (✅ no changes. NM needed)
   - .specify/templates/tasks-template.md (✅ no changes needed)
 Follow-up TODOs: None
 -->
@@ -267,6 +267,37 @@ All implementation tasks MUST be tracked via GitHub issues:
 
 **Rationale**: GitHub issues provide traceability, discussion context, and project management visibility. Standardized branch naming makes it easy to identify which issue a branch addresses and maintains consistency across the team. The `speckit` label helps identify issues that were automatically generated from the specification process.
 
+### Git Operations and Version Control
+
+AI agents and automated tools MUST NOT perform git commits or pushes automatically:
+
+- **NEVER commit changes automatically** - Always allow the developer to review diffs first
+- **NEVER push to remote automatically** - Developer must explicitly request push operations
+- Changes should be staged and ready for review, but commits must be initiated by the developer
+- This ensures developers maintain control over version control history and can review changes before committing
+
+**Rationale**: Developers need to review code changes, understand diffs, and maintain control over git history. Automatic commits can create messy history, make it harder to track changes, and prevent proper code review. This principle ensures developers have full visibility and control over version control operations.
+
+### Task Implementation Workflow with Human Review
+
+All task implementation MUST follow a strict workflow with mandatory human review:
+
+- **Implementation Phase**: AI agent implements the task with tests (following TDD)
+- **Review Phase**: Developer manually reviews the implementation, tests, and diffs
+- **Commit Phase**: Developer commits and pushes changes when satisfied
+- **Completion Phase**: Developer notifies the AI agent that the task is complete
+- **Task Progression**: AI agent MUST NOT proceed to the next task until explicitly notified by the developer
+- **No Automatic Progression**: AI agents MUST NEVER automatically mark tasks as complete or move to the next task
+
+**Workflow Steps**:
+1. AI implements task with tests
+2. AI waits for developer review
+3. Developer reviews, commits, and pushes (if satisfied)
+4. Developer explicitly notifies AI: "task done" or "próxima task" or similar
+5. Only then does AI mark task complete and proceed to next task
+
+**Rationale**: Human review is essential for code quality, understanding, and maintaining control over the development process. Automatic task progression can lead to issues being overlooked, poor code quality, and loss of developer agency. This workflow ensures every change is consciously reviewed and approved before moving forward.
+
 ### Commit Message Format
 
 Commit messages MUST be concise and follow a consistent format:
@@ -335,4 +366,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.5.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.5.1 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
