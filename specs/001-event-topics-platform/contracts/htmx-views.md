@@ -64,13 +64,13 @@
 
 ### Topic Views
 
-#### GET `/topics/<id>/`
+#### GET `/topics/<slug>/`
 
 **Purpose**: Display topic detail page
 
 **Request**:
 - Method: GET
-- Path: `/topics/<id>/`
+- Path: `/topics/<slug>/` (e.g., `/topics/advanced-django-orm/`)
 - Headers: Standard browser request
 
 **Response**:
@@ -82,7 +82,7 @@
 **HTMX Behavior**: None (full page load)
 
 **Data Flow**:
-1. View calls use case: `GetTopicDetailUseCase(topic_id)`
+1. View calls use case: `GetTopicDetailUseCase(topic_slug)`
 2. Use case returns TopicDetailDTO (includes comments, suggestions)
 3. View converts to context, renders template
 
@@ -138,13 +138,13 @@
 
 ---
 
-#### GET `/topics/<id>/edit/`
+#### GET `/topics/<slug>/edit/`
 
 **Purpose**: Display topic edit form
 
 **Request**:
 - Method: GET
-- Path: `/topics/<id>/edit/`
+- Path: `/topics/<slug>/edit/`
 
 **Response**:
 - Status: 200 OK (if owner) or 403 Forbidden (if not owner)
@@ -159,13 +159,13 @@
 
 ---
 
-#### POST `/topics/<id>/edit/`
+#### POST `/topics/<slug>/edit/`
 
 **Purpose**: Update topic
 
 **Request**:
 - Method: POST
-- Path: `/topics/<id>/edit/`
+- Path: `/topics/<slug>/edit/`
 - Headers: CSRF token
 - Body: Form data (`title`, `description`)
 
@@ -178,19 +178,19 @@
 **HTMX Behavior**: None (dedicated page, browser back button works)
 
 **Data Flow**:
-1. View calls use case: `EditTopicUseCase(user, topic_id, title, description)`
+1. View calls use case: `EditTopicUseCase(user, topic_slug, title, description)`
 2. Use case validates ownership, updates topic, returns TopicDTO
 3. View redirects to topic detail or event page
 
 ---
 
-#### POST `/topics/<id>/delete/`
+#### POST `/topics/<slug>/delete/`
 
 **Purpose**: Soft delete topic
 
 **Request**:
 - Method: POST
-- Path: `/topics/<id>/delete/`
+- Path: `/topics/<slug>/delete/`
 - Headers: CSRF token
 - Body: Confirmation (if required)
 
@@ -201,24 +201,24 @@
 - Template: HTMX removes element, or redirect on full page
 
 **HTMX Behavior**:
-- `hx-delete="/topics/<id>/delete/"`
+- `hx-delete="/topics/<slug>/delete/"`
 - `hx-swap="outerHTML"` (remove element)
 - `hx-confirm="Are you sure you want to delete this topic?"`
 
 **Data Flow**:
-1. View calls use case: `DeleteTopicUseCase(user, topic_id)`
+1. View calls use case: `DeleteTopicUseCase(user, topic_slug)`
 2. Use case validates ownership, soft deletes topic
 3. View returns success response, HTMX removes element
 
 ---
 
-#### POST `/topics/<id>/vote/` (HTMX)
+#### POST `/topics/<slug>/vote/` (HTMX)
 
 **Purpose**: Vote or un-vote on topic
 
 **Request**:
 - Method: POST
-- Path: `/topics/<id>/vote/`
+- Path: `/topics/<slug>/vote/`
 - Headers: `HX-Request: true`, CSRF token
 
 **Response**:
@@ -228,12 +228,12 @@
 - Template: `events/partials/vote_button.html`
 
 **HTMX Behavior**:
-- `hx-post="/topics/<id>/vote/"`
+- `hx-post="/topics/<slug>/vote/"`
 - `hx-swap="outerHTML"` (replace vote button)
-- `hx-target="#vote-button-<id>"`
+- `hx-target="#vote-button-<slug>"`
 
 **Data Flow**:
-1. View calls use case: `VoteTopicUseCase(user, topic_id)` or `UnvoteTopicUseCase(user, topic_id)`
+1. View calls use case: `VoteTopicUseCase(user, topic_slug)` or `UnvoteTopicUseCase(user, topic_slug)`
 2. Use case toggles vote, updates vote_count, returns VoteStatusDTO
 3. View converts to context, renders partial template
 4. Returns updated vote button HTML
@@ -244,13 +244,13 @@
 
 ### Comment Views
 
-#### POST `/topics/<id>/comments/create/` (HTMX)
+#### POST `/topics/<slug>/comments/create/` (HTMX)
 
 **Purpose**: Add comment to topic
 
 **Request**:
 - Method: POST
-- Path: `/topics/<id>/comments/create/`
+- Path: `/topics/<slug>/comments/create/`
 - Headers: `HX-Request: true`, CSRF token
 - Body: Form data (`content`)
 
@@ -261,12 +261,12 @@
 - Template: `events/partials/comment_item.html` (success)
 
 **HTMX Behavior**:
-- `hx-post="/topics/<id>/comments/create/"`
+- `hx-post="/topics/<slug>/comments/create/"`
 - `hx-swap="afterbegin"` (prepend to comments list)
 - `hx-target="#comments-list"`
 
 **Data Flow**:
-1. View calls use case: `AddCommentUseCase(user, topic_id, content)`
+1. View calls use case: `AddCommentUseCase(user, topic_slug, content)`
 2. Use case validates, creates comment, returns CommentDTO
 3. View converts to context, renders partial template
 
@@ -333,13 +333,13 @@
 
 ### Presenter Suggestion Views
 
-#### POST `/topics/<id>/presenters/suggest/` (HTMX)
+#### POST `/topics/<slug>/presenters/suggest/` (HTMX)
 
 **Purpose**: Suggest presenter for topic
 
 **Request**:
 - Method: POST
-- Path: `/topics/<id>/presenters/suggest/`
+- Path: `/topics/<slug>/presenters/suggest/`
 - Headers: `HX-Request: true`, CSRF token
 - Body: Form data (`email`, `url`, `full_name` - at least one required)
 
@@ -350,11 +350,11 @@
 - Template: `events/partials/presenter_suggestion_item.html`
 
 **HTMX Behavior**:
-- `hx-post="/topics/<id>/presenters/suggest/"`
+- `hx-post="/topics/<slug>/presenters/suggest/"`
 - `hx-swap="afterbegin"` (prepend to suggestions list)
 
 **Data Flow**:
-1. View calls use case: `SuggestPresenterUseCase(user, topic_id, email, url, full_name)`
+1. View calls use case: `SuggestPresenterUseCase(user, topic_slug, email, url, full_name)`
 2. Use case validates limits (3 per user, 10 per topic), creates suggestion, returns PresenterSuggestionDTO
 3. View converts to context, renders partial template
 

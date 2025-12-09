@@ -162,9 +162,10 @@ floripatalks/
 │   └── conftest.py        # pytest fixtures
 └── static/
     ├── css/
-    │   └── pure-css/      # Pure CSS library
+    │   └── pure-css/      # Pure CSS library (served from static, not CDN)
+    │       └── pure-min.css
     └── js/
-        └── htmx.min.js
+        └── htmx.min.js     # HTMX library (served from static, not CDN)
 ```
 
 **Structure Decision**: Django web application structure with app-based architecture. Events app contains all topic/comment/vote functionality. Use case layer separates business logic from models. DTOs ensure N+1 prevention. Django-Cotton components in `cotton/` directories. HTMX partial fragments in `templates/partials/`.

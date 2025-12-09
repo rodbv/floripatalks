@@ -1,19 +1,17 @@
 <!--
 Sync Impact Report:
-Version Change: 1.1.0 → 1.2.0 (added architecture and testing principles)
+Version Change: 1.2.0 → 1.3.0 (added security and data model principles)
 Modified Principles: 
-  - IV. HTMX Frontend Enhancement (expanded with hypermedia pattern)
-  - III. pytest Testing Framework (expanded with test pyramid and assertNumQueries)
+  - II. Django Framework (expanded with custom user model requirement)
 Added Sections: 
-  - X. Hypermedia Architecture (No API)
-  - XI. N+1 Query Prevention with DTOs
-  - XII. Use Case Layer Architecture
-  - Test Pyramid Principle (added to testing section)
+  - XIII. UUID v7 for Primary Keys
+  - XIV. SlugField for URL Routes
+  - Custom User Model (added to Django Framework principle)
 Removed Sections: None
 Templates Requiring Updates:
-  - .specify/templates/plan-template.md (⚠ pending - may need architecture section updates)
+  - .specify/templates/plan-template.md (✅ no changes needed - data model decisions)
   - .specify/templates/spec-template.md (✅ no changes needed)
-  - .specify/templates/tasks-template.md (⚠ pending - may need architecture task types)
+  - .specify/templates/tasks-template.md (✅ no changes needed)
 Follow-up TODOs: None
 -->
 
@@ -61,8 +59,9 @@ The project MUST use Django as the primary web framework, adhering to Django bes
 - Maintain separation of concerns: models, views, templates, forms
 - Use Django's class-based views where appropriate
 - Follow Django naming conventions and project structure
+- Use a custom user model inheriting from `AbstractUser` (not Django's default User model)
 
-**Rationale**: Django provides a robust, scalable foundation with built-in security features, admin interface, and a mature ecosystem. Consistency with Django conventions improves maintainability and developer onboarding.
+**Rationale**: Django provides a robust, scalable foundation with built-in security features, admin interface, and a mature ecosystem. Consistency with Django conventions improves maintainability and developer onboarding. Using a custom user model from the start (Django best practice) prevents migration issues later and allows customization of user fields.
 
 ### III. pytest Testing Framework and Test Pyramid
 
@@ -195,6 +194,29 @@ The system does NOT expose a REST API in the current version:
 
 **Rationale**: The hypermedia approach with HTMX provides a simpler architecture for the current needs, reducing complexity and maintenance overhead. API support can be added later if needed without affecting the core hypermedia implementation.
 
+### XIII. UUID v7 for Primary Keys
+
+All model primary keys MUST use UUID v7 (not auto-incrementing integers):
+
+- Use `uuid.UUID` with UUID v7 format for all model primary keys
+- UUID v7 is time-ordered and sortable (unlike UUID v4)
+- Prevents ID enumeration attacks (security benefit)
+- Use Django's `uuid` field: `id = models.UUIDField(primary_key=True, default=uuid.uuid7, editable=False)`
+
+**Rationale**: UUID v7 provides security by preventing ID guessing/enumeration attacks while maintaining sortability (time-ordered). Unlike sequential integers, UUIDs make it difficult for attackers to enumerate resources. UUID v7's time-ordered nature allows efficient database indexing and sorting by creation time.
+
+### XIV. SlugField for URL Routes
+
+Events and topics MUST use Django SlugField for URL-friendly identifiers:
+
+- Events use `slug` field (e.g., "python-floripa") for URLs: `/events/python-floripa/`
+- Topics use `slug` field for URLs: `/topics/<slug>/`
+- Use Django's `SlugField` with appropriate `max_length` and `unique` constraints
+- Slugs are human-readable and SEO-friendly
+- Primary keys remain UUID v7 (slugs are for URLs, not primary keys)
+
+**Rationale**: Slugs provide human-readable, SEO-friendly URLs while maintaining security through UUID primary keys. Users can share meaningful URLs (e.g., `/events/python-floripa/`) while the system uses UUIDs internally for security. This follows Django best practices for URL design.
+
 ## Development Workflow
 
 ### Code Review Requirements
@@ -246,4 +268,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.2.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.3.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09

@@ -162,6 +162,46 @@ All technical decisions align with the constitution and existing specifications.
 - Hard-coded Portuguese: Rejected - violates i18n requirement
 - Third-party i18n library: Rejected - Django i18n is sufficient
 
+### Static Assets: Pure CSS and HTMX
+
+**Decision**: Serve Pure CSS and HTMX from static folder (not CDN), using latest versions available as of 2025-12-09
+
+**Rationale**:
+- Serving from static folder provides better control and offline development capability
+- No external CDN dependency reduces risk of CDN outages
+- Better performance (served from same domain, no DNS lookup)
+- Version control of assets ensures consistency across environments
+- Works offline during development
+
+**Implementation**:
+- Download latest Pure CSS and HTMX versions
+- Place in `static/css/pure-css/` and `static/js/htmx.min.js`
+- Reference in templates using `{% static %}` template tag
+- Update versions as needed, commit to version control
+- Pure CSS: Download from https://purecss.io/ (latest version as of 2025-12-09)
+- HTMX: Download from https://htmx.org/ (latest version as of 2025-12-09)
+
+**File structure**:
+```
+static/
+├── css/
+│   └── pure-css/
+│       └── pure-min.css (or individual module files)
+└── js/
+    └── htmx.min.js
+```
+
+**Template usage**:
+```html
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/pure-css/pure-min.css' %}">
+<script src="{% static 'js/htmx.min.js' %}"></script>
+```
+
+**Alternatives considered**:
+- CDN (unpkg, jsDelivr): Rejected - external dependency, potential outages, privacy concerns
+- npm package: Rejected - adds complexity, static files simpler for this use case
+
 ## No Additional Research Needed
 
 All technology choices are:

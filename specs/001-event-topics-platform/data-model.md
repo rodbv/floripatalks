@@ -10,9 +10,9 @@
 Represents a recurring event series (e.g., Python Floripa).
 
 **Fields**:
-- `id`: Primary key (auto-generated)
+- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
 - `name`: CharField(max_length=200) - Event name (e.g., "Python Floripa")
-- `slug`: SlugField(unique=True) - URL slug (e.g., "python-floripa")
+- `slug`: SlugField(unique=True, max_length=100) - URL slug (e.g., "python-floripa")
 - `description`: TextField(blank=True, null=True) - Optional event description
 - `created_at`: DateTimeField(auto_now_add=True)
 - `updated_at`: DateTimeField(auto_now=True)
@@ -31,8 +31,9 @@ Represents a recurring event series (e.g., Python Floripa).
 Represents a suggested talk topic for an event.
 
 **Fields**:
-- `id`: Primary key (auto-generated)
+- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
 - `event`: ForeignKey(Event, on_delete=CASCADE, related_name='topics')
+- `slug`: SlugField(unique=True, max_length=200) - URL slug for topic
 - `title`: CharField(max_length=200) - Topic title
 - `description`: TextField(max_length=2000, blank=True, null=True) - Optional description
 - `creator`: ForeignKey(User, on_delete=CASCADE, related_name='created_topics')
@@ -64,7 +65,7 @@ Represents a suggested talk topic for an event.
 Represents a user's vote on a topic.
 
 **Fields**:
-- `id`: Primary key (auto-generated)
+- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
 - `topic`: ForeignKey(Topic, on_delete=CASCADE, related_name='votes')
 - `user`: ForeignKey(User, on_delete=CASCADE, related_name='votes')
 - `created_at`: DateTimeField(auto_now_add=True)
@@ -87,7 +88,7 @@ Represents a user's vote on a topic.
 Represents a user's comment on a topic.
 
 **Fields**:
-- `id`: Primary key (auto-generated)
+- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
 - `topic`: ForeignKey(Topic, on_delete=CASCADE, related_name='comments')
 - `author`: ForeignKey(User, on_delete=CASCADE, related_name='comments')
 - `content`: TextField(max_length=1000) - Comment text
@@ -113,7 +114,7 @@ Represents a user's comment on a topic.
 Represents a suggested presenter for a topic.
 
 **Fields**:
-- `id`: Primary key (auto-generated)
+- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
 - `topic`: ForeignKey(Topic, on_delete=CASCADE, related_name='presenter_suggestions')
 - `suggester`: ForeignKey(User, on_delete=CASCADE, related_name='presenter_suggestions')
 - `email`: EmailField(blank=True, null=True) - Optional email address
@@ -140,15 +141,16 @@ Represents a suggested presenter for a topic.
 
 ### User
 
-Represents an authenticated user (extends Django's AbstractUser or uses django-allauth's user model).
+Represents an authenticated user (custom model inheriting from AbstractUser, not Django's default User model).
 
-**Fields** (from django-allauth or custom):
-- `id`: Primary key (auto-generated)
+**Fields**:
+- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
 - `email`: EmailField(unique=True)
-- `username`: CharField (if using custom user model)
-- `display_name`: CharField - Name to display in UI
+- `username`: CharField(unique=True, max_length=150)
+- `display_name`: CharField(max_length=150) - Name to display in UI
 - `created_at`: DateTimeField(auto_now_add=True)
 - SSO provider fields (managed by django-allauth)
+- Standard AbstractUser fields (password, is_active, is_staff, is_superuser, etc.)
 
 **Relationships**:
 - One-to-many with Topic (creator)
@@ -156,7 +158,7 @@ Represents an authenticated user (extends Django's AbstractUser or uses django-a
 - One-to-many with Comment (author)
 - One-to-many with PresenterSuggestion (suggester)
 
-**Note**: User model implementation depends on django-allauth configuration. May use default User model or custom user model.
+**Note**: Custom user model MUST be defined before first migration. Inherits from `AbstractUser` following Django best practices. django-allauth will work with custom user model.
 
 ## State Transitions
 
