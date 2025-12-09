@@ -95,9 +95,9 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 - **Status**: COMPLIANT
 - **Verification**: HTMX hypermedia pattern only, no REST API endpoints
 
-### ✅ XIII. UUID v7 for Primary Keys
+### ✅ XIII. UUID v6 for Primary Keys
 - **Status**: COMPLIANT
-- **Verification**: All models use UUIDField with uuid.uuid7 default
+- **Verification**: All models use UUIDField with uuid6.uuid6 default
 
 ### ✅ XIV. SlugField for URL Routes
 - **Status**: COMPLIANT

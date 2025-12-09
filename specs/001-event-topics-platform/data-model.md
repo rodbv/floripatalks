@@ -10,7 +10,7 @@
 Represents a recurring event series (e.g., Python Floripa).
 
 **Fields**:
-- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
+- `id`: UUIDField(primary_key=True, default=uuid6.uuid6, editable=False) - UUID v6 primary key
 - `name`: CharField(max_length=200) - Event name (e.g., "Python Floripa")
 - `slug`: SlugField(unique=True, max_length=100) - URL slug (e.g., "python-floripa")
 - `description`: TextField(blank=True, null=True) - Optional event description
@@ -31,7 +31,7 @@ Represents a recurring event series (e.g., Python Floripa).
 Represents a suggested talk topic for an event.
 
 **Fields**:
-- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
+- `id`: UUIDField(primary_key=True, default=uuid6.uuid6, editable=False) - UUID v6 primary key
 - `event`: ForeignKey(Event, on_delete=CASCADE, related_name='topics')
 - `slug`: SlugField(unique=True, max_length=200) - URL slug for topic
 - `title`: CharField(max_length=200) - Topic title
@@ -65,7 +65,7 @@ Represents a suggested talk topic for an event.
 Represents a user's vote on a topic.
 
 **Fields**:
-- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
+- `id`: UUIDField(primary_key=True, default=uuid6.uuid6, editable=False) - UUID v6 primary key
 - `topic`: ForeignKey(Topic, on_delete=CASCADE, related_name='votes')
 - `user`: ForeignKey(User, on_delete=CASCADE, related_name='votes')
 - `created_at`: DateTimeField(auto_now_add=True)
@@ -88,7 +88,7 @@ Represents a user's vote on a topic.
 Represents a user's comment on a topic.
 
 **Fields**:
-- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
+- `id`: UUIDField(primary_key=True, default=uuid6.uuid6, editable=False) - UUID v6 primary key
 - `topic`: ForeignKey(Topic, on_delete=CASCADE, related_name='comments')
 - `author`: ForeignKey(User, on_delete=CASCADE, related_name='comments')
 - `content`: TextField(max_length=1000) - Comment text
@@ -114,7 +114,7 @@ Represents a user's comment on a topic.
 Represents a suggested presenter for a topic.
 
 **Fields**:
-- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
+- `id`: UUIDField(primary_key=True, default=uuid6.uuid6, editable=False) - UUID v6 primary key
 - `topic`: ForeignKey(Topic, on_delete=CASCADE, related_name='presenter_suggestions')
 - `suggester`: ForeignKey(User, on_delete=CASCADE, related_name='presenter_suggestions')
 - `email`: EmailField(blank=True, null=True) - Optional email address
@@ -144,7 +144,7 @@ Represents a suggested presenter for a topic.
 Represents an authenticated user (custom model inheriting from AbstractUser, not Django's default User model).
 
 **Fields**:
-- `id`: UUIDField(primary_key=True, default=uuid.uuid7, editable=False) - UUID v7 primary key
+- `id`: UUIDField(primary_key=True, default=uuid6.uuid6, editable=False) - UUID v6 primary key
 - `email`: EmailField(unique=True)
 - `username`: CharField(unique=True, max_length=150)
 - `display_name`: CharField(max_length=150) - Name to display in UI

@@ -14,6 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # This should be overridden in production.py
 SECRET_KEY = "django-insecure-exegsz^ama3ctf6l-n2la9#gy&v6)m#11ude8z8hsf+1fn7zbj"
 
+# Custom User Model
+AUTH_USER_MODEL = "accounts.User"
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",

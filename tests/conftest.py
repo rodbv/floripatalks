@@ -1,13 +1,35 @@
 """
-Pytest configuration and shared fixtures for FloripaTalks tests.
+Pytest configuration and shared fixtures.
 """
+import pytest
+from faker import Faker
 
-# Configure Django settings for pytest
-pytest_plugins = ["pytest_django"]
+from accounts.models import User
 
-# Fixtures will be added as needed in Phase 2 and beyond
-# Example:
-# @pytest.fixture
-# def user():
-#     from accounts.models import User
-#     return User.objects.create_user(...)
+fake = Faker()
+
+
+@pytest.fixture
+def user_factory() -> type[User]:
+    """Factory fixture for creating User instances."""
+    return User
+
+
+@pytest.fixture
+def sample_user(user_factory: type[User]) -> User:
+    """Create a sample user for testing."""
+    return user_factory.objects.create_user(
+        username=fake.user_name(),
+        email=fake.email(),
+        password="testpass123",
+    )
+
+
+@pytest.fixture
+def sample_superuser(user_factory: type[User]) -> User:
+    """Create a sample superuser for testing."""
+    return user_factory.objects.create_superuser(
+        username=fake.user_name(),
+        email=fake.email(),
+        password="testpass123",
+    )

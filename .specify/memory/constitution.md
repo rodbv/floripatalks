@@ -87,7 +87,14 @@ All tests MUST be written using pytest following the test pyramid principle:
 - All DTO tests MUST include `assertNumQueries` to verify N+1 query prevention
 - Test strategy: More unit tests, fewer integration tests (test pyramid principle)
 
-**Rationale**: pytest offers superior test discovery, fixtures, parametrization, and plugin ecosystem compared to Django's default test runner. The test pyramid (more unit tests, fewer integration tests) provides faster feedback, better isolation, and more comprehensive edge case coverage. Unit tests on use cases and services are data-oriented and easier to maintain.
+**Testing Tools and Best Practices**:
+- **model-bakery**: Use `model_bakery` for creating test model instances when useful (simpler than manual creation)
+- **pytest fixtures**: Use fixtures in `tests/conftest.py` for shared test data and setup (e.g., user fixtures, event fixtures)
+- **faker**: Use `faker` library for generating random test data (usernames, emails, text) instead of manual timestamps or hardcoded values
+- **Fixtures organization**: Place app-specific fixtures in `tests/conftest.py` or app-specific conftest files
+- **Fixture reuse**: Extract common patterns (e.g., `user_factory`, `event_factory`) into fixtures to reduce duplication
+
+**Rationale**: pytest offers superior test discovery, fixtures, parametrization, and plugin ecosystem compared to Django's default test runner. The test pyramid (more unit tests, fewer integration tests) provides faster feedback, better isolation, and more comprehensive edge case coverage. Unit tests on use cases and services are data-oriented and easier to maintain. Using model-bakery, fixtures, and faker simplifies test code, reduces duplication, and makes tests more maintainable and readable.
 
 ### IV. HTMX Hypermedia Pattern
 
@@ -214,16 +221,17 @@ The system does NOT expose a REST API in the current version:
 
 **Rationale**: The hypermedia approach with HTMX provides a simpler architecture for the current needs, reducing complexity and maintenance overhead. API support can be added later if needed without affecting the core hypermedia implementation.
 
-### XIII. UUID v7 for Primary Keys
+### XIII. UUID v6 for Primary Keys
 
-All model primary keys MUST use UUID v7 (not auto-incrementing integers):
+All model primary keys MUST use UUID v6 (not auto-incrementing integers):
 
-- Use `uuid.UUID` with UUID v7 format for all model primary keys
-- UUID v7 is time-ordered and sortable (unlike UUID v4)
+- Use `uuid6` library with UUID v6 format for all model primary keys
+- UUID v6 is time-ordered and sortable (unlike UUID v4)
 - Prevents ID enumeration attacks (security benefit)
-- Use Django's `uuid` field: `id = models.UUIDField(primary_key=True, default=uuid.uuid7, editable=False)`
+- Use Django's `uuid` field: `id = models.UUIDField(primary_key=True, default=uuid6.uuid6, editable=False)`
+- Install `uuid6` package: `uv add uuid6`
 
-**Rationale**: UUID v7 provides security by preventing ID guessing/enumeration attacks while maintaining sortability (time-ordered). Unlike sequential integers, UUIDs make it difficult for attackers to enumerate resources. UUID v7's time-ordered nature allows efficient database indexing and sorting by creation time.
+**Rationale**: UUID v6 provides security by preventing ID guessing/enumeration attacks while maintaining sortability (time-ordered). Unlike sequential integers, UUIDs make it difficult for attackers to enumerate resources. UUID v6's time-ordered nature allows efficient database indexing and sorting by creation time. UUID v6 is used instead of v7 because it's available via the `uuid6` library and provides the same time-ordered benefits.
 
 ### XIV. SlugField for URL Routes
 
@@ -233,7 +241,7 @@ Events and topics MUST use Django SlugField for URL-friendly identifiers:
 - Topics use `slug` field for URLs: `/topics/<slug>/`
 - Use Django's `SlugField` with appropriate `max_length` and `unique` constraints
 - Slugs are human-readable and SEO-friendly
-- Primary keys remain UUID v7 (slugs are for URLs, not primary keys)
+- Primary keys remain UUID v6 (slugs are for URLs, not primary keys)
 
 **Rationale**: Slugs provide human-readable, SEO-friendly URLs while maintaining security through UUID primary keys. Users can share meaningful URLs (e.g., `/events/python-floripa/`) while the system uses UUIDs internally for security. This follows Django best practices for URL design.
 
@@ -366,4 +374,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.5.1 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.5.3 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
