@@ -44,8 +44,6 @@ ignore = [
     "B008",  # do not perform function calls in argument defaults
     "F403",  # star imports (common in Django settings)
     "F405",  # undefined names from star imports (common in Django settings)
-    "ANN101", # missing type annotation for self
-    "ANN102", # missing type annotation for cls
 ]
 
 [tool.ruff.lint.isort]
