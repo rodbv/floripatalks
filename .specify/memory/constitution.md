@@ -252,6 +252,24 @@ All implementation tasks MUST be tracked via GitHub issues:
 
 **Rationale**: GitHub issues provide traceability, discussion context, and project management visibility. Standardized branch naming makes it easy to identify which issue a branch addresses and maintains consistency across the team. The `speckit` label helps identify issues that were automatically generated from the specification process.
 
+### Commit Message Format
+
+Commit messages MUST be concise and follow a consistent format:
+
+- **Format**: `<type>: <subject>` (max 50 chars for subject)
+- **Total length**: Maximum 200 characters (including subject and body)
+- **Types**: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `style`
+- **Style**: Imperative mood ("Add feature" not "Added feature")
+- **Body**: Optional, wrap at 72 chars, keep total under 200 chars
+
+**Examples**:
+- `feat: Add HTMX infinite scroll`
+- `fix: Resolve static files warning`
+- `docs: Update constitution with uv run rule`
+- `refactor: Split settings into base/dev/prod`
+
+**Rationale**: Concise commit messages improve readability in git history and make it easier to understand changes at a glance. The 200-character limit ensures messages remain focused and scannable.
+
 ### Code Review Requirements
 
 - All code changes MUST be reviewed via pull request
