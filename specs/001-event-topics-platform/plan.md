@@ -11,10 +11,11 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 
 ## Technical Context
 
-**Language/Version**: Python 3.12+  
+**Language/Version**: Python 3.12+ (with type annotations)  
 **Primary Dependencies**: Django, django-allauth (SSO), HTMX, AlpineJS, django-cotton, pytest, pytest-django  
 **Storage**: PostgreSQL (production), SQLite (development)  
 **Testing**: pytest with pytest-django, following test pyramid (majority unit tests, fewer integration tests)  
+**Code Quality**: Type annotations required, ruff for linting/formatting (line length 100)  
 **Target Platform**: Web application (mobile-first, responsive design)  
 **Project Type**: Web application (Django backend with server-rendered HTML + HTMX + AlpineJS)  
 **Performance Goals**:

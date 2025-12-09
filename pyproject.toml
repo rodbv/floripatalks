@@ -37,12 +37,15 @@ select = [
     "UP",  # pyupgrade
     "ARG", # flake8-unused-arguments
     "SIM", # flake8-simplify
+    "ANN", # flake8-annotations (type annotations)
 ]
 ignore = [
     "E501",  # line too long (handled by formatter)
     "B008",  # do not perform function calls in argument defaults
     "F403",  # star imports (common in Django settings)
     "F405",  # undefined names from star imports (common in Django settings)
+    "ANN101", # missing type annotation for self
+    "ANN102", # missing type annotation for cls
 ]
 
 [tool.ruff.lint.isort]

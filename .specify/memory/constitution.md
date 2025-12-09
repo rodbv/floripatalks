@@ -48,6 +48,19 @@ All features MUST be developed using Test-Driven Development methodology. The Re
 
 **Enforcement**: Tests MUST be written before implementation code. Pull requests without corresponding tests will be rejected.
 
+### I-A. Type Annotations
+
+All Python code MUST use type annotations:
+
+- Functions and methods MUST have type hints for parameters and return values
+- Class attributes SHOULD have type hints
+- Use `typing` module for complex types (Optional, List, Dict, etc.)
+- Use modern Python 3.12+ syntax when available (e.g., `list[str]` instead of `List[str]`)
+- Type annotations help with IDE support, static analysis, and code documentation
+- Pre-commit hooks will check type annotations via ruff
+
+**Rationale**: Type annotations improve code readability, enable better IDE support, catch type-related errors early, and make the codebase more maintainable. They serve as inline documentation and help with static analysis tools.
+
 ### II. Django Framework
 
 The project MUST use Django as the primary web framework, adhering to Django best practices and conventions:
