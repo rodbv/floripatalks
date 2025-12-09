@@ -59,7 +59,7 @@
 ### Development Tools
 
 - [x] T020 [P] Create `justfile` with common tasks: `just test` (run pytest), `just dev` (runserver), `just migrate`, `just lint`, `just format`
-- [ ] T021 [P] Create `.gitignore` for Python/Django project (include `.venv/`, `.uv/`, `uv.lock`, `db.sqlite3`, `__pycache__/`, etc.)
+- [x] T021 [P] Create `.gitignore` for Python/Django project (include `.venv/`, `.uv/`, `uv.lock`, `db.sqlite3`, `__pycache__/`, etc.)
 
 ### Pre-commit Hooks
 
