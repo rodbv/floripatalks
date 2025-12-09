@@ -243,8 +243,9 @@ All implementation tasks MUST be tracked via GitHub issues:
   - Issue ID is the GitHub issue number
   - Description is a short, descriptive slug (kebab-case, no special characters)
 - Branch names MUST be descriptive and traceable to the GitHub issue
+- **Issues created automatically from `tasks.md` via `speckit.taskstoissues` MUST be labeled with `speckit`** to distinguish them from manually created issues
 
-**Rationale**: GitHub issues provide traceability, discussion context, and project management visibility. Standardized branch naming makes it easy to identify which issue a branch addresses and maintains consistency across the team.
+**Rationale**: GitHub issues provide traceability, discussion context, and project management visibility. Standardized branch naming makes it easy to identify which issue a branch addresses and maintains consistency across the team. The `speckit` label helps identify issues that were automatically generated from the specification process.
 
 ### Code Review Requirements
 
