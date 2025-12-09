@@ -1,11 +1,10 @@
 <!--
 Sync Impact Report:
-Version Change: 1.3.0 → 1.4.0 (added AlpineJS for frontend state management)
+Version Change: 1.4.0 → 1.5.0 (added GitHub issues and branch naming requirements)
 Modified Principles: 
-  - IV. HTMX Hypermedia Pattern (expanded to clarify AlpineJS usage)
+  - Development Workflow (expanded with GitHub issues and branch naming)
 Added Sections: 
-  - XV. AlpineJS for Client-Side State Management
-  - AlpineJS added to Project Overview technology stack
+  - GitHub Issues and Branch Naming (added to Development Workflow)
 Removed Sections: None
 Templates Requiring Updates:
   - .specify/templates/plan-template.md (✅ no changes needed)
@@ -233,9 +232,24 @@ AlpineJS MUST be used for simple client-side state control and interactions when
 
 ## Development Workflow
 
+### GitHub Issues and Branch Naming
+
+All implementation tasks MUST be tracked via GitHub issues:
+
+- Every task MUST have a corresponding GitHub issue before work begins
+- GitHub issues MUST be linked to pull requests
+- Branch names MUST follow the pattern: `{issue-id}-{description-in-slug-format}`
+  - Example: `123-view-topics-list`, `456-add-vote-functionality`
+  - Issue ID is the GitHub issue number
+  - Description is a short, descriptive slug (kebab-case, no special characters)
+- Branch names MUST be descriptive and traceable to the GitHub issue
+
+**Rationale**: GitHub issues provide traceability, discussion context, and project management visibility. Standardized branch naming makes it easy to identify which issue a branch addresses and maintains consistency across the team.
+
 ### Code Review Requirements
 
 - All code changes MUST be reviewed via pull request
+- Pull requests MUST reference the GitHub issue number in the title or description
 - Pull requests MUST include tests (per TDD principle)
 - Pull requests MUST pass all CI checks
 - At least one approval required before merge
@@ -282,4 +296,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.4.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.5.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09

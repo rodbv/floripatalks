@@ -5,6 +5,8 @@
 
 **Tests**: TDD is required per constitution - all tests must be written before implementation code.
 
+**GitHub Issues**: All tasks MUST have corresponding GitHub issues before work begins. Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}` (e.g., `123-view-topics-list`).
+
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
 ## Format: `[ID] [P?] [Story] Description`
@@ -64,11 +66,13 @@
 
 ---
 
-## Phase 3: User Story 1 - View and Browse Topics (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - View and Browse Topics (Priority: P1) 🎯 MVP - Output-First
 
 **Goal**: Users (logged in or not) can view a list of topics for an event, see vote counts and comment counts, browse with infinite scroll. Non-authenticated users see sign-in popups when clicking interactive elements.
 
 **Independent Test**: A user (logged in or not) can navigate to `/events/python-floripa/` and see a list of topics with vote counts and comment counts displayed. Topics load in batches of 20 via infinite scroll. Non-authenticated users see interactive buttons but receive sign-in prompts when clicking them.
+
+**Output-First Rationale**: This is the foundation - users must be able to see existing content before they can interact with it or create new content.
 
 ### Tests for User Story 1 (TDD - Write First)
 
@@ -104,83 +108,111 @@
 
 ---
 
-## Phase 4: User Story 2 - Add, Edit, and Delete Topics (Priority: P1)
+## Phase 4: User Story 3 - Vote and Un-vote on Topics (Priority: P1) 🎯 Output-First
+
+**Goal**: Logged-in users can vote on topics they want to see as talks. Each user can vote once per topic and can later un-vote (remove their vote). The vote count is displayed and updates in real-time when users vote or un-vote.
+
+**Independent Test**: A logged-in user can click vote button, see count increment, then un-vote and see count decrement. Vote button state reflects user's vote status.
+
+**Output-First Rationale**: Voting allows users to immediately engage with existing content. This is prioritized over creating new content (output-first approach).
+
+### Tests for User Story 3 (TDD - Write First)
+
+- [ ] T049 [P] [US3] Unit test for Vote model in `tests/unit/events/test_models.py`
+- [ ] T050 [P] [US3] Unit test for VoteService.vote_topic in `tests/unit/events/test_services/test_vote_service.py`
+- [ ] T051 [P] [US3] Unit test for VoteService.unvote_topic in `tests/unit/events/test_services/test_vote_service.py`
+- [ ] T052 [P] [US3] Unit test for VoteTopicUseCase in `tests/unit/events/test_use_cases/test_vote_topic.py`
+- [ ] T053 [P] [US3] Unit test for UnvoteTopicUseCase in `tests/unit/events/test_use_cases/test_unvote_topic.py`
+- [ ] T054 [P] [US3] Integration test for vote/unvote flow in `tests/integration/events/test_vote_flow.py`
+
+### Implementation for User Story 3
+
+- [ ] T055 [US3] Create Vote model in `events/models.py` with UUID v7, topic FK, user FK, unique constraint (topic, user)
+- [ ] T056 [US3] Create migration for Vote model: `events/migrations/0002_vote.py`
+- [ ] T057 [US3] Create VoteService in `events/services/vote_service.py` with vote_topic, unvote_topic, get_user_vote_status methods
+- [ ] T058 [US3] Create VoteTopicUseCase in `events/use_cases/vote_topic.py` (validates, creates vote, updates vote_count, returns status DTO)
+- [ ] T059 [US3] Create UnvoteTopicUseCase in `events/use_cases/unvote_topic.py` (validates, removes vote, updates vote_count, returns status DTO)
+- [ ] T060 [US3] Create vote/unvote HTMX view in `events/views.py` for POST `/topics/<slug>/vote/` (toggles vote/unvote)
+- [ ] T061 [US3] Add URL pattern in `events/urls.py` for vote endpoint
+- [ ] T062 [US3] Create vote button partial template `events/templates/events/partials/vote_button.html` with HTMX attributes
+- [ ] T063 [US3] Create Django-Cotton vote button component `events/cotton/topic/vote_button.html`
+- [ ] T064 [US3] Integrate vote button in topic card component (shows sign-in popup for non-authenticated users)
+- [ ] T065 [US3] Update TopicService to include user vote status in TopicDTO
+- [ ] T066 [US3] Update GetEventTopicsUseCase to pass user context for vote status
+
+**Checkpoint**: At this point, User Stories 1 AND 3 should work independently. Users can view topics and vote on them (output-first approach).
+
+---
+
+## Phase 5: User Story 6 - Readonly Experience for Non-Authenticated Users (Priority: P2)
+
+**Goal**: Non-authenticated users can view all content in readonly mode. Interactive buttons trigger AlpineJS sign-in popup.
+
+**Independent Test**: A non-authenticated user can view topics, comments, and presenter suggestions. Clicking vote/comment/add buttons shows sign-in popup.
+
+### Tests for User Story 6 (TDD - Write First)
+
+- [ ] T067 [P] [US6] Integration test for non-authenticated user viewing topics in `tests/integration/events/test_readonly_experience.py`
+- [ ] T068 [P] [US6] Integration test for sign-in popup triggers in `tests/integration/accounts/test_signin_popup.py`
+
+### Implementation for User Story 6
+
+- [ ] T069 [US6] Enhance sign-in popup component `accounts/templates/accounts/login_popup.html` with Google and LinkedIn SSO buttons
+- [ ] T070 [US6] Create SSO authentication views in `accounts/views.py` for Google and LinkedIn OAuth flows
+- [ ] T071 [US6] Add URL patterns in `accounts/urls.py` for SSO authentication endpoints
+- [ ] T072 [US6] Integrate sign-in popup triggers in all interactive elements: vote buttons, comment forms, add topic buttons, suggest presenter buttons
+- [ ] T073 [US6] Update templates to show interactive buttons for non-authenticated users (with AlpineJS click handlers)
+- [ ] T074 [US6] Handle SSO authentication failures with user-friendly error messages and retry options
+
+**Checkpoint**: At this point, non-authenticated users have full readonly experience with sign-in prompts.
+
+---
+
+## Phase 6: User Story 2 - Add, Edit, and Delete Topics (Priority: P2)
 
 **Goal**: Logged-in users can create, edit, and delete their own topics. Editing occurs on dedicated pages (not modals) with seamless back button navigation.
 
 **Independent Test**: A logged-in user can create a topic via form, see it appear in the list, edit it on a dedicated page, and delete it with confirmation modal.
 
+**Output-First Rationale**: Following output-first approach, content creation is prioritized after viewing and voting functionality is available.
+
 ### Tests for User Story 2 (TDD - Write First)
 
-- [ ] T049 [P] [US2] Unit test for CreateTopicUseCase in `tests/unit/events/test_use_cases/test_create_topic.py`
-- [ ] T050 [P] [US2] Unit test for EditTopicUseCase in `tests/unit/events/test_use_cases/test_edit_topic.py`
-- [ ] T051 [P] [US2] Unit test for DeleteTopicUseCase in `tests/unit/events/test_use_cases/test_delete_topic.py`
-- [ ] T052 [P] [US2] Unit test for TopicService.create_topic in `tests/unit/events/test_services/test_topic_service.py`
-- [ ] T053 [P] [US2] Unit test for slug generation uniqueness in `tests/unit/events/test_services/test_topic_service.py`
-- [ ] T054 [P] [US2] Integration test for topic creation flow in `tests/integration/events/test_topic_creation.py`
-- [ ] T055 [P] [US2] Integration test for topic edit flow in `tests/integration/events/test_topic_edit.py`
-- [ ] T056 [P] [US2] Integration test for topic delete flow in `tests/integration/events/test_topic_delete.py`
+- [ ] T075 [P] [US2] Unit test for CreateTopicUseCase in `tests/unit/events/test_use_cases/test_create_topic.py`
+- [ ] T076 [P] [US2] Unit test for EditTopicUseCase in `tests/unit/events/test_use_cases/test_edit_topic.py`
+- [ ] T077 [P] [US2] Unit test for DeleteTopicUseCase in `tests/unit/events/test_use_cases/test_delete_topic.py`
+- [ ] T078 [P] [US2] Unit test for TopicService.create_topic in `tests/unit/events/test_services/test_topic_service.py`
+- [ ] T079 [P] [US2] Unit test for slug generation uniqueness in `tests/unit/events/test_services/test_topic_service.py`
+- [ ] T080 [P] [US2] Integration test for topic creation flow in `tests/integration/events/test_topic_creation.py`
+- [ ] T081 [P] [US2] Integration test for topic edit flow in `tests/integration/events/test_topic_edit.py`
+- [ ] T082 [P] [US2] Integration test for topic delete flow in `tests/integration/events/test_topic_delete.py`
 
 ### Implementation for User Story 2
 
-- [ ] T057 [US2] Create TopicForm in `events/forms.py` for topic creation/editing with validation
-- [ ] T058 [US2] Create CreateTopicUseCase in `events/use_cases/create_topic.py` (validates, generates slug, creates topic, returns DTO)
-- [ ] T059 [US2] Create EditTopicUseCase in `events/use_cases/edit_topic.py` (validates ownership, updates topic, keeps slug immutable, returns DTO)
-- [ ] T060 [US2] Create DeleteTopicUseCase in `events/use_cases/delete_topic.py` (validates ownership, soft deletes topic)
-- [ ] T061 [US2] Add create_topic method to TopicService in `events/services/topic_service.py` (slug generation with uniqueness)
-- [ ] T062 [US2] Add update_topic method to TopicService in `events/services/topic_service.py`
-- [ ] T063 [US2] Add soft_delete_topic method to TopicService in `events/services/topic_service.py`
-- [ ] T064 [US2] Create topic creation view in `events/views.py` for GET/POST `/topics/create/`
-- [ ] T065 [US2] Create topic edit view in `events/views.py` for GET/POST `/topics/<slug>/edit/`
-- [ ] T066 [US2] Create topic delete view in `events/views.py` for POST `/topics/<slug>/delete/` (HTMX, returns success response)
-- [ ] T067 [US2] Add URL patterns in `events/urls.py` for create, edit, delete endpoints
-- [ ] T068 [US2] Create topic form template `events/templates/events/topic_form.html` with AlpineJS character count validation
-- [ ] T069 [US2] Create topic edit template `events/templates/events/topic_edit.html` with HTMX form submission
-- [ ] T070 [US2] Create AlpineJS confirmation modal component for delete in `events/templates/events/partials/delete_confirm_modal.html`
-- [ ] T071 [US2] Integrate delete confirmation modal in topic detail/card (AlpineJS toggle, HTMX for delete action)
-- [ ] T072 [US2] Add "Add Topic" button/link in event detail template (shows sign-in popup for non-authenticated users)
-- [ ] T073 [US2] Add edit/delete buttons in topic card (only visible to topic creator)
-- [ ] T074 [US2] Implement rate limiting for topic creation: 10 topics/hour per user in `core/middleware.py`
+- [ ] T083 [US2] Create TopicForm in `events/forms.py` for topic creation/editing with validation
+- [ ] T084 [US2] Create CreateTopicUseCase in `events/use_cases/create_topic.py` (validates, generates slug, creates topic, returns DTO)
+- [ ] T085 [US2] Create EditTopicUseCase in `events/use_cases/edit_topic.py` (validates ownership, updates topic, keeps slug immutable, returns DTO)
+- [ ] T086 [US2] Create DeleteTopicUseCase in `events/use_cases/delete_topic.py` (validates ownership, soft deletes topic)
+- [ ] T087 [US2] Add create_topic method to TopicService in `events/services/topic_service.py` (slug generation with uniqueness)
+- [ ] T088 [US2] Add update_topic method to TopicService in `events/services/topic_service.py`
+- [ ] T089 [US2] Add soft_delete_topic method to TopicService in `events/services/topic_service.py`
+- [ ] T090 [US2] Create topic creation view in `events/views.py` for GET/POST `/topics/create/`
+- [ ] T091 [US2] Create topic edit view in `events/views.py` for GET/POST `/topics/<slug>/edit/`
+- [ ] T092 [US2] Create topic delete view in `events/views.py` for POST `/topics/<slug>/delete/` (HTMX, returns success response)
+- [ ] T093 [US2] Add URL patterns in `events/urls.py` for create, edit, delete endpoints
+- [ ] T094 [US2] Create topic form template `events/templates/events/topic_form.html` with AlpineJS character count validation
+- [ ] T095 [US2] Create topic edit template `events/templates/events/topic_edit.html` with HTMX form submission
+- [ ] T096 [US2] Create AlpineJS confirmation modal component for delete in `events/templates/events/partials/delete_confirm_modal.html`
+- [ ] T097 [US2] Integrate delete confirmation modal in topic detail/card (AlpineJS toggle, HTMX for delete action)
+- [ ] T098 [US2] Add "Add Topic" button/link in event detail template (shows sign-in popup for non-authenticated users)
+- [ ] T099 [US2] Add edit/delete buttons in topic card (only visible to topic creator)
+- [ ] T100 [US2] Implement rate limiting for topic creation: 10 topics/hour per user in `core/middleware.py`
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently. Users can view and manage topics.
-
----
-
-## Phase 5: User Story 3 - Vote and Un-vote on Topics (Priority: P2)
-
-**Goal**: Logged-in users can vote on topics (one vote per user per topic) and un-vote. Vote counts update in real-time via HTMX.
-
-**Independent Test**: A logged-in user can click vote button, see count increment, then un-vote and see count decrement. Vote button state reflects user's vote status.
-
-### Tests for User Story 3 (TDD - Write First)
-
-- [ ] T075 [P] [US3] Unit test for Vote model in `tests/unit/events/test_models.py`
-- [ ] T076 [P] [US3] Unit test for VoteService.vote_topic in `tests/unit/events/test_services/test_vote_service.py`
-- [ ] T077 [P] [US3] Unit test for VoteService.unvote_topic in `tests/unit/events/test_services/test_vote_service.py`
-- [ ] T078 [P] [US3] Unit test for VoteTopicUseCase in `tests/unit/events/test_use_cases/test_vote_topic.py`
-- [ ] T079 [P] [US3] Unit test for UnvoteTopicUseCase in `tests/unit/events/test_use_cases/test_unvote_topic.py`
-- [ ] T080 [P] [US3] Integration test for vote/unvote flow in `tests/integration/events/test_vote_flow.py`
-
-### Implementation for User Story 3
-
-- [ ] T081 [US3] Create Vote model in `events/models.py` with UUID v7, topic FK, user FK, unique constraint (topic, user)
-- [ ] T082 [US3] Create migration for Vote model: `events/migrations/0002_vote.py`
-- [ ] T083 [US3] Create VoteService in `events/services/vote_service.py` with vote_topic, unvote_topic, get_user_vote_status methods
-- [ ] T084 [US3] Create VoteTopicUseCase in `events/use_cases/vote_topic.py` (validates, creates vote, updates vote_count, returns status DTO)
-- [ ] T085 [US3] Create UnvoteTopicUseCase in `events/use_cases/unvote_topic.py` (validates, removes vote, updates vote_count, returns status DTO)
-- [ ] T086 [US3] Create vote/unvote HTMX view in `events/views.py` for POST `/topics/<slug>/vote/` (toggles vote/unvote)
-- [ ] T087 [US3] Add URL pattern in `events/urls.py` for vote endpoint
-- [ ] T088 [US3] Create vote button partial template `events/templates/events/partials/vote_button.html` with HTMX attributes
-- [ ] T089 [US3] Create Django-Cotton vote button component `events/cotton/topic/vote_button.html`
-- [ ] T090 [US3] Integrate vote button in topic card component (shows sign-in popup for non-authenticated users)
-- [ ] T091 [US3] Update TopicService to include user vote status in TopicDTO
-- [ ] T092 [US3] Update GetEventTopicsUseCase to pass user context for vote status
-
-**Checkpoint**: At this point, User Stories 1, 2, AND 3 should work independently. Users can view, manage, and vote on topics.
+**Checkpoint**: At this point, User Stories 1, 3, 6, AND 2 should work independently. Users can view, vote on, and create topics.
 
 ---
 
-## Phase 6: User Story 4 - Comment, Edit, and Delete Comments (Priority: P2)
+## Phase 7: User Story 4 - Comment, Edit, and Delete Comments (Priority: P2)
 
 **Goal**: Logged-in users can add, edit, and delete comments on topics. Comments display chronologically (oldest first). Editing on dedicated pages.
 
@@ -219,30 +251,6 @@
 - [ ] T118 [US4] Implement rate limiting for comments: 20 comments/hour per user in `core/middleware.py`
 
 **Checkpoint**: At this point, User Stories 1-4 should work independently. Users can view, manage, vote on, and comment on topics.
-
----
-
-## Phase 7: User Story 6 - Readonly Experience for Non-Authenticated Users (Priority: P2)
-
-**Goal**: Non-authenticated users can view all content in readonly mode. Interactive buttons trigger AlpineJS sign-in popup.
-
-**Independent Test**: A non-authenticated user can view topics, comments, and presenter suggestions. Clicking vote/comment/add buttons shows sign-in popup.
-
-### Tests for User Story 6 (TDD - Write First)
-
-- [ ] T119 [P] [US6] Integration test for non-authenticated user viewing topics in `tests/integration/events/test_readonly_experience.py`
-- [ ] T120 [P] [US6] Integration test for sign-in popup triggers in `tests/integration/accounts/test_signin_popup.py`
-
-### Implementation for User Story 6
-
-- [ ] T121 [US6] Enhance sign-in popup component `accounts/templates/accounts/login_popup.html` with Google and LinkedIn SSO buttons
-- [ ] T122 [US6] Create SSO authentication views in `accounts/views.py` for Google and LinkedIn OAuth flows
-- [ ] T123 [US6] Add URL patterns in `accounts/urls.py` for SSO authentication endpoints
-- [ ] T124 [US6] Integrate sign-in popup triggers in all interactive elements: vote buttons, comment forms, add topic buttons, suggest presenter buttons
-- [ ] T125 [US6] Update templates to show interactive buttons for non-authenticated users (with AlpineJS click handlers)
-- [ ] T126 [US6] Handle SSO authentication failures with user-friendly error messages and retry options
-
-**Checkpoint**: At this point, non-authenticated users have full readonly experience with sign-in prompts.
 
 ---
 
@@ -349,15 +357,15 @@
   - Or sequentially in priority order (P1 → P2 → P3)
 - **Polish (Phase 10)**: Depends on all desired user stories being complete
 
-### User Story Dependencies
+### User Story Dependencies (Output-First Approach)
 
 - **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
-- **User Story 2 (P1)**: Can start after Foundational (Phase 2) - Depends on US1 (needs Event and Topic models)
-- **User Story 3 (P2)**: Can start after Foundational (Phase 2) - Depends on US1 (needs Topic model)
+- **User Story 3 (P1)**: Can start after Foundational (Phase 2) - Depends on US1 (needs Topic model) - **Output-first: voting prioritized over creation**
+- **User Story 6 (P2)**: Can start after Foundational (Phase 2) - Depends on US1 and US3 (needs viewing and voting functionality)
+- **User Story 2 (P2)**: Can start after Foundational (Phase 2) - Depends on US1 (needs Event and Topic models) - **Content creation after viewing/voting**
 - **User Story 4 (P2)**: Can start after Foundational (Phase 2) - Depends on US1 (needs Topic model)
-- **User Story 5 (P3)**: Can start after Foundational (Phase 2) - Depends on US1 (needs Topic model)
-- **User Story 6 (P2)**: Can start after Foundational (Phase 2) - Depends on US1-4 (needs all interactive elements)
 - **User Story 7 (P2)**: Can start after Foundational (Phase 2) - Depends on US1 (needs Event model)
+- **User Story 5 (P3)**: Can start after Foundational (Phase 2) - Depends on US1 (needs Topic model)
 
 ### Within Each User Story
 
@@ -405,24 +413,25 @@ Task: T036 - Create TopicService
 
 ## Implementation Strategy
 
-### MVP First (User Story 1 Only)
+### MVP First (Output-First: View and Vote)
 
 1. Complete Phase 1: Setup
 2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
 3. Complete Phase 3: User Story 1 (View and Browse Topics)
-4. **STOP and VALIDATE**: Test User Story 1 independently
-5. Deploy/demo if ready
+4. Complete Phase 4: User Story 3 (Vote and Un-vote) - **Output-first: users can engage with existing content**
+5. **STOP and VALIDATE**: Test User Stories 1 and 3 independently
+6. Deploy/demo if ready
 
-### Incremental Delivery
+### Incremental Delivery (Output-First Approach)
 
 1. Complete Setup + Foundational → Foundation ready
-2. Add User Story 1 → Test independently → Deploy/Demo (MVP!)
-3. Add User Story 2 → Test independently → Deploy/Demo
-4. Add User Story 3 → Test independently → Deploy/Demo
-5. Add User Story 4 → Test independently → Deploy/Demo
-6. Add User Story 6 → Test independently → Deploy/Demo
-7. Add User Story 7 → Test independently → Deploy/Demo
-8. Add User Story 5 → Test independently → Deploy/Demo
+2. Add User Story 1 (View Topics) → Test independently → Deploy/Demo
+3. Add User Story 3 (Vote) → Test independently → Deploy/Demo (MVP with engagement!)
+4. Add User Story 6 (Readonly) → Test independently → Deploy/Demo
+5. Add User Story 2 (Create Topics) → Test independently → Deploy/Demo (Content creation after viewing/voting)
+6. Add User Story 4 (Comments) → Test independently → Deploy/Demo
+7. Add User Story 7 (Switch Events) → Test independently → Deploy/Demo
+8. Add User Story 5 (Presenters) → Test independently → Deploy/Demo
 9. Polish phase → Final improvements
 10. Each story adds value without breaking previous stories
 
@@ -442,21 +451,23 @@ With multiple developers:
 ## Summary
 
 - **Total Tasks**: 179
-- **Tasks per User Story**:
-  - US1 (View Topics): 24 tasks
-  - US2 (Manage Topics): 26 tasks
-  - US3 (Vote): 18 tasks
-  - US4 (Comments): 26 tasks
-  - US5 (Presenters): 25 tasks
-  - US6 (Readonly): 8 tasks
-  - US7 (Event Switch): 9 tasks
+- **Tasks per User Story** (Output-First Priority Order):
+  - US1 (View Topics - P1): 24 tasks
+  - US3 (Vote - P1): 12 tasks
+  - US6 (Readonly - P2): 6 tasks
+  - US2 (Manage Topics - P2): 26 tasks
+  - US4 (Comments - P2): 26 tasks
+  - US7 (Event Switch - P2): 9 tasks
+  - US5 (Presenters - P3): 25 tasks
   - Setup: 12 tasks
   - Foundational: 12 tasks
   - Polish: 19 tasks
 
 - **Parallel Opportunities**: Many tasks marked [P] can run in parallel
 - **Independent Test Criteria**: Each user story has clear independent test criteria
-- **Suggested MVP Scope**: Phase 1 + Phase 2 + Phase 3 (User Story 1) = 48 tasks
+- **Suggested MVP Scope (Output-First)**: Phase 1 + Phase 2 + Phase 3 (US1) + Phase 4 (US3) = 60 tasks
+  - Users can view topics and vote on them (output-first approach)
+  - Content creation (US2) comes after viewing/voting functionality
 - **Format Validation**: ✅ All tasks follow checklist format with Task ID, [P] markers, [Story] labels, and file paths
 
 ---
@@ -474,4 +485,6 @@ With multiple developers:
 - All DTO tests must include `assertNumQueries`
 - AlpineJS for client-side state, HTMX for server interactions
 - Custom user model MUST be created before first migration
+- **All tasks MUST have GitHub issues before work begins**
+- **Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}`** (e.g., `123-view-topics-list`)
 

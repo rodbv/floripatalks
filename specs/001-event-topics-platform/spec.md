@@ -66,11 +66,11 @@ A user (logged in or not) visits the event page and can see a list of topics tha
 
 ---
 
-### User Story 2 - Add, Edit, and Delete Topics (Priority: P1)
+### User Story 2 - Add, Edit, and Delete Topics (Priority: P2)
 
 A logged-in user can create a new topic suggestion for an event. They provide a topic title and optionally a description. Once created, the topic appears in the list and is available for other users to vote on and comment. Users can edit and delete their own topics.
 
-**Why this priority**: Users need to be able to contribute topics for the platform to be useful. This is a core interaction that enables community participation. Allowing users to edit and delete their own topics gives them control over their contributions.
+**Why this priority**: Following output-first approach, viewing and voting on existing topics is prioritized over creating new ones. Users can contribute topics after the core viewing and voting functionality is available. Allowing users to edit and delete their own topics gives them control over their contributions.
 
 **Independent Test**: A logged-in user can fill out a form to add a new topic, submit it, immediately see their topic appear in the topics list, edit their own topic on a dedicated page, and delete their own topic.
 
@@ -86,11 +86,11 @@ A logged-in user can create a new topic suggestion for an event. They provide a 
 
 ---
 
-### User Story 3 - Vote and Un-vote on Topics (Priority: P2)
+### User Story 3 - Vote and Un-vote on Topics (Priority: P1)
 
 A logged-in user can vote on topics they want to see as talks. Each user can vote once per topic and can later un-vote (remove their vote). The vote count is displayed and updates in real-time when users vote or un-vote.
 
-**Why this priority**: Voting enables the community to prioritize topics, showing which talks are most desired. This is essential for event organizers to understand community interest. Allowing un-voting gives users flexibility to change their mind.
+**Why this priority**: Following output-first approach, voting is a core interaction that allows users to engage with existing content immediately. Voting enables the community to prioritize topics, showing which talks are most desired. This is essential for event organizers to understand community interest. Allowing un-voting gives users flexibility to change their mind.
 
 **Independent Test**: A logged-in user can click a vote button on any topic, see the vote count increment, and can later click to un-vote, which decreases the vote count. The user cannot vote again on the same topic after un-voting without first un-voting.
 
