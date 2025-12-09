@@ -1,0 +1,12 @@
+# <type>: <subject> (max 50 chars)
+# 
+# <body> (wrap at 72 chars, max 200 chars total)
+#
+# Examples:
+# feat: Add user authentication
+# fix: Resolve database connection issue
+# docs: Update README with setup instructions
+# refactor: Simplify settings structure
+# test: Add unit tests for TopicService
+# chore: Update dependencies
+

@@ -44,9 +44,9 @@
 - [x] T009 [P] Create Django app `events`: run `python manage.py startapp events` in project root
 - [x] T010 [P] Create Django app `accounts`: run `python manage.py startapp accounts` in project root
 - [x] T011 [P] Create Django app `core`: run `python manage.py startapp core` in project root
-- [ ] T012 [P] Setup Django settings structure: create `floripatalks/settings/` directory with `__init__.py`, `base.py`, `development.py`, `production.py`
-- [ ] T013 [P] Configure `floripatalks/urls.py` with app routing: include `events.urls`, `accounts.urls`
-- [ ] T014 [P] Create `tests/` directory structure: `tests/unit/`, `tests/integration/`, `tests/conftest.py` with `__init__.py` files
+- [x] T012 [P] Setup Django settings structure: create `floripatalks/settings/` directory with `__init__.py`, `base.py`, `development.py`, `production.py`
+- [x] T013 [P] Configure `floripatalks/urls.py` with app routing: include `events.urls`, `accounts.urls`
+- [x] T014 [P] Create `tests/` directory structure: `tests/unit/`, `tests/integration/`, `tests/conftest.py` with `__init__.py` files
 
 ### Static Files and Assets
 
