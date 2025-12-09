@@ -64,7 +64,7 @@
 ### Pre-commit Hooks
 
 - [ ] T022 [P] Install prek or rustyhook: `cargo install prek` or `cargo install rustyhook` (Rust-based pre-commit runner)
-- [ ] T023 [P] Create `.pre-commit-config.yaml` with hooks: ruff (formatting/linting), mypy (type checking), security scanning
+- [x] T023 [P] Create `.pre-commit-config.yaml` with hooks: ruff (formatting/linting), mypy (type checking), security scanning
 - [ ] T024 [P] Initialize pre-commit: run `prek install` or `rustyhook install` to setup git hooks
 
 ### GitHub Actions CI/CD
