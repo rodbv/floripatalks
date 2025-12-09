@@ -43,7 +43,8 @@ db.sqlite3
 db.sqlite3-journal
 /media
 /staticfiles
-/static
+# /static - we commit source assets (HTMX, AlpineJS, Pure CSS)
+# Only ignore collected static files (staticfiles/)
 *.pot
 *.pyc
 
