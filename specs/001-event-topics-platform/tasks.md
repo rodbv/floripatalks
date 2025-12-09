@@ -30,13 +30,13 @@
 
 ### Initial Project Setup
 
-- [ ] T001 Initialize Python project with `uv`: create `pyproject.toml` with Python 3.12+ requirement
-- [ ] T002 [P] Add Django to project using `uv add django` (adds to `pyproject.toml` and installs)
-- [ ] T003 [P] Add django-allauth using `uv add django-allauth` for SSO authentication
-- [ ] T004 [P] Add django-cotton using `uv add django-cotton` for component-based UI
-- [ ] T005 [P] Add django-htmx using `uv add django-htmx` for Django HTMX integration helpers
-- [ ] T006 [P] Add pytest and pytest-django using `uv add pytest pytest-django` for testing
-- [ ] T007 [P] Run `uv sync` to install all dependencies and generate `uv.lock` file
+- [x] T001 Initialize Python project with `uv`: create `pyproject.toml` with Python 3.12+ requirement
+- [x] T002 [P] Add Django to project using `uv add django` (adds to `pyproject.toml` and installs)
+- [x] T003 [P] Add django-allauth using `uv add django-allauth` for SSO authentication
+- [x] T004 [P] Add django-cotton using `uv add django-cotton` for component-based UI
+- [x] T005 [P] Add django-htmx using `uv add django-htmx` for Django HTMX integration helpers
+- [x] T006 [P] Add pytest and pytest-django using `uv add pytest pytest-django` for testing
+- [x] T007 [P] Run `uv sync` to install all dependencies and generate `uv.lock` file
 - [ ] T008 Create Django project structure: run `django-admin startproject floripatalks` to create project root with `manage.py`
 
 ### Django Apps and Structure
