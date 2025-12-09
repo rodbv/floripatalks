@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2025-12-09
 
 ## Active Technologies
+- Python 3.12+ + Django, django-allauth (SSO), HTMX, django-cotton, pytest, pytest-django (001-event-topics-platform)
+- PostgreSQL (production), SQLite (development) (001-event-topics-platform)
 
 - Python 3.12+ + Django, HTMX, Django-Cotton, pytest, pytest-django, django-allauth (for SSO), pure-css (001-event-topics-platform)
 
@@ -22,6 +24,7 @@ cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLO
 Python 3.12+: Follow standard conventions
 
 ## Recent Changes
+- 001-event-topics-platform: Added Python 3.12+ + Django, django-allauth (SSO), HTMX, django-cotton, pytest, pytest-django
 
 - 001-event-topics-platform: Added Python 3.12+ + Django, HTMX, Django-Cotton, pytest, pytest-django, django-allauth (for SSO), pure-css
 

@@ -3,57 +3,104 @@
 **Branch**: `001-event-topics-platform` | **Date**: 2025-12-09 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/001-event-topics-platform/spec.md`
 
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
+
 ## Summary
 
-FloripaTalks is a mobile-first web application for managing event topics where users can suggest, vote on, and comment about talk topics for local events. The system uses Django with HTMX hypermedia pattern, following a use case layer architecture with DTOs to prevent N+1 queries. Users authenticate via Google/LinkedIn SSO, and the interface is primarily in Portuguese (pt-BR) with timezone America/Sao_Paulo.
+FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX, and Django-Cotton following TDD principles with a use case layer architecture.
 
 ## Technical Context
 
 **Language/Version**: Python 3.12+  
-**Primary Dependencies**: Django, HTMX, Django-Cotton, pytest, pytest-django, django-allauth (for SSO), pure-css  
-**Storage**: PostgreSQL (recommended) or SQLite (development)  
-**Testing**: pytest with pytest-django, following test pyramid (more unit tests, fewer integration tests)  
-**Target Platform**: Web (mobile-first, responsive)  
-**Project Type**: Web application  
-**Performance Goals**: Event pages load in under 2 seconds on mobile, support 1000+ topics per event without degradation  
-**Constraints**: Mobile-first design, WCAG 2.1 Level AA accessibility, no REST API (HTMX hypermedia only), Portuguese (pt-BR) primary language, timezone America/Sao_Paulo  
-**Scale/Scope**: Multiple events, 1000+ topics per event, unlimited users, rate limiting (10 topics/hour, 20 comments/hour per user)
+**Primary Dependencies**: Django, django-allauth (SSO), HTMX, django-cotton, pytest, pytest-django  
+**Storage**: PostgreSQL (production), SQLite (development)  
+**Testing**: pytest with pytest-django, following test pyramid (majority unit tests, fewer integration tests)  
+**Target Platform**: Web application (mobile-first, responsive design)  
+**Project Type**: Web application (Django backend with server-rendered HTML + HTMX)  
+**Performance Goals**: 
+- Event pages load in <2 seconds on mobile
+- Support 1000+ topics per event without degradation
+- Topic creation completes in <30 seconds on mobile
+- Event switching in <2 seconds
+
+**Constraints**: 
+- Mobile-first design (320px-768px width support)
+- WCAG 2.1 Level AA accessibility compliance
+- No REST API (HTMX hypermedia pattern only)
+- All templates receive DTOs (not QuerySets) to prevent N+1 queries
+- Business logic in use case layer (not models)
+
+**Scale/Scope**: 
+- Initial: Single event (Python Floripa)
+- Architecture supports multiple events from launch
+- Target: 1000+ topics per event, multiple concurrent users
+- Primary language: Portuguese (pt-BR), timezone: America/Sao_Paulo
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-### Pre-Research Gates
+### ✅ I. Test-Driven Development (TDD)
+- **Status**: COMPLIANT
+- **Verification**: All features will be developed using TDD (Red-Green-Refactor cycle)
+- **Enforcement**: Tests written before implementation code
 
-✅ **I. TDD**: All features will be developed using TDD (Red-Green-Refactor)  
-✅ **II. Django Framework**: Using Django with app-based architecture  
-✅ **III. pytest & Test Pyramid**: Using pytest with focus on unit tests for use cases/services, fewer integration tests  
-✅ **IV. HTMX Hypermedia Pattern**: Using HTMX with HTML responses and partial fragments (no REST API)  
-✅ **V. Django-Cotton Components**: Using Django-Cotton for component-based UI  
-✅ **VI. uv Dependency Management**: Using uv for package management  
-✅ **VII. justfile**: Using justfile for task automation  
-✅ **VIII. GitHub Actions**: CI/CD via GitHub Actions  
-✅ **IX. Pre-commit with Rust**: Using Rust-based pre-commit tools  
-✅ **X. N+1 Prevention with DTOs**: All templates receive dataclasses as DTOs, not QuerySets  
-✅ **XI. Use Case Layer**: Business logic in use cases/services, not models  
-✅ **XII. No REST API**: Hypermedia pattern only, no API endpoints
+### ✅ II. Django Framework
+- **Status**: COMPLIANT
+- **Verification**: Using Django with app-based architecture, custom user model (AbstractUser), Django ORM
+- **Custom User Model**: Required - will be implemented before first migration
 
-### Post-Design Gates
+### ✅ III. pytest Testing Framework and Test Pyramid
+- **Status**: COMPLIANT
+- **Verification**: pytest with pytest-django, test pyramid (majority unit tests for use cases/services, fewer integration tests)
+- **DTO Tests**: All DTO tests will include `assertNumQueries`
 
-✅ **I. TDD**: Plan includes TDD approach for all features  
-✅ **II. Django Framework**: Architecture follows Django app-based structure  
-✅ **III. pytest & Test Pyramid**: Test structure defined (unit tests in use_cases/services, integration tests for happy paths)  
-✅ **IV. HTMX Hypermedia Pattern**: All views return HTML (full pages or partial fragments), no JSON responses  
-✅ **V. Django-Cotton Components**: Component structure defined in `cotton/` directories  
-✅ **VI. uv Dependency Management**: Dependencies will be managed with uv  
-✅ **VII. justfile**: Task automation via justfile  
-✅ **VIII. GitHub Actions**: CI/CD will run tests automatically  
-✅ **IX. Pre-commit with Rust**: Pre-commit hooks will use Rust-based tools  
-✅ **X. N+1 Prevention with DTOs**: Architecture includes DTO layer, views convert QuerySets to DTOs before templates  
-✅ **XI. Use Case Layer**: Architecture clearly separates models, services, use cases, and views  
-✅ **XII. No REST API**: All contracts are HTMX views returning HTML, no API endpoints
+### ✅ IV. HTMX Hypermedia Pattern
+- **Status**: COMPLIANT
+- **Verification**: HTMX for all dynamic interactions, HTML responses with partial fragments (no REST API)
+- **Pattern**: Full pages for initial loads, partial fragments for HTMX requests
 
-**All gates pass.** Architecture fully aligns with constitution principles.
+### ✅ V. Component-Based UI with Django-Cotton
+- **Status**: COMPLIANT
+- **Verification**: Components in `cotton/` directories within Django apps, kebab-case naming
+
+### ✅ VI. uv Dependency Management
+- **Status**: COMPLIANT
+- **Verification**: Using uv for package management, pyproject.toml as source of truth
+
+### ✅ VII. justfile Task Automation
+- **Status**: COMPLIANT
+- **Verification**: Common tasks automated via justfile
+
+### ✅ VIII. GitHub Actions Continuous Integration
+- **Status**: COMPLIANT
+- **Verification**: CI workflow will run tests, linting, formatting on all pushes/PRs
+
+### ✅ IX. Pre-commit Hooks with Rust
+- **Status**: COMPLIANT
+- **Verification**: Rust-based pre-commit tools (prek/rustyhook) for code quality
+
+### ✅ X. N+1 Query Prevention with DTOs
+- **Status**: COMPLIANT
+- **Verification**: All templates receive dataclass DTOs, not QuerySets. All DTO tests include `assertNumQueries`
+
+### ✅ XI. Use Case Layer Architecture
+- **Status**: COMPLIANT
+- **Verification**: Business logic in use cases/services, models contain only data structure. Use cases return DTOs/simple objects
+
+### ✅ XII. No REST API (Current Version)
+- **Status**: COMPLIANT
+- **Verification**: HTMX hypermedia pattern only, no REST API endpoints
+
+### ✅ XIII. UUID v7 for Primary Keys
+- **Status**: COMPLIANT
+- **Verification**: All models use UUIDField with uuid.uuid7 default
+
+### ✅ XIV. SlugField for URL Routes
+- **Status**: COMPLIANT
+- **Verification**: Events and topics use SlugField for URLs, slugs auto-generated from titles with uniqueness guarantee
+
+**Overall Status**: ✅ ALL GATES PASSED - Ready for implementation
 
 ## Project Structure
 
@@ -62,10 +109,11 @@ FloripaTalks is a mobile-first web application for managing event topics where u
 ```text
 specs/001-event-topics-platform/
 ├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
+├── research.md          # Phase 0 output (/speckit.plan command) ✅ Complete
+├── data-model.md        # Phase 1 output (/speckit.plan command) ✅ Complete
+├── quickstart.md        # Phase 1 output (/speckit.plan command) ✅ Complete
+├── contracts/           # Phase 1 output (/speckit.plan command) ✅ Complete
+│   └── htmx-views.md    # HTMX view contracts
 └── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
@@ -87,7 +135,7 @@ floripatalks/
 │   └── asgi.py
 ├── events/                 # Django app: Events and Topics
 │   ├── __init__.py
-│   ├── models.py          # Event, Topic models (data only, no business rules)
+│   ├── models.py          # Event, Topic, Vote, Comment, PresenterSuggestion models (data only, no business rules)
 │   ├── managers.py        # Custom managers with is_deleted filtering
 │   ├── use_cases/         # Business logic orchestration
 │   │   ├── __init__.py
@@ -95,6 +143,7 @@ floripatalks/
 │   │   ├── edit_topic.py
 │   │   ├── delete_topic.py
 │   │   ├── vote_topic.py
+│   │   ├── unvote_topic.py
 │   │   ├── add_comment.py
 │   │   ├── edit_comment.py
 │   │   ├── delete_comment.py
@@ -138,7 +187,7 @@ floripatalks/
 │           └── suggestion.html
 ├── accounts/               # Django app: User authentication
 │   ├── __init__.py
-│   ├── models.py          # Custom user model if needed
+│   ├── models.py          # Custom user model (AbstractUser)
 │   ├── views.py           # SSO authentication views
 │   ├── urls.py
 │   └── templates/
@@ -162,16 +211,43 @@ floripatalks/
 │   └── conftest.py        # pytest fixtures
 └── static/
     ├── css/
-    │   └── pure-css/      # Pure CSS library (served from static, not CDN)
-    │       └── pure-min.css
+    │   └── pure-css/      # Pure CSS library
     └── js/
-        └── htmx.min.js     # HTMX library (served from static, not CDN)
+        └── htmx.min.js
 ```
 
-**Structure Decision**: Django web application structure with app-based architecture. Events app contains all topic/comment/vote functionality. Use case layer separates business logic from models. DTOs ensure N+1 prevention. Django-Cotton components in `cotton/` directories. HTMX partial fragments in `templates/partials/`.
+**Structure Decision**: Django web application structure with app-based architecture. Events app contains all topic-related functionality. Accounts app handles authentication. Core app provides shared utilities. Tests follow test pyramid structure (majority unit tests, fewer integration tests).
 
 ## Complexity Tracking
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-No violations detected. Architecture aligns with constitution principles.
+No violations - all constitution principles are followed.
+
+## Phase Status
+
+### Phase 0: Outline & Research ✅ COMPLETE
+- **research.md**: Generated with technology decisions (django-allauth, HTMX patterns, use case architecture)
+- All technical unknowns resolved
+- Best practices documented for all technology choices
+
+### Phase 1: Design & Contracts ✅ COMPLETE
+- **data-model.md**: Complete data model with all entities, relationships, and validation rules
+- **contracts/htmx-views.md**: HTMX view contracts defined (no REST API)
+- **quickstart.md**: Setup and development guide created
+- Agent context updated
+
+### Phase 2: Task Breakdown
+- **Status**: Pending `/speckit.tasks` command
+- **Next Step**: Run `/speckit.tasks` to generate implementation task list
+
+## Next Steps
+
+1. ✅ Constitution check passed
+2. ✅ Research completed (research.md)
+3. ✅ Data model designed (data-model.md)
+4. ✅ Contracts defined (contracts/htmx-views.md)
+5. ✅ Quickstart guide created (quickstart.md)
+6. ⏭️ **Run `/speckit.tasks`** to generate implementation task breakdown
+
+**Recommended next command**: `/speckit.tasks`

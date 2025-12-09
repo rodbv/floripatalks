@@ -30,6 +30,14 @@
 - Q: Should there be rate limiting to prevent abuse? → A: Basic rate limiting (e.g., 10 topics/hour, 20 comments/hour per user)
 - Q: Should users be able to search or filter topics? → A: No search/filtering in MVP (rely on vote-based sorting)
 
+### Session 2025-12-09 (Final)
+
+- Q: How should topic slugs be generated? → A: Automatically generated from title (using django.utils.text.slugify) with uniqueness guarantee (add numeric suffix if needed)
+- Q: When a user edits a topic title, should the slug be updated automatically? → A: Keep slug immutable after creation (preserves URL stability and shared links)
+- Q: How should comments be ordered in display? → A: Chronological order (oldest first)
+- Q: How should presenter suggestions be ordered/displayed? → A: Chronological order (oldest first)
+- Q: How many topics should be loaded per infinite scroll batch? → A: 20 topics per load
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - View and Browse Topics (Priority: P1)
@@ -98,7 +106,7 @@ A logged-in user can add comments to topics to discuss them or provide additiona
 **Acceptance Scenarios**:
 
 1. **Given** a user is logged in and viewing a topic, **When** they add a comment and submit it, **Then** their comment appears in the comments section with their name and timestamp
-2. **Given** a topic has multiple comments, **When** a user views that topic, **Then** they see all comments in chronological order
+2. **Given** a topic has multiple comments, **When** a user views that topic, **Then** they see all comments in chronological order (oldest first)
 3. **Given** a user is on mobile, **When** they add or view comments, **Then** the comment interface is optimized for mobile with readable text and easy input
 4. **Given** a user has created a comment, **When** they click edit on their own comment, **Then** they are taken to a dedicated edit page (not a modal) where they can modify the comment
 5. **Given** a user is editing their comment on a dedicated page, **When** they submit the changes, **Then** they are returned to the topic page with their updated comment displayed, and the browser back button works seamlessly
@@ -172,7 +180,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - What happens when a user suggests a presenter with invalid email format or broken URL? The system accepts the input but does not validate format (admins can review and clean up via admin interface).
 - How does the system handle users who are not logged in? Non-authenticated users can view topics in readonly mode but cannot vote, comment, add topics, or suggest presenters. When they click interactive buttons/links, a popup appears inviting them to sign in or sign up.
 - What happens when an event has no topics? The event page displays an empty state message encouraging users to add the first topic.
-- How does infinite scroll handle loading states? The system shows a loading indicator while fetching additional topics and handles end-of-list gracefully when all topics are loaded.
+- How does infinite scroll handle loading states? The system loads 20 topics per batch, shows a loading indicator while fetching additional topics, and handles end-of-list gracefully when all topics are loaded.
 - How does the system handle event switching when a user has unsaved changes (e.g., typing a comment)? The system should warn users about unsaved changes or auto-save draft content.
 - What happens when SSO authentication fails (provider unavailable, user cancels, network error)? The system displays a user-friendly error message explaining the issue and provides a retry option without losing context.
 - How does the system handle editing of user content? Users can edit their own topics, comments, and presenter suggestions on dedicated pages (not modals). The browser back button works seamlessly, and HTMX is used to minimize page refreshes during transitions.
@@ -188,8 +196,10 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-002**: System MUST allow users to authenticate via LinkedIn SSO
 - **FR-021**: System MUST handle SSO authentication failures by displaying user-friendly error messages with retry options
 - **FR-003**: System MUST display a list of topics for a selected event, ordered by vote count (descending), then by creation date (oldest first) for ties, showing topic title, vote count, and comment count
-- **FR-022**: System MUST implement infinite scroll for topics list, loading more topics as user scrolls down
+- **FR-022**: System MUST implement infinite scroll for topics list, loading 20 topics per batch as user scrolls down
 - **FR-004**: System MUST allow logged-in users to create new topics with a title (max 200 characters) and optional description (max 2000 characters)
+- **FR-038**: System MUST automatically generate a unique slug for each topic from its title (using django.utils.text.slugify), ensuring uniqueness within the event (add numeric suffix if duplicate)
+- **FR-039**: System MUST keep topic slugs immutable after creation (slug does not change when title is edited, preserving URL stability and shared links)
 - **FR-026**: System MUST allow logged-in users to edit their own topics
 - **FR-027**: System MUST allow logged-in users to delete their own topics (soft delete - content is marked as deleted and hidden from users but recoverable by admins)
 - **FR-005**: System MUST allow logged-in users to vote on topics (one vote per user per topic)
@@ -198,11 +208,11 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-007**: System MUST allow logged-in users to add comments to topics (max 1000 characters per comment)
 - **FR-024**: System MUST allow logged-in users to edit their own comments
 - **FR-025**: System MUST allow logged-in users to delete their own comments (soft delete - content is marked as deleted and hidden from users but recoverable by admins)
-- **FR-008**: System MUST display comments with commenter name and timestamp
+- **FR-008**: System MUST display comments with commenter name and timestamp, ordered chronologically (oldest first)
 - **FR-009**: System MUST allow logged-in users to suggest presenters for topics by providing email, URL, or full name, with a limit of 3 suggestions per user per topic and 10 total suggestions per topic
 - **FR-028**: System MUST allow logged-in users to edit their own presenter suggestions
 - **FR-029**: System MUST allow logged-in users to delete their own presenter suggestions (soft delete - content is marked as deleted and hidden from users but recoverable by admins)
-- **FR-010**: System MUST display presenter suggestions associated with topics
+- **FR-010**: System MUST display presenter suggestions associated with topics, ordered chronologically (oldest first)
 - **FR-011**: System MUST support multiple events, each with a unique URL slug
 - **FR-012**: System MUST allow users to switch between events using an event selector
 - **FR-013**: System MUST display topics specific to the selected event
@@ -225,7 +235,7 @@ A logged-in user can switch between different events using an event selector. Ea
 ### Key Entities *(include if feature involves data)*
 
 - **Event**: Represents a recurring event series (e.g., Python Floripa). Has a name, slug for URL, and optional description. Can have multiple topics associated with it.
-- **Topic**: Represents a suggested talk topic for an event. Has a title (max 200 characters), optional description (max 2000 characters), vote count, creation timestamp, creator, and is_deleted flag (indexed, defaults to False). Belongs to one event. Can have multiple comments and presenter suggestions. Soft-deleted topics are hidden from regular users but visible to admins.
+- **Topic**: Represents a suggested talk topic for an event. Has a title (max 200 characters), slug (auto-generated from title using django.utils.text.slugify, unique per event), optional description (max 2000 characters), vote count, creation timestamp, creator, and is_deleted flag (indexed, defaults to False). Belongs to one event. Can have multiple comments and presenter suggestions. Soft-deleted topics are hidden from regular users but visible to admins.
 - **Vote**: Represents a user's vote on a topic. Links a user to a topic. Each user can have only one vote per topic.
 - **Comment**: Represents a user's comment on a topic. Has text content (max 1000 characters), creation timestamp, author, and is_deleted flag (indexed, defaults to False). Belongs to one topic. Soft-deleted comments are hidden from regular users but visible to admins.
 - **Presenter Suggestion**: Represents a suggested presenter for a topic. Has either an email address, URL, or full name (at least one required), and is_deleted flag (indexed, defaults to False). Belongs to one topic. Limited to 3 suggestions per user per topic and 10 total suggestions per topic. Soft-deleted suggestions are hidden from regular users but visible to admins.
