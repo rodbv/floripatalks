@@ -1,0 +1,18 @@
+{
+  "git.showCommitInput": false,
+  "git.enableCommitSignOff": false,
+  "git.showCommitOutput": false,
+  "git.postCommitCommand": "none",
+  "notifications.showInStatusBar": false,
+  "git.confirmSync": false,
+  "git.confirmForceSync": false,
+  "git.useEditorAsCommitInput": false,
+  "git.enableSmartCommit": false,
+  "git.suggestSmartCommit": false,
+  "notifications.enabled": false,
+  "git.autofetch": false,
+  "git.autoRepositoryDetection": false,
+  "workbench.enableExperiments": false,
+  "git.decorations.enabled": false
+}
+
