@@ -130,9 +130,11 @@ Common development tasks MUST be automated using `justfile`:
 - Use descriptive task names and include help text
 - Make tasks composable and reusable
 - Document task dependencies and prerequisites
-- Include tasks for common workflows (e.g., `just test`, `just dev`, `just lint`)
+- Include tasks for common workflows (e.g., `just test`, `just dev`, `just migrate`, `just lint`)
+- **Use `just` commands instead of direct `uv run python manage.py` for ergonomics** (e.g., `just manage migrate` instead of `uv run python manage.py migrate`)
+- All Django management commands should be accessible via `just manage <command>`
 
-**Rationale**: `justfile` provides a simple, fast task runner that centralizes common commands, reduces manual errors, and improves developer productivity. It's more maintainable than shell scripts or complex Makefiles.
+**Rationale**: `justfile` provides a simple, fast task runner that centralizes common commands, reduces manual errors, and improves developer productivity. It's more maintainable than shell scripts or complex Makefiles. Using `just` commands improves ergonomics and makes the codebase more approachable for new developers.
 
 ### VIII. GitHub Actions Continuous Integration
 
