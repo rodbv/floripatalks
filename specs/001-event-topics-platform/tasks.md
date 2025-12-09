@@ -69,7 +69,7 @@
 
 ### GitHub Actions CI/CD
 
-- [ ] T025 [P] Create `.github/workflows/ci.yml` with workflow to:
+- [x] T025 [P] Create `.github/workflows/ci.yml` with workflow to:
   - Run on push and pull requests
   - Setup Python 3.12+ with uv
   - Install dependencies with `uv sync`
