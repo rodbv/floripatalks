@@ -41,9 +41,9 @@
 
 ### Django Apps and Structure
 
-- [ ] T009 [P] Create Django app `events`: run `python manage.py startapp events` in project root
-- [ ] T010 [P] Create Django app `accounts`: run `python manage.py startapp accounts` in project root
-- [ ] T011 [P] Create Django app `core`: run `python manage.py startapp core` in project root
+- [x] T009 [P] Create Django app `events`: run `python manage.py startapp events` in project root
+- [x] T010 [P] Create Django app `accounts`: run `python manage.py startapp accounts` in project root
+- [x] T011 [P] Create Django app `core`: run `python manage.py startapp core` in project root
 - [ ] T012 [P] Setup Django settings structure: create `floripatalks/settings/` directory with `__init__.py`, `base.py`, `development.py`, `production.py`
 - [ ] T013 [P] Configure `floripatalks/urls.py` with app routing: include `events.urls`, `accounts.urls`
 - [ ] T014 [P] Create `tests/` directory structure: `tests/unit/`, `tests/integration/`, `tests/conftest.py` with `__init__.py` files
@@ -58,7 +58,7 @@
 
 ### Development Tools
 
-- [ ] T020 [P] Create `justfile` with common tasks: `just test` (run pytest), `just dev` (runserver), `just migrate`, `just lint`, `just format`
+- [x] T020 [P] Create `justfile` with common tasks: `just test` (run pytest), `just dev` (runserver), `just migrate`, `just lint`, `just format`
 - [ ] T021 [P] Create `.gitignore` for Python/Django project (include `.venv/`, `.uv/`, `uv.lock`, `db.sqlite3`, `__pycache__/`, etc.)
 
 ### Pre-commit Hooks
