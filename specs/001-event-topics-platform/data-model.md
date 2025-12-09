@@ -209,19 +209,32 @@ To prevent N+1 queries when loading topics list:
 4. **Count comments**: Use `Count('comments', filter=Q(comments__is_deleted=False))` or denormalize
 5. **Convert to DTOs**: After optimization, convert QuerySet to dataclass DTOs before passing to templates
 
-## Soft Delete Implementation
+## Model Base Classes
 
-All models with soft delete (Topic, Comment, PresenterSuggestion) use:
+All models inherit from base classes defined in `core/models.py`:
+
+### BaseModel
+Abstract base model providing:
+- `id`: UUIDField(primary_key=True, default=uuid6.uuid6, editable=False) - UUID v6 primary key
+- `created_at`: DateTimeField(auto_now_add=True)
+- `updated_at`: DateTimeField(auto_now=True)
+
+### SoftDeleteModel
+Abstract model extending `BaseModel` with:
+- `is_deleted`: BooleanField(default=False, db_index=True)
+- `objects`: SoftDeleteManager (filters `is_deleted=False` by default)
+- `all_objects`: Manager (for accessing deleted records, admin use)
+
+### Usage
+- Models without soft delete: inherit from `BaseModel` (Event, Vote, User)
+- Models with soft delete: inherit from `SoftDeleteModel` (Topic, Comment, PresenterSuggestion)
+
+### SoftDeleteManager Implementation
 
 ```python
 class SoftDeleteManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_deleted=False)
-
-class Topic(models.Model):
-    objects = SoftDeleteManager()
-    all_objects = models.Manager()  # For admin access to deleted items
-    # ... fields ...
 ```
 
 Admin interface uses `all_objects` to access deleted items for recovery.

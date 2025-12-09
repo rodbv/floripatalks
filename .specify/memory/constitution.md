@@ -73,7 +73,19 @@ The project MUST use Django as the primary web framework, adhering to Django bes
 - Follow Django naming conventions and project structure
 - Use a custom user model inheriting from `AbstractUser` (not Django's default User model)
 
-**Rationale**: Django provides a robust, scalable foundation with built-in security features, admin interface, and a mature ecosystem. Consistency with Django conventions improves maintainability and developer onboarding. Using a custom user model from the start (Django best practice) prevents migration issues later and allows customization of user fields.
+**Model Base Classes**:
+- All models MUST inherit from `BaseModel` (defined in `core/models.py`) which provides:
+  - UUID v6 primary key (`id`)
+  - `created_at` timestamp (auto_now_add)
+  - `updated_at` timestamp (auto_now)
+- Models requiring soft delete MUST inherit from `SoftDeleteModel` (defined in `core/models.py`) which extends `BaseModel` with:
+  - `is_deleted` boolean field (indexed, default=False)
+  - Custom `SoftDeleteManager` that filters `is_deleted=False` by default
+  - `all_objects` manager for accessing deleted records (admin use)
+- Models that don't need soft delete inherit directly from `BaseModel`
+- This pattern ensures DRY, consistency, and maintainability across all models
+
+**Rationale**: Django provides a robust, scalable foundation with built-in security features, admin interface, and a mature ecosystem. Consistency with Django conventions improves maintainability and developer onboarding. Using a custom user model from the start (Django best practice) prevents migration issues later and allows customization of user fields. Base model classes eliminate code duplication, ensure consistency across models, and centralize common patterns like soft delete.
 
 ### III. pytest Testing Framework and Test Pyramid
 
@@ -374,4 +386,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.5.3 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.6.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
