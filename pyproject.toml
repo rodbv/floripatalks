@@ -1,7 +1,7 @@
 [project]
 name = "floripatalks"
 version = "0.1.0"
-description = "Add your description here"
+description = "Event topics platform for local Python community events"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
