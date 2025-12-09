@@ -1,15 +1,14 @@
 <!--
 Sync Impact Report:
-Version Change: 1.2.0 → 1.3.0 (added security and data model principles)
+Version Change: 1.3.0 → 1.4.0 (added AlpineJS for frontend state management)
 Modified Principles: 
-  - II. Django Framework (expanded with custom user model requirement)
+  - IV. HTMX Hypermedia Pattern (expanded to clarify AlpineJS usage)
 Added Sections: 
-  - XIII. UUID v7 for Primary Keys
-  - XIV. SlugField for URL Routes
-  - Custom User Model (added to Django Framework principle)
+  - XV. AlpineJS for Client-Side State Management
+  - AlpineJS added to Project Overview technology stack
 Removed Sections: None
 Templates Requiring Updates:
-  - .specify/templates/plan-template.md (✅ no changes needed - data model decisions)
+  - .specify/templates/plan-template.md (✅ no changes needed)
   - .specify/templates/spec-template.md (✅ no changes needed)
   - .specify/templates/tasks-template.md (✅ no changes needed)
 Follow-up TODOs: None
@@ -25,6 +24,7 @@ Follow-up TODOs: None
 - **Backend Framework**: Django
 - **Testing Framework**: pytest
 - **Frontend Enhancement**: HTMX
+- **Client-Side State**: AlpineJS (when needed)
 - **Component System**: Django-Cotton
 - **Package Manager**: uv
 - **Task Runner**: justfile
@@ -33,7 +33,7 @@ Follow-up TODOs: None
 
 **Development Methodology**: Test-Driven Development (TDD)
 
-**Rationale**: This is a web application built with Django, using HTMX for frontend interactivity and Django-Cotton for component-based UI. The project follows TDD principles with pytest, uses modern Python tooling (uv), and enforces code quality through automated CI/CD and pre-commit hooks.
+**Rationale**: This is a web application built with Django, using HTMX for frontend interactivity, AlpineJS for client-side state management when needed, and Django-Cotton for component-based UI. The project follows TDD principles with pytest, uses modern Python tooling (uv), and enforces code quality through automated CI/CD and pre-commit hooks.
 
 ## Core Principles
 
@@ -88,8 +88,9 @@ Frontend interactivity MUST be implemented using HTMX following hypermedia princ
 - Use HTMX events for complex interactions when needed
 - Maintain progressive enhancement: core functionality works without JavaScript
 - The system does NOT have a REST API in the current version (may exist in the future)
+- For client-side state management and simple interactions that don't require server communication, use AlpineJS (see Principle XV)
 
-**Rationale**: HTMX enables dynamic, interactive UIs without writing extensive JavaScript, keeping the frontend simple and maintainable while leveraging Django's template system. The hypermedia pattern (HTML responses with partial fragments) aligns with HTMX best practices and provides a simpler, more maintainable architecture than traditional REST APIs.
+**Rationale**: HTMX enables dynamic, interactive UIs without writing extensive JavaScript, keeping the frontend simple and maintainable while leveraging Django's template system. The hypermedia pattern (HTML responses with partial fragments) aligns with HTMX best practices and provides a simpler, more maintainable architecture than traditional REST APIs. AlpineJS complements HTMX by handling client-side state when server communication is not needed.
 
 ### V. Component-Based UI with Django-Cotton
 
@@ -217,6 +218,19 @@ Events and topics MUST use Django SlugField for URL-friendly identifiers:
 
 **Rationale**: Slugs provide human-readable, SEO-friendly URLs while maintaining security through UUID primary keys. Users can share meaningful URLs (e.g., `/events/python-floripa/`) while the system uses UUIDs internally for security. This follows Django best practices for URL design.
 
+### XV. AlpineJS for Client-Side State Management
+
+AlpineJS MUST be used for simple client-side state control and interactions when server communication is not required:
+
+- Use AlpineJS for local UI state management (toggles, dropdowns, form validation feedback, etc.)
+- Serve AlpineJS from static files (not CDN) for better control and offline capability
+- Prefer HTMX for server-driven interactions; use AlpineJS only when client-side state is sufficient
+- Keep AlpineJS usage minimal and focused on simple state management
+- AlpineJS directives (`x-data`, `x-show`, `x-if`, `x-for`, etc.) should be used inline in templates
+- Do not create complex AlpineJS components - prefer Django-Cotton components for reusable UI patterns
+
+**Rationale**: AlpineJS provides lightweight client-side reactivity without the overhead of larger JavaScript frameworks. It complements HTMX by handling simple UI state (modals, dropdowns, form toggles) that don't require server communication. Serving from static files ensures better control, versioning, and offline capability. Keeping AlpineJS usage minimal maintains the simplicity of the HTMX hypermedia approach.
+
 ## Development Workflow
 
 ### Code Review Requirements
@@ -268,4 +282,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.3.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.4.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09

@@ -7,16 +7,16 @@
 
 ## Summary
 
-FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX, and Django-Cotton following TDD principles with a use case layer architecture.
+FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX, AlpineJS (for client-side state), and Django-Cotton following TDD principles with a use case layer architecture.
 
 ## Technical Context
 
 **Language/Version**: Python 3.12+  
-**Primary Dependencies**: Django, django-allauth (SSO), HTMX, django-cotton, pytest, pytest-django  
+**Primary Dependencies**: Django, django-allauth (SSO), HTMX, AlpineJS, django-cotton, pytest, pytest-django  
 **Storage**: PostgreSQL (production), SQLite (development)  
 **Testing**: pytest with pytest-django, following test pyramid (majority unit tests, fewer integration tests)  
 **Target Platform**: Web application (mobile-first, responsive design)  
-**Project Type**: Web application (Django backend with server-rendered HTML + HTMX)  
+**Project Type**: Web application (Django backend with server-rendered HTML + HTMX + AlpineJS)  
 **Performance Goals**: 
 - Event pages load in <2 seconds on mobile
 - Support 1000+ topics per event without degradation
@@ -59,6 +59,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 - **Status**: COMPLIANT
 - **Verification**: HTMX for all dynamic interactions, HTML responses with partial fragments (no REST API)
 - **Pattern**: Full pages for initial loads, partial fragments for HTMX requests
+- **AlpineJS**: Used for client-side state management when server communication is not needed
 
 ### ✅ V. Component-Based UI with Django-Cotton
 - **Status**: COMPLIANT
@@ -99,6 +100,11 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 ### ✅ XIV. SlugField for URL Routes
 - **Status**: COMPLIANT
 - **Verification**: Events and topics use SlugField for URLs, slugs auto-generated from titles with uniqueness guarantee
+
+### ✅ XV. AlpineJS for Client-Side State Management
+- **Status**: COMPLIANT
+- **Verification**: AlpineJS used for simple client-side state (toggles, dropdowns, form validation), served from static files
+- **Usage**: Minimal and focused - HTMX for server interactions, AlpineJS for local UI state
 
 **Overall Status**: ✅ ALL GATES PASSED - Ready for implementation
 
@@ -213,7 +219,8 @@ floripatalks/
     ├── css/
     │   └── pure-css/      # Pure CSS library
     └── js/
-        └── htmx.min.js
+        ├── htmx.min.js
+        └── alpine.min.js  # AlpineJS for client-side state management
 ```
 
 **Structure Decision**: Django web application structure with app-based architecture. Events app contains all topic-related functionality. Accounts app handles authentication. Core app provides shared utilities. Tests follow test pyramid structure (majority unit tests, fewer integration tests).
