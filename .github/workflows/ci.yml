@@ -27,7 +27,16 @@ jobs:
         run: uv sync
 
       - name: Run tests
-        run: uv run pytest
+        run: |
+          uv run pytest --maxfail=1 || {
+            EXIT_CODE=$?
+            if [ $EXIT_CODE -eq 5 ]; then
+              echo "No tests found - this is expected in early phases"
+              exit 0
+            else
+              exit $EXIT_CODE
+            fi
+          }
         env:
           DJANGO_SETTINGS_MODULE: floripatalks.settings.development
 
