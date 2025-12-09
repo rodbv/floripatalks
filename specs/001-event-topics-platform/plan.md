@@ -7,7 +7,7 @@
 
 ## Summary
 
-FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX, AlpineJS (for client-side state), and Django-Cotton following TDD principles with a use case layer architecture.
+FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX (for server-driven interactions), AlpineJS (for client-side state management), and Django-Cotton following TDD principles with a use case layer architecture.
 
 ## Technical Context
 
@@ -29,6 +29,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 - No REST API (HTMX hypermedia pattern only)
 - All templates receive DTOs (not QuerySets) to prevent N+1 queries
 - Business logic in use case layer (not models)
+- AlpineJS for client-side state (popups, toggles, form validation), HTMX for server interactions
 
 **Scale/Scope**: 
 - Initial: Single event (Python Floripa)
@@ -103,8 +104,13 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 
 ### ✅ XV. AlpineJS for Client-Side State Management
 - **Status**: COMPLIANT
-- **Verification**: AlpineJS used for simple client-side state (toggles, dropdowns, form validation), served from static files
-- **Usage**: Minimal and focused - HTMX for server interactions, AlpineJS for local UI state
+- **Verification**: AlpineJS used for simple client-side state (popups, toggles, form validation, modals), served from static files
+- **Usage Patterns**:
+  - Sign-in popups: AlpineJS for toggle (x-show/x-if), HTMX for authentication
+  - Form validation: AlpineJS for client-side feedback, HTMX for submission
+  - Event selector: AlpineJS for dropdown toggle, HTMX to load content
+  - Confirmation dialogs: AlpineJS for modal toggle, HTMX to execute action
+  - Loading indicators: HTMX native (hx-indicator) as default, AlpineJS optional for custom states
 
 **Overall Status**: ✅ ALL GATES PASSED - Ready for implementation
 
@@ -198,7 +204,7 @@ floripatalks/
 │   ├── urls.py
 │   └── templates/
 │       └── accounts/
-│           └── login_popup.html
+│           └── login_popup.html  # AlpineJS popup component
 ├── core/                   # Shared utilities
 │   ├── __init__.py
 │   ├── middleware.py      # Rate limiting middleware
@@ -223,7 +229,7 @@ floripatalks/
         └── alpine.min.js  # AlpineJS for client-side state management
 ```
 
-**Structure Decision**: Django web application structure with app-based architecture. Events app contains all topic-related functionality. Accounts app handles authentication. Core app provides shared utilities. Tests follow test pyramid structure (majority unit tests, fewer integration tests).
+**Structure Decision**: Django web application structure with app-based architecture. Events app contains all topic-related functionality. Accounts app handles authentication. Core app provides shared utilities. Tests follow test pyramid structure (majority unit tests, fewer integration tests). AlpineJS and HTMX work together: AlpineJS for client-side UI state, HTMX for server interactions.
 
 ## Complexity Tracking
 
@@ -234,9 +240,9 @@ No violations - all constitution principles are followed.
 ## Phase Status
 
 ### Phase 0: Outline & Research ✅ COMPLETE
-- **research.md**: Generated with technology decisions (django-allauth, HTMX patterns, use case architecture)
+- **research.md**: Generated with technology decisions (django-allauth, HTMX patterns, use case architecture, AlpineJS integration patterns)
 - All technical unknowns resolved
-- Best practices documented for all technology choices
+- Best practices documented for all technology choices including AlpineJS usage patterns
 
 ### Phase 1: Design & Contracts ✅ COMPLETE
 - **data-model.md**: Complete data model with all entities, relationships, and validation rules
@@ -248,6 +254,18 @@ No violations - all constitution principles are followed.
 - **Status**: Pending `/speckit.tasks` command
 - **Next Step**: Run `/speckit.tasks` to generate implementation task list
 
+## AlpineJS/HTMX Integration Patterns
+
+Based on clarifications, the following patterns are established:
+
+1. **Sign-in Popups**: AlpineJS (`x-show`/`x-if`) for toggle, HTMX for authentication flow
+2. **Form Validation**: AlpineJS for real-time client-side feedback (character count, validation), HTMX for form submission and server-side validation
+3. **Event Selector**: AlpineJS for dropdown toggle, HTMX to load selected event content
+4. **Confirmation Dialogs**: AlpineJS for modal toggle, HTMX to execute confirmed actions
+5. **Loading Indicators**: HTMX native (`hx-indicator`) as default, AlpineJS optional for custom loading states
+
+**General Rule**: AlpineJS for client-side UI state (no server communication needed), HTMX for all server interactions.
+
 ## Next Steps
 
 1. ✅ Constitution check passed
@@ -255,6 +273,7 @@ No violations - all constitution principles are followed.
 3. ✅ Data model designed (data-model.md)
 4. ✅ Contracts defined (contracts/htmx-views.md)
 5. ✅ Quickstart guide created (quickstart.md)
-6. ⏭️ **Run `/speckit.tasks`** to generate implementation task breakdown
+6. ✅ AlpineJS integration patterns documented
+7. ⏭️ **Run `/speckit.tasks`** to generate implementation task breakdown
 
 **Recommended next command**: `/speckit.tasks`

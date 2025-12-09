@@ -104,6 +104,31 @@ All technical decisions align with the constitution and existing specifications.
 - Hard delete: Rejected - no recovery option
 - Separate archive table: Rejected - unnecessary complexity for MVP
 
+### AlpineJS for Client-Side State Management
+
+**Decision**: Use AlpineJS for simple client-side state and interactions when server communication is not required
+
+**Rationale**:
+- Aligns with constitution principle XV (AlpineJS for Client-Side State Management)
+- Complements HTMX by handling UI state that doesn't need server communication
+- Lightweight (small bundle size) compared to larger JavaScript frameworks
+- Served from static files for better control and offline capability
+- Minimal usage maintains simplicity of HTMX hypermedia approach
+
+**Implementation Patterns** (based on clarifications):
+- **Sign-in popups**: AlpineJS (`x-show`/`x-if`) for toggle, HTMX for authentication flow
+- **Form validation**: AlpineJS for real-time client-side feedback (character count, validation), HTMX for submission
+- **Event selector**: AlpineJS for dropdown toggle, HTMX to load selected event content
+- **Confirmation dialogs**: AlpineJS for modal toggle, HTMX to execute confirmed actions
+- **Loading indicators**: HTMX native (`hx-indicator`) as default, AlpineJS optional for custom states
+
+**General Rule**: AlpineJS for client-side UI state (no server communication), HTMX for all server interactions.
+
+**Alternatives considered**:
+- Vanilla JavaScript: Rejected - AlpineJS provides better reactivity with less code
+- Larger frameworks (React, Vue): Rejected - too heavy for simple state management needs
+- HTMX for everything: Rejected - some UI interactions (popups, toggles) don't need server communication
+
 ### Rate Limiting
 
 **Decision**: Use Django middleware or django-ratelimit for rate limiting

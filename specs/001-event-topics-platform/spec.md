@@ -38,6 +38,14 @@
 - Q: How should presenter suggestions be ordered/displayed? → A: Chronological order (oldest first)
 - Q: How many topics should be loaded per infinite scroll batch? → A: 20 topics per load
 
+### Session 2025-12-09 (AlpineJS Integration)
+
+- Q: How should the sign-in popup be implemented when non-authenticated users click interactive buttons? → A: AlpineJS for popup toggle (x-show/x-if), HTMX for authentication when user clicks "Sign in"
+- Q: How should form validation feedback be implemented (e.g., character count, real-time error messages)? → A: AlpineJS for client-side validation/feedback (character count, real-time errors), HTMX for form submission and server-side validation
+- Q: How should the event selector work in the interface? → A: Dropdown/select with AlpineJS for toggle, HTMX to load content of selected event
+- Q: How should confirmation dialogs (e.g., delete confirmation) be implemented? → A: AlpineJS for confirmation modal toggle, HTMX to execute action after confirmation
+- Q: How should loading indicators be implemented for HTMX requests? → A: HTMX native (hx-indicator) as default, AlpineJS optional for custom loading states when needed
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - View and Browse Topics (Priority: P1)
@@ -74,7 +82,7 @@ A logged-in user can create a new topic suggestion for an event. They provide a 
 4. **Given** a user is on mobile, **When** they add a topic, **Then** the form is easy to use with mobile-friendly input fields
 5. **Given** a user has created a topic, **When** they click edit on their own topic, **Then** they are taken to a dedicated edit page (not a modal) where they can modify the topic
 6. **Given** a user is editing their topic on a dedicated page, **When** they submit the changes, **Then** they are returned to the topic list or detail page with their updated topic displayed, and the browser back button works seamlessly
-7. **Given** a user has created a topic, **When** they click delete on their own topic, **Then** the topic is removed after confirmation
+7. **Given** a user has created a topic, **When** they click delete on their own topic, **Then** a confirmation modal appears (AlpineJS), and after confirmation, the topic is removed via HTMX
 
 ---
 
@@ -110,7 +118,7 @@ A logged-in user can add comments to topics to discuss them or provide additiona
 3. **Given** a user is on mobile, **When** they add or view comments, **Then** the comment interface is optimized for mobile with readable text and easy input
 4. **Given** a user has created a comment, **When** they click edit on their own comment, **Then** they are taken to a dedicated edit page (not a modal) where they can modify the comment
 5. **Given** a user is editing their comment on a dedicated page, **When** they submit the changes, **Then** they are returned to the topic page with their updated comment displayed, and the browser back button works seamlessly
-6. **Given** a user has created a comment, **When** they click delete on their own comment, **Then** the comment is removed after confirmation
+6. **Given** a user has created a comment, **When** they click delete on their own comment, **Then** a confirmation modal appears (AlpineJS), and after confirmation, the comment is removed via HTMX
 
 ---
 
@@ -130,7 +138,7 @@ A logged-in user can suggest a person who could present a topic. They can provid
 4. **Given** multiple presenter suggestions exist for a topic, **When** a user views that topic, **Then** they see all suggested presenters
 5. **Given** a user has created a presenter suggestion, **When** they click edit on their own suggestion, **Then** they are taken to a dedicated edit page (not a modal) where they can modify the suggestion
 6. **Given** a user is editing their presenter suggestion on a dedicated page, **When** they submit the changes, **Then** they are returned to the topic page with their updated suggestion displayed, and the browser back button works seamlessly
-7. **Given** a user has created a presenter suggestion, **When** they click delete on their own suggestion, **Then** the suggestion is removed after confirmation
+7. **Given** a user has created a presenter suggestion, **When** they click delete on their own suggestion, **Then** a confirmation modal appears (AlpineJS), and after confirmation, the suggestion is removed via HTMX
 
 ---
 
@@ -171,7 +179,7 @@ A logged-in user can switch between different events using an event selector. Ea
 ### Edge Cases
 
 - What happens when a user tries to add a topic with an empty title? The system should prevent submission and show an error message.
-- What happens when a user exceeds character limits? The system should prevent submission, show an error message indicating the limit, and display the current character count.
+- What happens when a user exceeds character limits? The system uses AlpineJS to display real-time character count and prevent submission when limit is reached, shows an error message indicating the limit, and HTMX handles form submission with server-side validation.
 - What happens when a user tries to add more than 3 presenter suggestions to a topic? The system should prevent the addition and show an error message indicating the per-user limit.
 - What happens when a topic already has 10 presenter suggestions? The system should prevent new suggestions and show an error message indicating the topic has reached the maximum number of suggestions.
 - How does the system handle duplicate topics? Users can create topics with similar titles, but the system should allow this (admins can manage duplicates via admin interface).
@@ -180,7 +188,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - What happens when a user suggests a presenter with invalid email format or broken URL? The system accepts the input but does not validate format (admins can review and clean up via admin interface).
 - How does the system handle users who are not logged in? Non-authenticated users can view topics in readonly mode but cannot vote, comment, add topics, or suggest presenters. When they click interactive buttons/links, a popup appears inviting them to sign in or sign up.
 - What happens when an event has no topics? The event page displays an empty state message encouraging users to add the first topic.
-- How does infinite scroll handle loading states? The system loads 20 topics per batch, shows a loading indicator while fetching additional topics, and handles end-of-list gracefully when all topics are loaded.
+- How does infinite scroll handle loading states? The system loads 20 topics per batch, uses HTMX native loading indicators (hx-indicator) while fetching additional topics, and handles end-of-list gracefully when all topics are loaded. AlpineJS may be used for custom loading states if needed.
 - How does the system handle event switching when a user has unsaved changes (e.g., typing a comment)? The system should warn users about unsaved changes or auto-save draft content.
 - What happens when SSO authentication fails (provider unavailable, user cancels, network error)? The system displays a user-friendly error message explaining the issue and provides a retry option without losing context.
 - How does the system handle editing of user content? Users can edit their own topics, comments, and presenter suggestions on dedicated pages (not modals). The browser back button works seamlessly, and HTMX is used to minimize page refreshes during transitions.
@@ -214,7 +222,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-029**: System MUST allow logged-in users to delete their own presenter suggestions (soft delete - content is marked as deleted and hidden from users but recoverable by admins)
 - **FR-010**: System MUST display presenter suggestions associated with topics, ordered chronologically (oldest first)
 - **FR-011**: System MUST support multiple events, each with a unique URL slug
-- **FR-012**: System MUST allow users to switch between events using an event selector
+- **FR-012**: System MUST allow users to switch between events using an event selector (dropdown with AlpineJS for toggle, HTMX to load event content)
 - **FR-013**: System MUST display topics specific to the selected event
 - **FR-014**: System MUST provide Django admin interface for admins to manage topics, comments, presenter suggestions, users, and events
 - **FR-036**: System MUST implement soft delete for topics, comments, and presenter suggestions (marked as deleted, hidden from regular users, recoverable by admins)
@@ -222,7 +230,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-015**: System MUST be mobile-first, with all functionality accessible and usable on mobile devices
 - **FR-016**: System MUST meet accessibility standards (WCAG 2.1 Level AA compliance)
 - **FR-017**: System MUST allow non-authenticated users to view topics but require authentication for voting, commenting, adding topics, and suggesting presenters
-- **FR-030**: System MUST display popups inviting non-authenticated users to sign in or sign up when they click interactive buttons/links (vote, comment, add topic, suggest presenter)
+- **FR-030**: System MUST display popups inviting non-authenticated users to sign in or sign up when they click interactive buttons/links (vote, comment, add topic, suggest presenter). Popup toggle uses AlpineJS (x-show/x-if), authentication uses HTMX
 - **FR-031**: System MUST provide edit functionality on dedicated pages (not modals/popups) for topics, comments, and presenter suggestions
 - **FR-032**: System MUST ensure browser back button works seamlessly when navigating to and from edit pages
 - **FR-033**: System MUST use HTMX to minimize page refreshes for all transitions, maintaining smooth user experience
@@ -268,7 +276,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - Presenter suggestions are informational only and do not require validation or contact
 - The system starts with one event (Python Floripa) but architecture supports multiple events from launch
 - Mobile-first means the interface is designed for mobile but works on desktop
-- Pure CSS library will be used for styling (no JavaScript frameworks beyond HTMX)
+- Pure CSS library will be used for styling. HTMX for server-driven interactions, AlpineJS for client-side state management (popups, toggles, form validation feedback)
 - Users can edit and delete their own topics, comments, and presenter suggestions
 - Editing occurs on dedicated pages (not modals) to ensure mobile-friendliness and proper browser navigation
 - HTMX is used for all page transitions to minimize refreshes and provide smooth user experience
