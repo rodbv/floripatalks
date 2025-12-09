@@ -58,3 +58,19 @@ line-ending = "lf"
 profile = "black"
 line_length = 100
 known_first_party = ["floripatalks", "events", "accounts", "core"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "floripatalks.settings.development"
+python_files = ["tests.py", "test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+addopts = [
+    "--strict-markers",
+    "--tb=short",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow running tests",
+]

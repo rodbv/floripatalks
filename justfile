@@ -31,13 +31,17 @@ test *args:
 test-cov:
     uv run pytest --cov --cov-report=html
 
-# Run linting (when configured)
+# Run linting (ruff)
 lint:
-    @echo "Linting not yet configured"
+    uv run ruff check .
 
-# Run formatting (when configured)
+# Run formatting (ruff)
 format:
-    @echo "Formatting not yet configured"
+    uv run ruff format .
+
+# Check formatting without modifying files
+format-check:
+    uv run ruff format --check .
 
 # Install/update dependencies
 sync:
