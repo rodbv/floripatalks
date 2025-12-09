@@ -5,10 +5,13 @@ description = "Event topics platform for local Python community events"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "cryptography>=46.0.3",
     "django>=6.0",
     "django-allauth>=65.13.1",
     "django-cotton>=2.5.1",
     "django-htmx>=1.27.0",
+    "pyjwt>=2.10.1",
     "pytest>=9.0.2",
     "pytest-django>=4.11.1",
+    "requests>=2.32.5",
 ]
