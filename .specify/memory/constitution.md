@@ -1,9 +1,9 @@
 <!--
 Sync Impact Report:
 Version Change: 1.4.0 → 1.5.0 (added GitHub issues and branch naming requirements)
-Modified Principles: 
+Modified Principles:
   - Development Workflow (expanded with GitHub issues and branch naming)
-Added Sections: 
+Added Sections:
   - GitHub Issues and Branch Naming (added to Development Workflow)
 Removed Sections: None
 Templates Requiring Updates:
@@ -28,7 +28,7 @@ Follow-up TODOs: None
 - **Package Manager**: uv
 - **Task Runner**: justfile
 - **CI/CD**: GitHub Actions
-- **Pre-commit**: Rust-based tools (prek/rustyhook)
+- **Pre-commit**: pre-commit framework
 
 **Development Methodology**: Test-Driven Development (TDD)
 
@@ -153,17 +153,19 @@ The CI workflow MUST:
 
 **Rationale**: Automated testing in CI ensures code quality, prevents regressions, and provides confidence in merges. Early detection of issues reduces debugging time and maintains codebase health.
 
-### IX. Pre-commit Hooks with Rust
+### IX. Pre-commit Hooks
 
-Code quality checks MUST be enforced via pre-commit hooks using Rust-based tools:
+Code quality checks MUST be enforced via pre-commit hooks:
 
-- Use Rust-based pre-commit runners (e.g., `prek` or `rustyhook`) for performance
+- Use `pre-commit` (Python-based) for hook management
+- Install with: `uv add --dev pre-commit` or `pip install pre-commit`
 - Configure hooks for: code formatting, linting, type checking, security scanning
+- Initialize with: `pre-commit install`
 - Ensure hooks run quickly to not impede development workflow
 - All hooks MUST pass before commits are accepted
 - Document hook configuration and requirements
 
-**Rationale**: Rust-based pre-commit tools offer superior performance compared to Python-based alternatives. Pre-commit hooks catch issues early, enforce code standards, and maintain codebase consistency without requiring manual intervention.
+**Rationale**: Pre-commit hooks catch issues early, enforce code standards, and maintain codebase consistency without requiring manual intervention. The standard `pre-commit` framework is well-maintained, widely used, and integrates seamlessly with Python projects.
 
 ### X. N+1 Query Prevention with DTOs
 

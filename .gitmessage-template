@@ -1,7 +1,7 @@
 # Commit Message Guidelines
-# 
+#
 # Format: <type>: <subject>
-# 
+#
 # Types:
 #   feat: New feature
 #   fix: Bug fix
@@ -10,10 +10,10 @@
 #   test: Tests
 #   chore: Maintenance (deps, config, etc)
 #   style: Formatting
-# 
+#
 # Subject: 50 chars max, imperative mood
 # Body: 72 chars per line, max 200 chars total
-# 
+#
 # Examples:
 # feat: Add HTMX infinite scroll
 # fix: Resolve static files warning
@@ -21,4 +21,3 @@
 # refactor: Split settings into base/dev/prod
 # test: Add TopicService unit tests
 # chore: Update Django to 6.0
-

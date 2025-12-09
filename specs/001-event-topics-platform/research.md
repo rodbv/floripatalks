@@ -14,7 +14,7 @@ All technical decisions align with the constitution and existing specifications.
 
 **Decision**: Use django-allauth for Google and LinkedIn SSO authentication
 
-**Rationale**: 
+**Rationale**:
 - django-allauth is the standard Django library for social authentication
 - Supports Google and LinkedIn OAuth2 out of the box
 - Handles token management, user creation, and session management
@@ -241,4 +241,3 @@ Proceed to Phase 1: Design & Contracts to create:
 - Data model with entities and relationships
 - HTMX view contracts (not REST API)
 - Quickstart guide
-

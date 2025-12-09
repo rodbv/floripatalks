@@ -1,11 +1,9 @@
 """
 Pytest configuration and shared fixtures for FloripaTalks tests.
 """
-import pytest
-from django.conf import settings
 
 # Configure Django settings for pytest
-pytest_plugins = ['pytest_django']
+pytest_plugins = ["pytest_django"]
 
 # Fixtures will be added as needed in Phase 2 and beyond
 # Example:
@@ -13,4 +11,3 @@ pytest_plugins = ['pytest_django']
 # def user():
 #     from accounts.models import User
 #     return User.objects.create_user(...)
-

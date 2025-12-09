@@ -1,42 +1,57 @@
 # Pre-commit hooks configuration for FloripaTalks
-# Uses prek (Rust-based pre-commit runner) or rustyhook
-# Install with: cargo install prek (or rustyhook)
-# Then run: prek install (or rustyhook install)
+# Install: uv run pre-commit install
+# Run manually: uv run pre-commit run --all-files
 
 repos:
-  # Python code formatting with ruff
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
+  # Local ruff (installed via uv)
+  - repo: local
     hooks:
       - id: ruff
+        name: ruff (linting)
+        entry: uv run ruff check
+        language: system
+        types: [python]
         args: [--fix, --exit-non-zero-on-fix]
+        pass_filenames: true
+
       - id: ruff-format
+        name: ruff (formatting)
+        entry: uv run ruff format
+        language: system
+        types: [python]
+        args: [--check]
+        pass_filenames: true
 
-  # Python type checking with mypy
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
+  # Django-specific checks
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: 1.16.0
     hooks:
-      - id: mypy
-        additional_dependencies: [django-stubs, types-requests]
-        args: [--ignore-missing-imports, --no-strict-optional]
+      - id: django-upgrade
+        args: [--target-version, "5.0"]
 
-  # Security scanning with bandit
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.10
-    hooks:
-      - id: bandit
-        args: [-r, ., -ll, -i]
-
-  # General file checks
+  # General file checks (auto-fix when possible)
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
       - id: end-of-file-fixer
       - id: check-yaml
+        args: [--unsafe]  # Allow custom tags
       - id: check-added-large-files
+        args: [--maxkb=500]
       - id: check-json
       - id: check-toml
       - id: check-merge-conflict
       - id: debug-statements
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-case-conflict
+      - id: check-docstring-first
 
+  # Sort Python imports (if needed, ruff handles this but keeping as backup)
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=100]

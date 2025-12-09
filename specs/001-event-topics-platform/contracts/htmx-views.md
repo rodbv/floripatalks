@@ -507,4 +507,3 @@ Rate limiting applied at view level:
 - Topic creation: 10 per hour per user
 - Comment creation: 20 per hour per user
 - Returns 429 Too Many Requests with HTML error message showing retry time
-

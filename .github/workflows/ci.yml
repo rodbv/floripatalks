@@ -9,33 +9,32 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           version: "latest"
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      
+
       - name: Install dependencies
         run: uv sync
-      
+
       - name: Run tests
         run: uv run pytest
         env:
           DJANGO_SETTINGS_MODULE: floripatalks.settings.development
-      
+
       - name: Run linting (ruff)
         run: uv run ruff check . || true
         continue-on-error: true
-      
+
       - name: Run formatting check (ruff format)
         run: uv run ruff format --check . || true
         continue-on-error: true
-

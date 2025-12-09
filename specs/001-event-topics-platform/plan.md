@@ -17,13 +17,13 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 **Testing**: pytest with pytest-django, following test pyramid (majority unit tests, fewer integration tests)  
 **Target Platform**: Web application (mobile-first, responsive design)  
 **Project Type**: Web application (Django backend with server-rendered HTML + HTMX + AlpineJS)  
-**Performance Goals**: 
+**Performance Goals**:
 - Event pages load in <2 seconds on mobile
 - Support 1000+ topics per event without degradation
 - Topic creation completes in <30 seconds on mobile
 - Event switching in <2 seconds
 
-**Constraints**: 
+**Constraints**:
 - Mobile-first design (320px-768px width support)
 - WCAG 2.1 Level AA accessibility compliance
 - No REST API (HTMX hypermedia pattern only)
@@ -31,7 +31,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 - Business logic in use case layer (not models)
 - AlpineJS for client-side state (popups, toggles, form validation), HTMX for server interactions
 
-**Scale/Scope**: 
+**Scale/Scope**:
 - Initial: Single event (Python Floripa)
 - Architecture supports multiple events from launch
 - Target: 1000+ topics per event, multiple concurrent users

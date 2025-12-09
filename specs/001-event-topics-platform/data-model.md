@@ -225,4 +225,3 @@ class Topic(models.Model):
 ```
 
 Admin interface uses `all_objects` to access deleted items for recovery.
-

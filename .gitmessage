@@ -1,5 +1,5 @@
 # <type>: <subject> (max 50 chars)
-# 
+#
 # <body> (wrap at 72 chars, max 200 chars total)
 #
 # Examples:
@@ -9,4 +9,3 @@
 # refactor: Simplify settings structure
 # test: Add unit tests for TopicService
 # chore: Update dependencies
-

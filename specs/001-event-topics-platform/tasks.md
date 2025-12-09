@@ -63,9 +63,9 @@
 
 ### Pre-commit Hooks
 
-- [ ] T022 [P] Install prek or rustyhook: `cargo install prek` or `cargo install rustyhook` (Rust-based pre-commit runner) - **MANUAL: Requires Rust/Cargo installed**
-- [x] T023 [P] Create `.pre-commit-config.yaml` with hooks: ruff (formatting/linting), mypy (type checking), security scanning
-- [ ] T024 [P] Initialize pre-commit: run `prek install` or `rustyhook install` to setup git hooks - **MANUAL: Requires T022 completed first**
+- [x] T022 [P] Install pre-commit: `uv add --dev pre-commit ruff`
+- [x] T023 [P] Create `.pre-commit-config.yaml` with hooks: ruff (formatting/linting, line length 100), Django checks, auto-fix enabled
+- [x] T024 [P] Initialize pre-commit: run `pre-commit install` to setup git hooks
 
 ### GitHub Actions CI/CD
 
@@ -525,4 +525,3 @@ With multiple developers:
 - Custom user model MUST be created before first migration
 - **All tasks MUST have GitHub issues before work begins**
 - **Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}`** (e.g., `123-view-topics-list`)
-

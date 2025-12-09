@@ -62,4 +62,3 @@ collectstatic:
 # Show Django version
 version:
     uv run python manage.py --version
-
