@@ -199,14 +199,14 @@
 - [ ] T090 [US2] Create topic creation view in `events/views.py` for GET/POST `/topics/create/`
 - [ ] T091 [US2] Create topic edit view in `events/views.py` for GET/POST `/topics/<slug>/edit/`
 - [ ] T092 [US2] Create topic delete view in `events/views.py` for POST `/topics/<slug>/delete/` (HTMX, returns success response)
-- [ ] T093 [US2] Add URL patterns in `events/urls.py` for create, edit, delete endpoints
-- [ ] T094 [US2] Create topic form template `events/templates/events/topic_form.html` with AlpineJS character count validation
-- [ ] T095 [US2] Create topic edit template `events/templates/events/topic_edit.html` with HTMX form submission
-- [ ] T096 [US2] Create AlpineJS confirmation modal component for delete in `events/templates/events/partials/delete_confirm_modal.html`
-- [ ] T097 [US2] Integrate delete confirmation modal in topic detail/card (AlpineJS toggle, HTMX for delete action)
-- [ ] T098 [US2] Add "Add Topic" button/link in event detail template (shows sign-in popup for non-authenticated users)
-- [ ] T099 [US2] Add edit/delete buttons in topic card (only visible to topic creator)
-- [ ] T100 [US2] Implement rate limiting for topic creation: 10 topics/hour per user in `core/middleware.py`
+- [ ] T101 [US2] Add URL patterns in `events/urls.py` for create, edit, delete endpoints
+- [ ] T102 [US2] Create topic form template `events/templates/events/topic_form.html` with AlpineJS character count validation
+- [ ] T103 [US2] Create topic edit template `events/templates/events/topic_edit.html` with HTMX form submission
+- [ ] T104 [US2] Create AlpineJS confirmation modal component for delete in `events/templates/events/partials/delete_confirm_modal.html`
+- [ ] T105 [US2] Integrate delete confirmation modal in topic detail/card (AlpineJS toggle, HTMX for delete action)
+- [ ] T106 [US2] Add "Add Topic" button/link in event detail template (shows sign-in popup for non-authenticated users)
+- [ ] T107 [US2] Add edit/delete buttons in topic card (only visible to topic creator)
+- [ ] T108 [US2] Implement rate limiting for topic creation: 10 topics/hour per user in `core/middleware.py`
 
 **Checkpoint**: At this point, User Stories 1, 3, 6, AND 2 should work independently. Users can view, vote on, and create topics.
 
@@ -220,35 +220,35 @@
 
 ### Tests for User Story 4 (TDD - Write First)
 
-- [ ] T093 [P] [US4] Unit test for Comment model in `tests/unit/events/test_models.py`
-- [ ] T094 [P] [US4] Unit test for CommentDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_comment_dto.py`
-- [ ] T095 [P] [US4] Unit test for CommentService.add_comment in `tests/unit/events/test_services/test_comment_service.py`
-- [ ] T096 [P] [US4] Unit test for AddCommentUseCase in `tests/unit/events/test_use_cases/test_add_comment.py`
-- [ ] T097 [P] [US4] Unit test for EditCommentUseCase in `tests/unit/events/test_use_cases/test_edit_comment.py`
-- [ ] T098 [P] [US4] Unit test for DeleteCommentUseCase in `tests/unit/events/test_use_cases/test_delete_comment.py`
-- [ ] T099 [P] [US4] Integration test for comment flow in `tests/integration/events/test_comment_flow.py`
+- [ ] T109 [P] [US4] Unit test for Comment model in `tests/unit/events/test_models.py`
+- [ ] T110 [P] [US4] Unit test for CommentDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_comment_dto.py`
+- [ ] T111 [P] [US4] Unit test for CommentService.add_comment in `tests/unit/events/test_services/test_comment_service.py`
+- [ ] T112 [P] [US4] Unit test for AddCommentUseCase in `tests/unit/events/test_use_cases/test_add_comment.py`
+- [ ] T113 [P] [US4] Unit test for EditCommentUseCase in `tests/unit/events/test_use_cases/test_edit_comment.py`
+- [ ] T114 [P] [US4] Unit test for DeleteCommentUseCase in `tests/unit/events/test_use_cases/test_delete_comment.py`
+- [ ] T115 [P] [US4] Integration test for comment flow in `tests/integration/events/test_comment_flow.py`
 
 ### Implementation for User Story 4
 
-- [ ] T100 [US4] Create Comment model in `events/models.py` with UUID v7, topic FK, author FK, content, is_deleted, timestamps
-- [ ] T101 [US4] Create migration for Comment model: `events/migrations/0003_comment.py`
-- [ ] T102 [US4] Create CommentDTO dataclass in `events/dto/comment_dto.py`
-- [ ] T103 [US4] Create CommentService in `events/services/comment_service.py` with add_comment, update_comment, soft_delete_comment methods
-- [ ] T104 [US4] Create AddCommentUseCase in `events/use_cases/add_comment.py` (validates, creates comment, returns DTO)
-- [ ] T105 [US4] Create EditCommentUseCase in `events/use_cases/edit_comment.py` (validates ownership, updates comment, returns DTO)
-- [ ] T106 [US4] Create DeleteCommentUseCase in `events/use_cases/delete_comment.py` (validates ownership, soft deletes comment)
-- [ ] T107 [US4] Create add comment HTMX view in `events/views.py` for POST `/topics/<slug>/comments/create/` (returns comment partial)
-- [ ] T108 [US4] Create comment edit view in `events/views.py` for GET/POST `/topics/<slug>/comments/<id>/edit/`
-- [ ] T109 [US4] Create comment delete view in `events/views.py` for POST `/topics/<slug>/comments/<id>/delete/` (HTMX)
-- [ ] T110 [US4] Add URL patterns in `events/urls.py` for comment endpoints
-- [ ] T111 [US4] Create comment item partial template `events/templates/events/partials/comment_item.html` for HTMX insertion
-- [ ] T112 [US4] Create Django-Cotton comment item component `events/cotton/comment/item.html`
-- [ ] T113 [US4] Create comment form template `events/templates/events/comment_form.html` with AlpineJS character count
-- [ ] T114 [US4] Create comment edit template `events/templates/events/comment_edit.html` with HTMX form submission
-- [ ] T115 [US4] Integrate comment form in topic detail template (shows sign-in popup for non-authenticated users)
-- [ ] T116 [US4] Update GetTopicDetailUseCase to include comments (ordered chronologically, oldest first)
-- [ ] T117 [US4] Update TopicDetailDTO to include list of CommentDTOs
-- [ ] T118 [US4] Implement rate limiting for comments: 20 comments/hour per user in `core/middleware.py`
+- [ ] T116 [US4] Create Comment model in `events/models.py` with UUID v7, topic FK, author FK, content, is_deleted, timestamps
+- [ ] T117 [US4] Create migration for Comment model: `events/migrations/0003_comment.py`
+- [ ] T118 [US4] Create CommentDTO dataclass in `events/dto/comment_dto.py`
+- [ ] T119 [US4] Create CommentService in `events/services/comment_service.py` with add_comment, update_comment, soft_delete_comment methods
+- [ ] T120 [US4] Create AddCommentUseCase in `events/use_cases/add_comment.py` (validates, creates comment, returns DTO)
+- [ ] T121 [US4] Create EditCommentUseCase in `events/use_cases/edit_comment.py` (validates ownership, updates comment, returns DTO)
+- [ ] T122 [US4] Create DeleteCommentUseCase in `events/use_cases/delete_comment.py` (validates ownership, soft deletes comment)
+- [ ] T123 [US4] Create add comment HTMX view in `events/views.py` for POST `/topics/<slug>/comments/create/` (returns comment partial)
+- [ ] T124 [US4] Create comment edit view in `events/views.py` for GET/POST `/topics/<slug>/comments/<id>/edit/`
+- [ ] T125 [US4] Create comment delete view in `events/views.py` for POST `/topics/<slug>/comments/<id>/delete/` (HTMX)
+- [ ] T126 [US4] Add URL patterns in `events/urls.py` for comment endpoints
+- [ ] T127 [US4] Create comment item partial template `events/templates/events/partials/comment_item.html` for HTMX insertion
+- [ ] T128 [US4] Create Django-Cotton comment item component `events/cotton/comment/item.html`
+- [ ] T129 [US4] Create comment form template `events/templates/events/comment_form.html` with AlpineJS character count
+- [ ] T130 [US4] Create comment edit template `events/templates/events/comment_edit.html` with HTMX form submission
+- [ ] T131 [US4] Integrate comment form in topic detail template (shows sign-in popup for non-authenticated users)
+- [ ] T132 [US4] Update GetTopicDetailUseCase to include comments (ordered chronologically, oldest first)
+- [ ] T133 [US4] Update TopicDetailDTO to include list of CommentDTOs
+- [ ] T134 [US4] Implement rate limiting for comments: 20 comments/hour per user in `core/middleware.py`
 
 **Checkpoint**: At this point, User Stories 1-4 should work independently. Users can view, manage, vote on, and comment on topics.
 
@@ -262,18 +262,18 @@
 
 ### Tests for User Story 7 (TDD - Write First)
 
-- [ ] T127 [P] [US7] Unit test for event selector use case in `tests/unit/events/test_use_cases/test_get_events.py`
-- [ ] T128 [P] [US7] Integration test for event switching in `tests/integration/events/test_event_switching.py`
+- [ ] T135 [P] [US7] Unit test for event selector use case in `tests/unit/events/test_use_cases/test_get_events.py`
+- [ ] T136 [P] [US7] Integration test for event switching in `tests/integration/events/test_event_switching.py`
 
 ### Implementation for User Story 7
 
-- [ ] T129 [US7] Create GetEventsUseCase in `events/use_cases/get_events.py` (returns list of EventDTOs)
-- [ ] T130 [US7] Create EventDTO dataclass in `events/dto/event_dto.py`
-- [ ] T131 [US7] Create event selector view in `events/views.py` for GET `/events/` (returns event list)
-- [ ] T132 [US7] Add URL pattern in `events/urls.py` for events list
-- [ ] T133 [US7] Create AlpineJS event selector dropdown component in base template or navigation
-- [ ] T134 [US7] Create HTMX handler for event selection (loads event content without full page refresh)
-- [ ] T135 [US7] Update navigation to include event selector (AlpineJS for dropdown, HTMX for content loading)
+- [ ] T137 [US7] Create GetEventsUseCase in `events/use_cases/get_events.py` (returns list of EventDTOs)
+- [ ] T138 [US7] Create EventDTO dataclass in `events/dto/event_dto.py`
+- [ ] T139 [US7] Create event selector view in `events/views.py` for GET `/events/` (returns event list)
+- [ ] T140 [US7] Add URL pattern in `events/urls.py` for events list
+- [ ] T141 [US7] Create AlpineJS event selector dropdown component in base template or navigation
+- [ ] T142 [US7] Create HTMX handler for event selection (loads event content without full page refresh)
+- [ ] T143 [US7] Update navigation to include event selector (AlpineJS for dropdown, HTMX for content loading)
 
 **Checkpoint**: At this point, users can switch between events seamlessly.
 
@@ -287,34 +287,34 @@
 
 ### Tests for User Story 5 (TDD - Write First)
 
-- [ ] T136 [P] [US5] Unit test for PresenterSuggestion model in `tests/unit/events/test_models.py`
-- [ ] T137 [P] [US5] Unit test for PresenterDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_presenter_dto.py`
-- [ ] T138 [P] [US5] Unit test for PresenterService.suggest_presenter with limits in `tests/unit/events/test_services/test_presenter_service.py`
-- [ ] T139 [P] [US5] Unit test for SuggestPresenterUseCase in `tests/unit/events/test_use_cases/test_suggest_presenter.py`
-- [ ] T140 [P] [US5] Unit test for EditPresenterSuggestionUseCase in `tests/unit/events/test_use_cases/test_edit_presenter_suggestion.py`
-- [ ] T141 [P] [US5] Unit test for DeletePresenterSuggestionUseCase in `tests/unit/events/test_use_cases/test_delete_presenter_suggestion.py`
-- [ ] T142 [P] [US5] Integration test for presenter suggestion flow in `tests/integration/events/test_presenter_suggestion_flow.py`
+- [ ] T144 [P] [US5] Unit test for PresenterSuggestion model in `tests/unit/events/test_models.py`
+- [ ] T145 [P] [US5] Unit test for PresenterDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_presenter_dto.py`
+- [ ] T146 [P] [US5] Unit test for PresenterService.suggest_presenter with limits in `tests/unit/events/test_services/test_presenter_service.py`
+- [ ] T147 [P] [US5] Unit test for SuggestPresenterUseCase in `tests/unit/events/test_use_cases/test_suggest_presenter.py`
+- [ ] T148 [P] [US5] Unit test for EditPresenterSuggestionUseCase in `tests/unit/events/test_use_cases/test_edit_presenter_suggestion.py`
+- [ ] T149 [P] [US5] Unit test for DeletePresenterSuggestionUseCase in `tests/unit/events/test_use_cases/test_delete_presenter_suggestion.py`
+- [ ] T150 [P] [US5] Integration test for presenter suggestion flow in `tests/integration/events/test_presenter_suggestion_flow.py`
 
 ### Implementation for User Story 5
 
-- [ ] T143 [US5] Create PresenterSuggestion model in `events/models.py` with UUID v7, topic FK, suggester FK, email, url, full_name, is_deleted, timestamps
-- [ ] T144 [US5] Create migration for PresenterSuggestion model: `events/migrations/0004_presenter_suggestion.py`
-- [ ] T145 [US5] Create PresenterDTO dataclass in `events/dto/presenter_dto.py`
-- [ ] T146 [US5] Create PresenterService in `events/services/presenter_service.py` with suggest_presenter, update_suggestion, soft_delete_suggestion, check_limits methods
-- [ ] T147 [US5] Create SuggestPresenterUseCase in `events/use_cases/suggest_presenter.py` (validates limits: 3 per user, 10 per topic, creates suggestion, returns DTO)
-- [ ] T148 [US5] Create EditPresenterSuggestionUseCase in `events/use_cases/edit_presenter_suggestion.py` (validates ownership, updates suggestion, returns DTO)
-- [ ] T149 [US5] Create DeletePresenterSuggestionUseCase in `events/use_cases/delete_presenter_suggestion.py` (validates ownership, soft deletes suggestion)
-- [ ] T150 [US5] Create suggest presenter HTMX view in `events/views.py` for POST `/topics/<slug>/presenters/suggest/` (returns suggestion partial)
-- [ ] T151 [US5] Create presenter suggestion edit view in `events/views.py` for GET/POST `/topics/<slug>/presenters/<id>/edit/`
-- [ ] T152 [US5] Create presenter suggestion delete view in `events/views.py` for POST `/topics/<slug>/presenters/<id>/delete/` (HTMX)
-- [ ] T153 [US5] Add URL patterns in `events/urls.py` for presenter suggestion endpoints
-- [ ] T154 [US5] Create presenter suggestion partial template `events/templates/events/partials/presenter_suggestion_item.html`
-- [ ] T155 [US5] Create Django-Cotton presenter suggestion component `events/cotton/presenter/suggestion.html`
-- [ ] T156 [US5] Create presenter suggestion form template with AlpineJS validation
-- [ ] T157 [US5] Create presenter suggestion edit template `events/templates/events/presenter_suggestion_edit.html`
-- [ ] T158 [US5] Integrate presenter suggestions in topic detail template (shows sign-in popup for non-authenticated users)
-- [ ] T159 [US5] Update GetTopicDetailUseCase to include presenter suggestions (ordered chronologically, oldest first)
-- [ ] T160 [US5] Update TopicDetailDTO to include list of PresenterDTOs
+- [ ] T151 [US5] Create PresenterSuggestion model in `events/models.py` with UUID v7, topic FK, suggester FK, email, url, full_name, is_deleted, timestamps
+- [ ] T152 [US5] Create migration for PresenterSuggestion model: `events/migrations/0004_presenter_suggestion.py`
+- [ ] T153 [US5] Create PresenterDTO dataclass in `events/dto/presenter_dto.py`
+- [ ] T154 [US5] Create PresenterService in `events/services/presenter_service.py` with suggest_presenter, update_suggestion, soft_delete_suggestion, check_limits methods
+- [ ] T155 [US5] Create SuggestPresenterUseCase in `events/use_cases/suggest_presenter.py` (validates limits: 3 per user, 10 per topic, creates suggestion, returns DTO)
+- [ ] T156 [US5] Create EditPresenterSuggestionUseCase in `events/use_cases/edit_presenter_suggestion.py` (validates ownership, updates suggestion, returns DTO)
+- [ ] T157 [US5] Create DeletePresenterSuggestionUseCase in `events/use_cases/delete_presenter_suggestion.py` (validates ownership, soft deletes suggestion)
+- [ ] T158 [US5] Create suggest presenter HTMX view in `events/views.py` for POST `/topics/<slug>/presenters/suggest/` (returns suggestion partial)
+- [ ] T159 [US5] Create presenter suggestion edit view in `events/views.py` for GET/POST `/topics/<slug>/presenters/<id>/edit/`
+- [ ] T160 [US5] Create presenter suggestion delete view in `events/views.py` for POST `/topics/<slug>/presenters/<id>/delete/` (HTMX)
+- [ ] T161 [US5] Add URL patterns in `events/urls.py` for presenter suggestion endpoints
+- [ ] T162 [US5] Create presenter suggestion partial template `events/templates/events/partials/presenter_suggestion_item.html`
+- [ ] T163 [US5] Create Django-Cotton presenter suggestion component `events/cotton/presenter/suggestion.html`
+- [ ] T164 [US5] Create presenter suggestion form template with AlpineJS validation
+- [ ] T165 [US5] Create presenter suggestion edit template `events/templates/events/presenter_suggestion_edit.html`
+- [ ] T166 [US5] Integrate presenter suggestions in topic detail template (shows sign-in popup for non-authenticated users)
+- [ ] T167 [US5] Update GetTopicDetailUseCase to include presenter suggestions (ordered chronologically, oldest first)
+- [ ] T168 [US5] Update TopicDetailDTO to include list of PresenterDTOs
 
 **Checkpoint**: At this point, all user stories should be independently functional. Users can suggest presenters with proper limits.
 
@@ -324,25 +324,25 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T161 [P] Configure Django admin for all models: Event, Topic, Vote, Comment, PresenterSuggestion in `events/admin.py`
-- [ ] T162 [P] Add comprehensive admin actions: bulk soft delete recovery, export functionality
-- [ ] T163 [P] Implement proper error handling and user-friendly error messages across all views
-- [ ] T164 [P] Add loading indicators using HTMX hx-indicator for all HTMX requests
-- [ ] T165 [P] Optimize database queries: add composite indexes per data-model.md specifications
-- [ ] T166 [P] Add comprehensive logging for all use cases and services
-- [ ] T167 [P] Implement proper CSRF protection for all forms
-- [ ] T168 [P] Add mobile-first responsive design improvements using Pure CSS
-- [ ] T169 [P] Ensure WCAG 2.1 Level AA accessibility compliance across all templates
-- [ ] T170 [P] Add proper meta tags and SEO optimization
-- [ ] T171 [P] Create empty state templates for events with no topics
-- [ ] T172 [P] Add proper timezone handling for all datetime displays (America/Sao_Paulo)
-- [ ] T173 [P] Implement proper i18n strings for all user-facing text (Portuguese pt-BR)
-- [ ] T174 [P] Add comprehensive integration tests for complete user journeys
-- [ ] T175 [P] Run quickstart.md validation scenarios
-- [ ] T176 [P] Performance testing: verify 1000+ topics per event without degradation
-- [ ] T177 [P] Security audit: verify UUID v7 prevents ID enumeration, verify rate limiting works
-- [ ] T178 [P] Documentation: Update README with setup instructions
-- [ ] T179 [P] Documentation: Add API documentation for HTMX endpoints (contracts)
+- [ ] T169 [P] Configure Django admin for all models: Event, Topic, Vote, Comment, PresenterSuggestion in `events/admin.py`
+- [ ] T170 [P] Add comprehensive admin actions: bulk soft delete recovery, export functionality
+- [ ] T171 [P] Implement proper error handling and user-friendly error messages across all views
+- [ ] T172 [P] Add loading indicators using HTMX hx-indicator for all HTMX requests
+- [ ] T173 [P] Optimize database queries: add composite indexes per data-model.md specifications
+- [ ] T174 [P] Add comprehensive logging for all use cases and services
+- [ ] T175 [P] Implement proper CSRF protection for all forms
+- [ ] T176 [P] Add mobile-first responsive design improvements using Pure CSS
+- [ ] T177 [P] Ensure WCAG 2.1 Level AA accessibility compliance across all templates
+- [ ] T178 [P] Add proper meta tags and SEO optimization
+- [ ] T179 [P] Create empty state templates for events with no topics
+- [ ] T180 [P] Add proper timezone handling for all datetime displays (America/Sao_Paulo)
+- [ ] T181 [P] Implement proper i18n strings for all user-facing text (Portuguese pt-BR)
+- [ ] T182 [P] Add comprehensive integration tests for complete user journeys
+- [ ] T183 [P] Run quickstart.md validation scenarios
+- [ ] T184 [P] Performance testing: verify 1000+ topics per event without degradation
+- [ ] T185 [P] Security audit: verify UUID v7 prevents ID enumeration, verify rate limiting works
+- [ ] T186 [P] Documentation: Update README with setup instructions
+- [ ] T187 [P] Documentation: Add API documentation for HTMX endpoints (contracts)
 
 ---
 
@@ -450,7 +450,7 @@ With multiple developers:
 
 ## Summary
 
-- **Total Tasks**: 179
+- **Total Tasks**: 187
 - **Tasks per User Story** (Output-First Priority Order):
   - US1 (View Topics - P1): 24 tasks
   - US3 (Vote - P1): 12 tasks
