@@ -88,7 +88,7 @@
 - [ ] T026 Create custom User model in `accounts/models.py` inheriting from `AbstractUser` with UUID v7 primary key
 - [ ] T027 [P] Create User migration: `accounts/migrations/0001_initial.py` (MUST be first migration)
 - [ ] T028 [P] Configure django-allauth for Google and LinkedIn SSO in `floripatalks/settings/base.py`
-- [ ] T029 [P] Setup database configuration: PostgreSQL (production), SQLite (development) in `floripatalks/settings/base.py`
+- [ ] T029 [P] Setup database configuration: SQLite for all environments (development and production) in `floripatalks/settings/base.py`
 - [ ] T030 [P] Configure django-htmx in `floripatalks/settings/base.py`: add `django_htmx` to `INSTALLED_APPS`
 - [ ] T031 [P] Configure django-cotton in `floripatalks/settings/base.py`: add `cotton` to `INSTALLED_APPS`
 - [ ] T032 [P] Create base templates directory: `templates/base.html` with HTMX and AlpineJS includes
