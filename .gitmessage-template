@@ -12,7 +12,7 @@
 #   style: Formatting
 #
 # Subject: 50 chars max, imperative mood
-# Body: 72 chars per line, max 200 chars total
+# Body: 72 chars per line, max 300 chars total
 #
 # Examples:
 # feat: Add HTMX infinite scroll

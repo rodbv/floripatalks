@@ -95,9 +95,9 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 - **Status**: COMPLIANT
 - **Verification**: HTMX hypermedia pattern only, no REST API endpoints
 
-### ✅ XIII. UUID v7 for Primary Keys
+### ✅ XIII. UUID v6 for Primary Keys
 - **Status**: COMPLIANT
-- **Verification**: All models use UUIDField with uuid.uuid7 default
+- **Verification**: All models use UUIDField with uuid6.uuid6 default
 
 ### ✅ XIV. SlugField for URL Routes
 - **Status**: COMPLIANT
@@ -149,7 +149,7 @@ floripatalks/
 ├── events/                 # Django app: Events and Topics
 │   ├── __init__.py
 │   ├── models.py          # Event, Topic, Vote, Comment, PresenterSuggestion models (data only, no business rules)
-│   ├── managers.py        # Custom managers with is_deleted filtering
+│   ├── models.py          # BaseModel, SoftDeleteModel, SoftDeleteManager
 │   ├── use_cases/         # Business logic orchestration
 │   │   ├── __init__.py
 │   │   ├── create_topic.py
@@ -206,10 +206,11 @@ floripatalks/
 │   └── templates/
 │       └── accounts/
 │           └── login_popup.html  # AlpineJS popup component
-├── core/                   # Shared utilities
+├── core/                   # Shared utilities and base models
 │   ├── __init__.py
+│   ├── models.py           # BaseModel, SoftDeleteModel, SoftDeleteManager
 │   ├── middleware.py      # Rate limiting middleware
-│   └── utils.py
+│   └── utils.py           # Shared utilities
 ├── tests/
 │   ├── __init__.py
 │   ├── unit/              # Unit tests (majority)

@@ -85,14 +85,14 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T026 Create custom User model in `accounts/models.py` inheriting from `AbstractUser` with UUID v7 primary key
+- [ ] T026 Create custom User model in `accounts/models.py` inheriting from `AbstractUser` with UUID v6 primary key
 - [ ] T027 [P] Create User migration: `accounts/migrations/0001_initial.py` (MUST be first migration)
 - [ ] T028 [P] Configure django-allauth for Google and LinkedIn SSO in `floripatalks/settings/base.py`
 - [ ] T029 [P] Setup database configuration: SQLite for all environments (development and production) in `floripatalks/settings/base.py`
 - [ ] T030 [P] Configure django-htmx in `floripatalks/settings/base.py`: add `django_htmx` to `INSTALLED_APPS`
 - [ ] T031 [P] Configure django-cotton in `floripatalks/settings/base.py`: add `cotton` to `INSTALLED_APPS`
 - [ ] T032 [P] Create base templates directory: `templates/base.html` with HTMX and AlpineJS includes
-- [ ] T033 [P] Create `core/middleware.py` for rate limiting middleware structure
+- [ ] T033 [P] Create base model classes in `core/models.py`: `BaseModel` (UUID v6, created_at, updated_at) and `SoftDeleteModel` (extends BaseModel with is_deleted and SoftDeleteManager)
 - [ ] T034 [P] Setup i18n configuration: Portuguese (pt-BR) as primary language, timezone America/Sao_Paulo in `floripatalks/settings/base.py`
 - [ ] T035 [P] Create `core/utils.py` for shared utilities
 - [ ] T036 [P] Configure Django admin in `accounts/admin.py` for User model
@@ -123,9 +123,8 @@
 
 ### Implementation for User Story 1
 
-- [ ] T046 [P] [US1] Create Event model in `events/models.py` with UUID v7, slug, name, description
-- [ ] T047 [P] [US1] Create Topic model in `events/models.py` with UUID v7, slug (auto-generated), title, description, vote_count, is_deleted, event FK, creator FK
-- [ ] T048 [P] [US1] Create SoftDeleteManager in `events/managers.py` with is_deleted filtering
+- [ ] T046 [P] [US1] Create Event model in `events/models.py` inheriting from `BaseModel` with slug, name, description
+- [ ] T047 [P] [US1] Create Topic model in `events/models.py` inheriting from `SoftDeleteModel` with slug (auto-generated), title, description, vote_count, event FK, creator FK
 - [ ] T049 [US1] Create migrations for Event and Topic models: `events/migrations/0001_initial.py`
 - [ ] T050 [P] [US1] Create TopicDTO dataclass in `events/dto/topic_dto.py`
 - [ ] T051 [P] [US1] Create TopicService in `events/services/topic_service.py` with get_topics_for_event method (prefetch, select_related, convert to DTOs)
@@ -165,7 +164,7 @@
 
 ### Implementation for User Story 3
 
-- [ ] T070 [US3] Create Vote model in `events/models.py` with UUID v7, topic FK, user FK, unique constraint (topic, user)
+- [ ] T070 [US3] Create Vote model in `events/models.py` inheriting from `BaseModel` with topic FK, user FK, unique constraint (topic, user)
 - [ ] T071 [US3] Create migration for Vote model: `events/migrations/0002_vote.py`
 - [ ] T072 [US3] Create VoteService in `events/services/vote_service.py` with vote_topic, unvote_topic, get_user_vote_status methods
 - [ ] T073 [US3] Create VoteTopicUseCase in `events/use_cases/vote_topic.py` (validates, creates vote, updates vote_count, returns status DTO)
@@ -268,7 +267,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T123 [US4] Create Comment model in `events/models.py` with UUID v7, topic FK, author FK, content, is_deleted, timestamps
+- [ ] T123 [US4] Create Comment model in `events/models.py` inheriting from `SoftDeleteModel` with topic FK, author FK, content
 - [ ] T124 [US4] Create migration for Comment model: `events/migrations/0003_comment.py`
 - [ ] T125 [US4] Create CommentDTO dataclass in `events/dto/comment_dto.py`
 - [ ] T126 [US4] Create CommentService in `events/services/comment_service.py` with add_comment, update_comment, soft_delete_comment methods
@@ -335,7 +334,7 @@
 
 ### Implementation for User Story 5
 
-- [ ] T158 [US5] Create PresenterSuggestion model in `events/models.py` with UUID v7, topic FK, suggester FK, email, url, full_name, is_deleted, timestamps
+- [ ] T158 [US5] Create PresenterSuggestion model in `events/models.py` inheriting from `SoftDeleteModel` with topic FK, suggester FK, email, url, full_name
 - [ ] T159 [US5] Create migration for PresenterSuggestion model: `events/migrations/0004_presenter_suggestion.py`
 - [ ] T160 [US5] Create PresenterDTO dataclass in `events/dto/presenter_dto.py`
 - [ ] T161 [US5] Create PresenterService in `events/services/presenter_service.py` with suggest_presenter, update_suggestion, soft_delete_suggestion, check_limits methods
@@ -378,7 +377,7 @@
 - [ ] T189 [P] Add comprehensive integration tests for complete user journeys
 - [ ] T190 [P] Run quickstart.md validation scenarios
 - [ ] T191 [P] Performance testing: verify 1000+ topics per event without degradation
-- [ ] T192 [P] Security audit: verify UUID v7 prevents ID enumeration, verify rate limiting works
+- [ ] T192 [P] Security audit: verify UUID v6 prevents ID enumeration, verify rate limiting works
 - [ ] T193 [P] Documentation: Update README with setup instructions
 - [ ] T194 [P] Documentation: Add API documentation for HTMX endpoints (contracts)
 
