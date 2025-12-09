@@ -298,6 +298,19 @@ AI agents and automated tools MUST NOT perform git commits or pushes automatical
 
 **Rationale**: Developers need to review code changes, understand diffs, and maintain control over git history. Automatic commits can create messy history, make it harder to track changes, and prevent proper code review. This principle ensures developers have full visibility and control over version control operations.
 
+### Data and Database Operations
+
+AI agents MUST NEVER perform destructive database operations without explicit developer approval:
+
+- **NEVER delete databases, database files, or data** without explicit developer request
+- **NEVER drop tables, truncate data, or reset migrations** without explicit approval
+- **NEVER remove user data, test data, or production-like data** without explicit request
+- If migration conflicts occur, propose solutions that preserve data (e.g., fake migrations, data migration scripts) rather than deleting databases
+- Always ask before performing any operation that could result in data loss
+- If database reset is necessary, clearly explain why and get explicit approval first
+
+**Rationale**: Data loss is irreversible and can cause significant disruption. Developers may have important test data, user data, or configurations in their local databases. Automatic deletion of databases or data violates developer trust and can cause work to be lost. This principle ensures data safety and gives developers full control over their development environment.
+
 ### Task Implementation Workflow with Human Review
 
 All task implementation MUST follow a strict workflow with mandatory human review:
@@ -323,10 +336,10 @@ All task implementation MUST follow a strict workflow with mandatory human revie
 Commit messages MUST be concise and follow a consistent format:
 
 - **Format**: `<type>: <subject>` (max 50 chars for subject)
-- **Total length**: Maximum 200 characters (including subject and body)
+- **Total length**: Maximum 300 characters (including subject and body)
 - **Types**: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `style`
 - **Style**: Imperative mood ("Add feature" not "Added feature")
-- **Body**: Optional, wrap at 72 chars, keep total under 200 chars
+- **Body**: Optional, wrap at 72 chars, keep total under 300 chars
 
 **Examples**:
 - `feat: Add HTMX infinite scroll`
@@ -334,7 +347,7 @@ Commit messages MUST be concise and follow a consistent format:
 - `docs: Update constitution with uv run rule`
 - `refactor: Split settings into base/dev/prod`
 
-**Rationale**: Concise commit messages improve readability in git history and make it easier to understand changes at a glance. The 200-character limit ensures messages remain focused and scannable.
+**Rationale**: Concise commit messages improve readability in git history and make it easier to understand changes at a glance. The 300-character limit provides flexibility while keeping messages focused and scannable.
 
 ### Code Review Requirements
 
@@ -386,4 +399,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.6.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.6.1 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
