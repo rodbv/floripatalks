@@ -50,11 +50,11 @@
 
 ### Static Files and Assets
 
-- [ ] T015 [P] Setup static files configuration in `floripatalks/settings/base.py`: `STATIC_URL`, `STATICFILES_DIRS`, `STATIC_ROOT`
-- [ ] T016 [P] Create static files directories: `static/js/`, `static/css/pure-css/`
-- [ ] T017 [P] Download HTMX latest version to `static/js/htmx.min.js` (from https://htmx.org/)
-- [ ] T018 [P] Download AlpineJS latest version to `static/js/alpine.min.js` (from https://alpinejs.dev/)
-- [ ] T019 [P] Download Pure CSS latest version to `static/css/pure-css/pure-min.css` (from https://purecss.io/)
+- [x] T015 [P] Setup static files configuration in `floripatalks/settings/base.py`: `STATIC_URL`, `STATICFILES_DIRS`, `STATIC_ROOT`
+- [x] T016 [P] Create static files directories: `static/js/`, `static/css/pure-css/`
+- [x] T017 [P] Download HTMX latest version to `static/js/htmx.min.js` (from https://htmx.org/)
+- [x] T018 [P] Download AlpineJS latest version to `static/js/alpine.min.js` (from https://alpinejs.dev/)
+- [x] T019 [P] Download Pure CSS latest version to `static/css/pure-css/pure-min.css` (from https://purecss.io/)
 
 ### Development Tools
 
