@@ -17,24 +17,30 @@ dependencies = [
     "uuid6>=2025.0.1",
     "model-bakery>=1.20.5",
     "faker>=38.2.0",
+    "python-dotenv>=1.2.1",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pre-commit>=4.5.0",
-    "ruff>=0.8.4",
-]
+dev = ["pre-commit>=4.5.0", "ruff>=0.8.4"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+exclude = [
+    "*.md",  # Exclude markdown files
+    "*.mdx",  # Exclude MDX files
+    ".venv",
+    ".git",
+    "__pycache__",
+    "*.pyc",
+]
 
 [tool.ruff.lint]
 select = [
-    "E",   # pycodestyle errors
+    "E",   # pycodestyle errors (includes E402: module level import not at top of file)
     "W",   # pycodestyle warnings
     "F",   # pyflakes
-    "I",   # isort
+    "I",   # isort (import sorting)
     "B",   # flake8-bugbear
     "C4",  # flake8-comprehensions
     "UP",  # pyupgrade
@@ -43,10 +49,19 @@ select = [
     "ANN", # flake8-annotations (type annotations)
 ]
 ignore = [
-    "E501",  # line too long (handled by formatter)
-    "B008",  # do not perform function calls in argument defaults
-    "F403",  # star imports (common in Django settings)
-    "F405",  # undefined names from star imports (common in Django settings)
+    "E501", # line too long (handled by formatter)
+    "B008", # do not perform function calls in argument defaults
+    "F403", # star imports (common in Django settings)
+    "F405", # undefined names from star imports (common in Django settings)
+]
+
+# Per-file ignores: Django migrations use dynamic types and have specific signatures
+# E402 is enforced: module-level imports MUST be at top of file
+[tool.ruff.lint.per-file-ignores]
+"**/migrations/*.py" = [
+    "ANN001", # Missing type annotation for function argument (apps, schema_editor are Django types)
+    "ANN401", # Dynamically typed expressions (apps.get_model returns dynamic types)
+    "ARG001", # Unused function argument (schema_editor may not be used in data migrations)
 ]
 
 [tool.ruff.lint.isort]
@@ -68,10 +83,7 @@ python_files = ["tests.py", "test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 testpaths = ["tests"]
-addopts = [
-    "--strict-markers",
-    "--tb=short",
-]
+addopts = ["--strict-markers", "--tb=short"]
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",

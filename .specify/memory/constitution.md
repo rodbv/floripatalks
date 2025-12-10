@@ -1,14 +1,13 @@
 <!--
 Sync Impact Report:
-Version Change: 1.6.1 → 1.7.0 (added semantic HTML and modern HTML controls principle, changed AlpineJS from "Minimized" to "Optional")
+Version Change: 1.8.4 → 1.8.5 (added User Story Design principle with standalone, testable, value-delivering requirements and output-first approach)
 Modified Principles:
-  - Development Workflow (expanded with GitHub issues and branch naming)
-Added Sections:
-  - GitHub Issues and Branch Naming (added to Development Workflow)
+  - Added new principle XVI: User Story Design: Standalone, Testable, Value-Delivering (includes output-first approach)
+Added Sections: None
 Removed Sections: None
 Templates Requiring Updates:
   - .specify/templates/plan-template.md (✅ no changes needed)
-  - .specify/templates/spec-template.md (✅ no changes. NM needed)
+  - .specify/templates/spec-template.md (✅ no changes needed)
   - .specify/templates/tasks-template.md (✅ no changes needed)
 Follow-up TODOs: None
 -->
@@ -91,12 +90,13 @@ The project MUST use Django as the primary web framework, adhering to Django bes
 
 All tests MUST be written using pytest following the test pyramid principle:
 
+- **NEVER inherit from Django's TestCase**: All tests MUST use pytest functions and classes, never Django's `django.test.TestCase` or `django.test.TransactionTestCase`
 - **Unit tests** (majority): Focus on use cases and services with data-oriented tests covering edge cases
 - **Integration tests** (fewer): Test happy paths end-to-end, verify component interactions
 - **Contract tests**: For interfaces and boundaries when applicable
 - Test fixtures for reusable test data and setup
 - pytest-django for Django-specific testing utilities
-- All DTO tests MUST include `assertNumQueries` to verify N+1 query prevention
+- All DTO tests MUST verify query count using `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance)
 - Test strategy: More unit tests, fewer integration tests (test pyramid principle)
 
 **Testing Tools and Best Practices**:
@@ -205,23 +205,25 @@ All templates (full pages and partial fragments) MUST receive dataclasses as Dat
 
 - All views MUST convert QuerySets to dataclass DTOs before passing to templates
 - Templates receive only dataclasses, single values, or simple objects
-- All DTO tests MUST include `assertNumQueries` to verify query count
+- All DTO tests MUST verify query count using `assertNumQueries` from `pytest_django.asserts` to ensure N+1 query prevention
 - Prefetch related objects and select related fields to prevent N+1 queries at the service/use case layer
 - Query optimization MUST happen before DTO conversion
 
-**Rationale**: Passing QuerySets to templates risks N+1 queries when templates access related objects. DTOs force explicit data fetching and optimization at the service layer, making query performance predictable and testable. `assertNumQueries` ensures N+1 prevention is verified in tests.
+**Rationale**: Passing QuerySets to templates risks N+1 queries when templates access related objects. DTOs force explicit data fetching and optimization at the service layer, making query performance predictable and testable. Query count verification ensures N+1 prevention is verified in tests. Use `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance).
 
 ### XI. Use Case Layer Architecture
 
 Business logic MUST be separated from models using a use case layer:
 
 - **Models**: Contain only data structure, validation, and basic ORM operations (no business rules)
-- **Services**: Provide reusable business logic, can access ORM models and return QuerySets
-- **Use Cases**: Orchestrate business workflows, use services for common code, return only dataclasses, single values, or simple objects (NOT QuerySets or Django model instances)
-- **Views**: Call use cases, convert results to DTOs, pass to templates
+- **Services**: Provide reusable business logic as functions (not classes), can access ORM models and return QuerySets or DTOs
+- **Use Cases**: Orchestrate business workflows as functions (not classes), use service functions for common code, return only dataclasses, single values, or simple objects (NOT QuerySets or Django model instances)
+- **Views**: Call use case functions, convert results to DTOs, pass to templates
 - Business rules MUST NOT be in models - they belong in use cases or services
+- **Prefer functions over classes**: Use functions for services and use cases (e.g., `get_event_topics()` instead of `GetEventTopicsUseCase.execute()`)
+- **Naming convention**: Use case functions MUST follow "verb + noun" pattern in snake_case to clearly indicate what they do (e.g., `get_event_topics()`, `create_topic()`, `vote_topic()`, `edit_comment()`)
 
-**Rationale**: Separating business logic from models improves testability, maintainability, and follows single responsibility principle. Use cases are data-oriented and easily unit testable. Services provide reusable logic while use cases orchestrate workflows. This architecture enables comprehensive unit testing with fewer integration tests.
+**Rationale**: Separating business logic from models improves testability, maintainability, and follows single responsibility principle. Use cases are data-oriented and easily unit testable. Services provide reusable logic while use cases orchestrate workflows. Functions are simpler than classes for stateless operations and reduce boilerplate. Verb + noun naming makes use case purpose immediately clear. This architecture enables comprehensive unit testing with fewer integration tests.
 
 ### XII. No REST API (Current Version)
 
@@ -270,7 +272,19 @@ Events and topics MUST use Django SlugField for URL-friendly identifiers:
 
 **Rationale**: This project aims to showcase how far HTMX and hypermedia can go before needing client-side JavaScript. AlpineJS is optional and should be used only when explicitly requested to demonstrate the power of server-driven interactions, HTML fragments, and the hypermedia approach. Only use AlpineJS when explicitly requested by the developer after exploring HTMX solutions.
 
-### XVI. Semantic HTML and Modern HTML Controls
+### XVI. User Story Design: Standalone, Testable, Value-Delivering
+
+All user stories MUST be designed as standalone, independently testable deliveries that deliver value by themselves:
+
+- **Standalone Delivery**: Each user story MUST be independently completable and deliverable without depending on other user stories for its core functionality. No user story should be just boilerplate, chore, or a prerequisite for another story
+- **Independent Testability**: Each user story MUST have a clear "Independent Test" that can be verified by a Product Owner (PO) without requiring other features to be complete
+- **Visual Verification**: Each user story MUST be verifiable either through the frontend interface or Django Admin, depending on what it does. There MUST be a way to visually check that it works or doesn't work
+- **Value Delivery**: Each user story MUST deliver value by itself, even if it's an intermediate feature (e.g., a table missing future columns, missing sorting). The important thing is that the user story can be visually checked and has a way to ensure it works or not
+- **Output-First Approach**: Prioritize user stories that enable users to view and interact with existing content (output) before stories that require content creation (input). This approach allows users to engage with the platform immediately and validates the core value proposition before building creation workflows
+
+**Rationale**: Standalone, testable user stories enable incremental delivery, allow independent validation by stakeholders, and ensure each story delivers tangible value. The output-first approach prioritizes viewing and engagement features (which provide immediate value) over creation features (which require content to exist first). This ensures the platform is useful from the first deployed story and allows Product Owners to verify functionality independently.
+
+### XVII. Semantic HTML and Modern HTML Controls
 
 All HTML MUST use semantic elements and modern HTML5 controls to leverage native browser capabilities:
 
@@ -374,9 +388,10 @@ Code comments and docstrings are NOT recommended as they may contradict code or 
 - **Only comment non-obvious, surprising code**: Comments should only be used for code that intentionally breaks best practices or contains non-obvious logic that cannot be made clearer through refactoring
 - **No intermediary comments**: Do not leave temporary or intermediary comments explaining implementation decisions (e.g., "# using uuidv6 due to problem with uuidv7")
 - **Same rule for docstrings**: Docstrings follow the same principle - only add them when the code's purpose cannot be made clear through better naming or structure
+- **No obvious docstrings**: Do NOT write docstrings that simply restate what the code already makes obvious (e.g., docstrings that repeat parameter names, return types, or describe obvious operations). Type annotations and clear naming already provide this information
 - **Prefer refactoring over commenting**: If code needs a comment to be understood, refactor it to be more obvious instead
 
-**Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
+**Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Obvious docstrings that restate type annotations, parameter names, or obvious operations add no value and create maintenance burden. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
 
 ### Code Review and Quality Gates
 
@@ -428,4 +443,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.7.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.8.5 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10

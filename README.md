@@ -26,6 +26,8 @@ FloripaTalks é uma aplicação web mobile-first desenvolvida para apoiar evento
 
 Este projeto é um experimento utilizando o [SpecKit](https://github.com/github/spec-kit), uma ferramenta para desenvolvimento orientado por especificações (Spec-Driven Development). O SpecKit ajuda a manter especificações claras, planos de implementação estruturados e documentação alinhada com o código.
 
+📖 **Documentação**: Veja o [Guia de Uso do SpecKit](docs/speckit-guide.md) para aprender como usar o SpecKit neste projeto.
+
 ## Status do Projeto
 
 🚧 **Em desenvolvimento** - Este projeto está em fase inicial de desenvolvimento.

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load cotton %}
+{% load static %}
+
+{% block title %}{{ event.name }} - FloripaTalks{% endblock %}
+
+{% block content %}
+<div class="event-detail">
+    <header class="event-header">
+        <h1>{{ event.name }}</h1>
+        {% if event.description %}
+        <p class="event-description">{{ event.description }}</p>
+        {% endif %}
+    </header>
+
+    <section class="topics-section">
+        <h2>Tópicos</h2>
+        <div id="topics-list" class="topics-list">
+            {% if topics %}
+                {% for topic in topics %}
+                    {% include "events/partials/topic_item.html" with topic=topic %}
+                {% endfor %}
+                {% if topics|length >= 20 %}
+                    <div
+                        hx-get="{% url 'events:load_more_topics' slug=event.slug %}?offset=20"
+                        hx-trigger="revealed"
+                        hx-swap="afterend"
+                        class="load-more-trigger"
+                    ></div>
+                {% endif %}
+            {% else %}
+                <p class="empty-state">Nenhum tópico ainda. Seja o primeiro a sugerir um tópico!</p>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

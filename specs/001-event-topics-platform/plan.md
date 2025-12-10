@@ -7,17 +7,17 @@
 
 ## Summary
 
-FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX (for server-driven interactions), AlpineJS (for client-side state management), and Django-Cotton following TDD principles with a use case layer architecture.
+FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX (for server-driven interactions), AlpineJS (optional, only when explicitly requested), and Django-Cotton following TDD principles with a use case layer architecture.
 
 ## Technical Context
 
 **Language/Version**: Python 3.12+ (with type annotations)  
-**Primary Dependencies**: Django, django-allauth (SSO), HTMX, AlpineJS, django-cotton, pytest, pytest-django  
+**Primary Dependencies**: Django, django-allauth (SSO), HTMX, AlpineJS (optional), django-cotton, pytest, pytest-django  
 **Storage**: SQLite for all environments (development and production)  
 **Testing**: pytest with pytest-django, following test pyramid (majority unit tests, fewer integration tests)  
 **Code Quality**: Type annotations required, ruff for linting/formatting (line length 100)  
 **Target Platform**: Web application (mobile-first, responsive design)  
-**Project Type**: Web application (Django backend with server-rendered HTML + HTMX + AlpineJS)  
+**Project Type**: Web application (Django backend with server-rendered HTML + HTMX + AlpineJS optional)  
 **Performance Goals**:
 - Event pages load in <2 seconds on mobile
 - Support 1000+ topics per event without degradation
@@ -55,7 +55,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 ### ✅ III. pytest Testing Framework and Test Pyramid
 - **Status**: COMPLIANT
 - **Verification**: pytest with pytest-django, test pyramid (majority unit tests for use cases/services, fewer integration tests)
-- **DTO Tests**: All DTO tests will include `assertNumQueries`
+- **DTO Tests**: All DTO tests will include `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance)
 
 ### ✅ IV. HTMX Hypermedia Pattern
 - **Status**: COMPLIANT
@@ -85,11 +85,11 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 
 ### ✅ X. N+1 Query Prevention with DTOs
 - **Status**: COMPLIANT
-- **Verification**: All templates receive dataclass DTOs, not QuerySets. All DTO tests include `assertNumQueries`
+- **Verification**: All templates receive dataclass DTOs, not QuerySets. All DTO tests include `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance)
 
 ### ✅ XI. Use Case Layer Architecture
 - **Status**: COMPLIANT
-- **Verification**: Business logic in use cases/services, models contain only data structure. Use cases return DTOs/simple objects
+- **Verification**: Business logic in use cases/services as functions (not classes), models contain only data structure. Use case functions follow "verb + noun" naming pattern (e.g., `get_event_topics()`, `create_topic()`). Use cases return DTOs/simple objects
 
 ### ✅ XII. No REST API (Current Version)
 - **Status**: COMPLIANT
@@ -258,15 +258,17 @@ No violations - all constitution principles are followed.
 
 ## AlpineJS/HTMX Integration Patterns
 
+**HTMX-First Principle**: This project prioritizes HTMX and hypermedia capabilities. AlpineJS is **optional** and should be used **only when explicitly requested** by the developer.
+
 Based on clarifications, the following patterns are established:
 
-1. **Sign-in Popups**: AlpineJS (`x-show`/`x-if`) for toggle, HTMX for authentication flow
-2. **Form Validation**: AlpineJS for real-time client-side feedback (character count, validation), HTMX for form submission and server-side validation
-3. **Event Selector**: AlpineJS for dropdown toggle, HTMX to load selected event content
-4. **Confirmation Dialogs**: AlpineJS for modal toggle, HTMX to execute confirmed actions
-5. **Loading Indicators**: HTMX native (`hx-indicator`) as default, AlpineJS optional for custom loading states
+1. **Sign-in Popups**: **HTMX-first**: Use HTMX to load a sign-in modal fragment from the server. AlpineJS only if explicitly requested.
+2. **Form Validation**: **HTMX-first**: Server-side validation with HTMX responses showing errors. Character count can be done with HTML/CSS or vanilla JS if needed. AlpineJS only if explicitly requested.
+3. **Event Selector**: **HTMX-first**: Use HTMX to load content when event is selected (native HTML select with hx-get/hx-trigger). AlpineJS only if explicitly requested.
+4. **Confirmation Dialogs**: **HTMX-first**: Use HTMX to load a confirmation dialog fragment from the server. AlpineJS only if explicitly requested.
+5. **Loading Indicators**: HTMX native (`hx-indicator`) as default. AlpineJS only if explicitly requested for custom loading states.
 
-**General Rule**: AlpineJS for client-side UI state (no server communication needed), HTMX for all server interactions.
+**General Rule**: **HTMX first, AlpineJS only when explicitly requested**. Showcase hypermedia and server-driven interactions.
 
 ## Next Steps
 

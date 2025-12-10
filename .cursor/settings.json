@@ -10,5 +10,10 @@
   "git.useEditorAsCommitInput": true,
   "git.commitMessageTemplate": ".gitmessage-template",
   "cursor.aiCommitMessage": true,
-  "cursor.aiCommitMessageFormat": "conventional"
+  "cursor.aiCommitMessageFormat": "conventional",
+  "git.enableSmartCommit": false,
+  "git.suggestSmartCommit": false,
+  "git.autofetch": false,
+  "notifications.enabled": false,
+  "workbench.enableExperiments": false
 }

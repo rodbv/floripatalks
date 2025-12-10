@@ -1,0 +1,45 @@
+{% comment %}
+Django-Cotton component for topic card.
+
+Props:
+- id: Topic UUID
+- slug: Topic slug
+- title: Topic title
+- description: Topic description (optional)
+- vote_count: Number of votes
+- creator_username: Username of topic creator
+- event_slug: Event slug
+- created_at: Creation timestamp
+{% endcomment %}
+
+{% load core_tags %}
+
+<article class="topic-card">
+    <header class="topic-card-header">
+        <h3 class="topic-title">
+            <a href="#">{{ title }}</a>
+        </h3>
+        <div class="topic-meta">
+            <span class="topic-creator">por {{ creator_username }}</span>
+            <time class="topic-date" datetime="{{ created_at }}">{{ created_at }}</time>
+        </div>
+    </header>
+
+    {% if description %}
+    <div class="topic-description">
+        <p>{{ description|truncatewords:50 }}</p>
+    </div>
+    {% endif %}
+
+    <footer class="topic-card-footer">
+        <div class="topic-stats">
+            <span class="vote-count">{{ vote_count|format_vote_count }}</span>
+            <span class="comment-count">0 comentários</span>
+        </div>
+        <div class="topic-actions">
+            <button class="vote-button" data-requires-auth="true">
+                Votar
+            </button>
+        </div>
+    </footer>
+</article>

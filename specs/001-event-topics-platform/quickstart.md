@@ -158,7 +158,7 @@ This guide provides a quick overview of how to get started with the Event Topics
 - HTMX transitions complete without noticeable delay
 - Infinite scroll loads next batch smoothly
 - System handles 1000+ topics per event without degradation
-- Query optimization prevents N+1 queries (verified with assertNumQueries in tests)
+- Query optimization prevents N+1 queries (verified with `assertNumQueries` from `pytest_django.asserts` in tests)
 
 ## Accessibility
 
