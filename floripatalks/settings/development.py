@@ -2,7 +2,20 @@
 Django development settings for floripatalks project.
 """
 
+import os
+
+from dotenv import load_dotenv
+
 from .base import *
+
+# Load environment variables from .env file
+# This allows using .env file for local development
+env_path = BASE_DIR / ".env"
+if env_path.exists():
+    load_dotenv(env_path)
+    print(f"✅ Loaded environment variables from {env_path}")
+else:
+    print(f"ℹ️  No .env file found at {env_path}, using system environment variables")
 
 DEBUG = True
 
@@ -18,3 +31,21 @@ DATABASES = {
 
 # Email backend for development
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# OAuth credentials from environment variables (for development)
+# Set these in your environment or .env file:
+# export GOOGLE_CLIENT_ID="your-google-client-id"
+# export GOOGLE_CLIENT_SECRET="your-google-client-secret"
+# export LINKEDIN_CLIENT_ID="your-linkedin-client-id"
+# export LINKEDIN_CLIENT_SECRET="your-linkedin-client-secret"
+if os.environ.get("GOOGLE_CLIENT_ID"):
+    SOCIALACCOUNT_PROVIDERS["google"]["APP"]["client_id"] = os.environ.get("GOOGLE_CLIENT_ID")
+    SOCIALACCOUNT_PROVIDERS["google"]["APP"]["secret"] = os.environ.get("GOOGLE_CLIENT_SECRET")
+
+if os.environ.get("LINKEDIN_CLIENT_ID"):
+    SOCIALACCOUNT_PROVIDERS["openid_connect"]["APPS"][0]["client_id"] = os.environ.get(
+        "LINKEDIN_CLIENT_ID"
+    )
+    SOCIALACCOUNT_PROVIDERS["openid_connect"]["APPS"][0]["secret"] = os.environ.get(
+        "LINKEDIN_CLIENT_SECRET"
+    )

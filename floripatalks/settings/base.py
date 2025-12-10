@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.sites",  # Required for django-allauth
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Third-party apps
@@ -31,9 +32,9 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    # Social providers - will be configured in Phase 2
-    # 'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.linkedin_oauth2',
+    # Social providers
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.openid_connect",  # Used for LinkedIn
     # Local apps
     "events",
     "accounts",
@@ -62,7 +63,7 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
-                "django.template.context_processors.request",
+                "django.template.context_processors.request",  # Required for allauth
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
@@ -110,5 +111,58 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
-# Custom user model (will be created in Phase 2)
-# AUTH_USER_MODEL = 'accounts.User'
+# Django-allauth account configuration
+ACCOUNT_LOGIN_METHODS = {"email"}  # Use email for login
+ACCOUNT_SIGNUP_FIELDS = [
+    "email*",
+    "password1*",
+    "password2*",
+]  # Email required, username not required
+ACCOUNT_EMAIL_VERIFICATION = "none"  # For MVP, skip email verification
+ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_ADAPTER = "accounts.adapters.CustomAccountAdapter"  # Optional: uncomment if custom adapter needed
+
+# Django-allauth social account configuration
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"  # For MVP, skip email verification
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_STORE_TOKENS = False  # Don't store OAuth tokens (not needed for basic SSO)
+
+# Social provider settings
+# These will be configured via environment variables in production
+# For development, set these in development.py or via environment variables
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "APP": {
+            "client_id": "",  # Set via GOOGLE_CLIENT_ID environment variable
+            "secret": "",  # Set via GOOGLE_CLIENT_SECRET environment variable
+            "key": "",
+        },
+    },
+    "openid_connect": {
+        "APPS": [
+            {
+                "provider_id": "linkedin",
+                "name": "LinkedIn",
+                "client_id": "",  # Set via LINKEDIN_CLIENT_ID environment variable
+                "secret": "",  # Set via LINKEDIN_CLIENT_SECRET environment variable
+                "settings": {
+                    "server_url": "https://www.linkedin.com/oauth",
+                },
+            }
+        ]
+    },
+}
+
+# Login/Logout URLs
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"

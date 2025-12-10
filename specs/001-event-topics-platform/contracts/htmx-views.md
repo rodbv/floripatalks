@@ -452,20 +452,20 @@
 
 ---
 
-#### GET `/accounts/linkedin/login/`
+#### GET `/accounts/openid_connect/linkedin/login/`
 
-**Purpose**: Initiate LinkedIn SSO authentication
+**Purpose**: Initiate LinkedIn SSO authentication via OpenID Connect
 
 **Request**:
 - Method: GET
-- Path: `/accounts/linkedin/login/`
+- Path: `/accounts/openid_connect/linkedin/login/`
 - Query params: `next=<url>` (redirect after login)
 
 **Response**:
 - Status: 302 Redirect
-- Location: LinkedIn OAuth2 authorization URL
+- Location: LinkedIn OpenID Connect authorization URL
 
-**Managed by**: django-allauth
+**Managed by**: django-allauth (OpenID Connect provider)
 
 ---
 
