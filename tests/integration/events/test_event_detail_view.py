@@ -10,6 +10,8 @@ These tests verify the full request/response cycle including:
 This helps catch regressions like import errors, NoneType errors, and template issues.
 """
 
+from http import HTTPStatus
+
 import pytest
 from django.test import Client
 from django.urls import reverse
@@ -34,14 +36,14 @@ class TestEventDetailView:
         url = reverse("events:event_detail", kwargs={"slug": "test-event"})
         response = client.get(url)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
 
     def test_event_detail_view_returns_404_for_invalid_slug(self, client: Client) -> None:
         """Verify event detail view returns 404 for invalid event slug."""
         url = reverse("events:event_detail", kwargs={"slug": "non-existent"})
         response = client.get(url)
 
-        assert response.status_code == 404
+        assert response.status_code == HTTPStatus.NOT_FOUND
 
     def test_event_detail_view_displays_event_name(self, client: Client) -> None:
         """Verify event detail view displays event name in template."""
@@ -50,7 +52,7 @@ class TestEventDetailView:
         url = reverse("events:event_detail", kwargs={"slug": "test-event"})
         response = client.get(url)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert "Test Event" in response.content.decode()
 
     def test_event_detail_view_displays_topics(self, client: Client) -> None:
@@ -63,7 +65,7 @@ class TestEventDetailView:
         url = reverse("events:event_detail", kwargs={"slug": "test-event"})
         response = client.get(url)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         content = response.content.decode()
         assert "Topic 1" in content
         assert "Topic 2" in content
@@ -75,7 +77,7 @@ class TestEventDetailView:
         url = reverse("events:event_detail", kwargs={"slug": "test-event"})
         response = client.get(url)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
 
     def test_event_detail_view_renders_without_errors(self, client: Client) -> None:
         """
@@ -100,9 +102,9 @@ class TestEventDetailView:
         url = reverse("events:event_detail", kwargs={"slug": "regression-test"})
         response = client.get(url)
 
-        # Should return 200, not 500
-        assert response.status_code == 200, (
-            f"Expected 200, got {response.status_code}. Error: {response.content.decode()[:500]}"
+        # Should return OK, not 500
+        assert response.status_code == HTTPStatus.OK, (
+            f"Expected {HTTPStatus.OK}, got {response.status_code}. Error: {response.content.decode()[:500]}"
         )
 
         # Should render template without errors
@@ -124,7 +126,7 @@ class TestEventDetailView:
         url = reverse("events:event_detail", kwargs={"slug": "context-test"})
         response = client.get(url)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         # Verify topics are in context and iterable
         assert "topics" in response.context
         topics = response.context["topics"]
@@ -144,7 +146,7 @@ class TestEventDetailView:
         url = reverse("events:event_detail", kwargs={"slug": "anonymous-test"})
         response = client.get(url)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert "topics" in response.context
         topics = response.context["topics"]
         assert isinstance(topics, list)
@@ -163,7 +165,7 @@ class TestEventDetailView:
         url = reverse("events:event_detail", kwargs={"slug": "none-test"})
         response = client.get(url)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         topics = response.context.get("topics")
         assert topics is not None, "Topics should never be None"
         assert isinstance(topics, list), f"Topics should be a list, got {type(topics)}"

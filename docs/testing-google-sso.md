@@ -30,9 +30,7 @@ Open your browser and navigate to:
 **http://localhost:8000/accounts/login/**
 
 You should see:
-- A login form (for email/password login)
 - A "Sign in with Google" button/link
-- A "Sign in with LinkedIn" button/link (if LinkedIn credentials are set)
 
 ### 3. Test Google SSO
 

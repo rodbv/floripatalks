@@ -102,7 +102,7 @@
 
 - [x] T026 Create custom User model in `accounts/models.py` inheriting from `AbstractUser` with UUID v6 primary key
 - [x] T027 [P] Create User migration: `accounts/migrations/0001_initial.py` (MUST be first migration)
-- [x] T028 [P] Configure django-allauth for Google and LinkedIn SSO in `floripatalks/settings/base.py` (partial: allauth installed, providers not configured)
+- [x] T028 [P] Configure django-allauth for Google SSO in `floripatalks/settings/base.py` (LinkedIn SSO planned for future release)
 - [x] T029 [P] Setup database configuration: SQLite for all environments (development and production) in `floripatalks/settings/base.py`
 - [x] T030 [P] Configure django-htmx in `floripatalks/settings/base.py`: add `django_htmx` to `INSTALLED_APPS`
 - [x] T031 [P] Configure django-cotton in `floripatalks/settings/base.py`: add `django_cotton` to `INSTALLED_APPS`

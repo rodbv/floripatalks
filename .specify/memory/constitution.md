@@ -408,6 +408,28 @@ Code comments and docstrings are NOT recommended as they may contradict code or 
 
 **Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Implementation decision comments are transient explanations that lose value over time as context is forgotten. Obvious docstrings that restate type annotations, parameter names, or obvious operations add no value and create maintenance burden. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
 
+### XIX. HTTP Status Codes - Use http.HTTPStatus Constants
+
+All HTTP status codes MUST use constants from Python's `http.HTTPStatus` module instead of magic numbers:
+
+- **Views**: Use `HTTPStatus.OK`, `HTTPStatus.NOT_FOUND`, `HTTPStatus.UNAUTHORIZED`, etc. instead of `200`, `404`, `401`
+- **Tests**: Use `HTTPStatus` constants in assertions (e.g., `assert response.status_code == HTTPStatus.OK` instead of `assert response.status_code == 200`)
+- **Django render()**: Use `status=HTTPStatus.UNAUTHORIZED` instead of `status=401`
+- **Import**: `from http import HTTPStatus`
+
+**Rationale**: Using named constants instead of magic numbers improves code readability, makes the intent clear, prevents typos, and provides better IDE support. HTTP status codes are semantic values that should be expressed as named constants, not numeric literals. This follows Python best practices and makes code self-documenting.
+
+### XX. Services and Use Cases Are HTTP-Agnostic
+
+Services and use cases MUST NOT know they are running in an HTTP application context:
+
+- **Services and use cases MUST NOT return HTTP status codes**: They should raise domain-specific exceptions (e.g., `TopicNotFoundError`, `VoteAlreadyExistsError`) or standard Python exceptions (e.g., `ValueError`, `PermissionError`)
+- **Only views convert exceptions to HTTP responses**: The web layer (views) is responsible for catching exceptions and converting them to appropriate HTTP status codes
+- **Services and use cases are reusable**: They should be callable from scripts, CLI tools, background tasks, or any other context, not just HTTP requests
+- **Exception-based error handling**: Use exceptions for error conditions, not return codes or HTTP status values
+
+**Rationale**: Services and use cases represent business logic that should be independent of the delivery mechanism (HTTP, CLI, scripts, etc.). Returning HTTP status codes couples business logic to the web layer, making it impossible to reuse in non-HTTP contexts. Exception-based error handling is more Pythonic and allows the web layer to decide how to present errors to users. This separation of concerns improves testability and maintainability.
+
 ### Code Review and Quality Gates
 
 All code changes MUST be reviewed via pull request and meet quality standards before merging:
@@ -458,4 +480,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.8.7 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
+**Version**: 1.8.9 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10

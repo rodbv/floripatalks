@@ -3,7 +3,9 @@
 **Feature Branch**: `001-event-topics-platform`  
 **Created**: 2025-12-09  
 **Status**: Draft  
-**Input**: User description: "we are implementing the first version of this web app. It is called FloripaTalks , created to support local events, and its goal is to be a mobile-first app in which users logged in via google/linkedin SSO can do the following: - see which topics people want to see as talks in future events (eg Advanced Django ORM, or Intro to Pandas/Polars) - vote or comment on topics they also want to see - add new topics themselves which will be available for other people to vote/comment - suggest a person who could present that talk - by  email or url (eg linkedin) or fullname - the system will start with a single monthly event (Python Floripa) but should support more in the future, in which people can switch somewhere on the site (with its own slug-like url like floripatalks/python-floripa Admins can use django admin to add or remove talks and suggestions, add and remove users, create new events, and other common admin tasks Accessibility and workoig mobile-first is a must. As frotend css library we will use pure-css"
+**Input**: User description: "we are implementing the first version of this web app. It is called FloripaTalks , created to support local events, and its goal is to be a mobile-first app in which users logged in via google SSO can do the following:
+
+**Note**: LinkedIn SSO support is planned for a future release. See future enhancements section. - see which topics people want to see as talks in future events (eg Advanced Django ORM, or Intro to Pandas/Polars) - vote or comment on topics they also want to see - add new topics themselves which will be available for other people to vote/comment - suggest a person who could present that talk - by  email or url (eg linkedin) or fullname - the system will start with a single monthly event (Python Floripa) but should support more in the future, in which people can switch somewhere on the site (with its own slug-like url like floripatalks/python-floripa Admins can use django admin to add or remove talks and suggestions, add and remove users, create new events, and other common admin tasks Accessibility and workoig mobile-first is a must. As frotend css library we will use pure-css"
 
 ## Clarifications
 
@@ -17,7 +19,7 @@
 
 ### Additional Requirements (2025-12-09)
 
-- Non-authenticated users can view topics in readonly mode with sign-in popups for interactive actions
+- Non-authenticated users can view topics in readonly mode and are redirected to login when attempting interactive actions
 - Users can edit and delete their own topics, comments, and presenter suggestions
 - Users can un-vote on topics they have voted on
 - Editing occurs on dedicated pages (not modals) with seamless back button navigation
@@ -42,7 +44,7 @@
 
 **Note**: This project prioritizes HTMX and hypermedia. AlpineJS is optional and should be used only when explicitly requested.
 
-- Q: How should the sign-in popup be implemented when non-authenticated users click interactive buttons? → A: **HTMX-first approach**: Use HTMX to load a sign-in modal fragment from the server. AlpineJS only if explicitly requested.
+- Q: How should authentication be handled when non-authenticated users click interactive buttons? → A: **HTMX redirect approach**: Use `HttpResponseClientRedirect` from `django-htmx` to redirect to the login page. For HTMX requests, this triggers a full-page redirect via the `HX-Redirect` header. For regular requests, use standard Django redirect. This follows HTMX best practices and provides a seamless user experience.
 - Q: How should form validation feedback be implemented (e.g., character count, real-time error messages)? → A: **HTMX-first approach**: Server-side validation with HTMX responses showing errors. Character count can be done with HTML/CSS or vanilla JS if needed. AlpineJS only if explicitly requested.
 - Q: How should the event selector work in the interface? → A: **HTMX-first approach**: Use HTMX to load content when event is selected (native HTML select with hx-get/hx-trigger). AlpineJS only if explicitly requested.
 - Q: How should confirmation dialogs (e.g., delete confirmation) be implemented? → A: **HTMX-first approach**: Use HTMX to load a confirmation dialog fragment from the server. AlpineJS only if explicitly requested.
@@ -62,7 +64,7 @@
 
 ### User Story 1 - View and Browse Topics (Priority: P1)
 
-A user (logged in or not) visits the event page and can see a list of topics that people want to see as talks in future events. Each topic displays its title, vote count, comment count, and any suggested presenters. Users can browse topics to understand what the community is interested in. Non-authenticated users have a readonly experience and see popups inviting them to sign in when attempting interactive actions.
+A user (logged in or not) visits the event page and can see a list of topics that people want to see as talks in future events. Each topic displays its title, vote count, comment count, and any suggested presenters. Users can browse topics to understand what the community is interested in. Non-authenticated users have a readonly experience and are redirected to the login page when attempting interactive actions.
 
 **Why this priority**: This is the core value proposition - users need to see what topics exist before they can interact with them. Without this, the platform has no purpose. Allowing non-authenticated viewing increases discoverability and engagement.
 
@@ -74,7 +76,7 @@ A user (logged in or not) visits the event page and can see a list of topics tha
 2. **Given** a user is on a mobile device, **When** they view the topics list, **Then** the layout is optimized for mobile viewing with readable text and touch-friendly interactions
 3. **Given** a topic has suggested presenters, **When** a user views that topic, **Then** they can see the presenter suggestions with contact information (email, name, LinkedIn URL, WhatsApp contact, etc.) associated with that topic
 4. **Given** multiple events exist, **When** a user switches between events using the event selector, **Then** they see topics specific to the selected event
-5. **Given** a non-authenticated user is viewing topics, **When** they click a vote button or other interactive element, **Then** a popup appears inviting them to sign in or sign up
+5. **Given** a non-authenticated user is viewing topics, **When** they click a vote button or other interactive element, **Then** they are redirected to the login page with a `next` parameter to return to the original page after authentication
 
 ---
 
@@ -156,19 +158,19 @@ A logged-in user can suggest a person who could present a topic. They provide co
 
 ### User Story 6 - Readonly Experience for Non-Authenticated Users (Priority: P2)
 
-Non-authenticated users can view topics, vote counts, comments, and presenter suggestions in a readonly mode. When they attempt to interact (vote, comment, add topic, suggest presenter), a popup appears inviting them to sign in or sign up via Google or LinkedIn SSO.
+Non-authenticated users can view topics, vote counts, comments, and presenter suggestions in a readonly mode. When they attempt to interact (vote, comment, add topic, suggest presenter), they are redirected to the login page via HTMX redirect (for HTMX requests) or standard redirect (for regular requests), with a `next` parameter to return to the original page after authentication.
 
-**Why this priority**: Allowing non-authenticated viewing increases discoverability and engagement. The popup mechanism provides a clear path to authentication without blocking content discovery.
+**Why this priority**: Allowing non-authenticated viewing increases discoverability and engagement. The redirect mechanism provides a clear path to authentication without blocking content discovery.
 
-**Independent Test**: A non-authenticated user can view topics, see vote counts and comments, and when clicking interactive buttons, receives a sign-in prompt popup.
+**Independent Test**: A non-authenticated user can view topics, see vote counts and comments, and when clicking interactive buttons, is redirected to the login page.
 
 **Acceptance Scenarios**:
 
 1. **Given** a non-authenticated user is viewing topics, **When** they see the topics list, **Then** they can read all topic information (title, description, vote count, comments, presenter suggestions)
-2. **Given** a non-authenticated user clicks a vote button, **When** the button is clicked, **Then** a popup appears inviting them to sign in or sign up
-3. **Given** a non-authenticated user clicks "Add Topic", **When** the link is clicked, **Then** a popup appears inviting them to sign in or sign up
-4. **Given** a non-authenticated user clicks a comment button, **When** the button is clicked, **Then** a popup appears inviting them to sign in or sign up
-5. **Given** a non-authenticated user is on mobile, **When** they view topics or receive sign-in popups, **Then** the experience is optimized for mobile devices
+2. **Given** a non-authenticated user clicks a vote button via HTMX, **When** the button is clicked, **Then** they are redirected to the login page via `HX-Redirect` header with a `next` parameter
+3. **Given** a non-authenticated user clicks "Add Topic", **When** the link is clicked, **Then** they are redirected to the login page with a `next` parameter
+4. **Given** a non-authenticated user clicks a comment button, **When** the button is clicked, **Then** they are redirected to the login page with a `next` parameter
+5. **Given** a non-authenticated user is on mobile, **When** they view topics or are redirected to login, **Then** the experience is optimized for mobile devices
 
 ---
 
@@ -199,7 +201,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - How does the system handle very long topic titles or comments? Text should be displayed with appropriate truncation or wrapping for readability on mobile devices.
 - How should the system format large numbers in display (e.g., vote counts > 1000, many comments)? The system uses simple formatting in Portuguese (pt-BR) conventions (e.g., "1.234 votos", "567 comentários") without abbreviations like "1.2k". This maintains clarity and aligns with pt-BR number formatting standards.
 - What happens when a user suggests a presenter with contact information? The system accepts any text input for `presenter_contact` (email, name, LinkedIn URL, WhatsApp contact, etc.) and does not validate format (admins can review and clean up via admin interface).
-- How does the system handle users who are not logged in? Non-authenticated users can view topics in readonly mode but cannot vote, comment, add topics, or suggest presenters. When they click interactive buttons/links, a popup appears inviting them to sign in or sign up.
+- How does the system handle users who are not logged in? Non-authenticated users can view topics in readonly mode but cannot vote, comment, add topics, or suggest presenters. When they click interactive buttons/links, they are redirected to the login page (via HTMX redirect for HTMX requests, standard redirect for regular requests) with a `next` parameter to return after authentication.
 - What happens when an event has no topics? The event page displays an empty state message encouraging users to add the first topic.
 - How does infinite scroll handle loading states? The system loads 20 topics per batch, uses HTMX native loading indicators (hx-indicator) while fetching additional topics, and handles end-of-list gracefully when all topics are loaded. AlpineJS may be used for custom loading states if needed.
 - How does the system handle event switching when a user has unsaved changes (e.g., typing a comment)? The system warns users about unsaved changes with a confirmation dialog before switching events. Users can choose to continue switching (discarding changes) or cancel to keep editing.
@@ -217,7 +219,7 @@ A logged-in user can switch between different events using an event selector. Ea
 ### Functional Requirements
 
 - **FR-001**: System MUST allow users to authenticate via Google SSO
-- **FR-002**: System MUST allow users to authenticate via LinkedIn SSO
+- **FR-002**: ~~System MUST allow users to authenticate via LinkedIn SSO~~ (Future enhancement - see future enhancements section)
 - **FR-021**: System MUST handle SSO authentication failures by displaying inline error messages using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) with retry options
 - **FR-003**: System MUST display a list of topics for a selected event, ordered by vote count (descending), then by creation date (oldest first) for ties, showing topic title, vote count, and comment count
 - **FR-022**: System MUST implement infinite scroll for topics list, loading 20 topics per batch as user scrolls down
@@ -255,7 +257,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-015**: System MUST be mobile-first, with all functionality accessible and usable on mobile devices
 - **FR-016**: System MUST meet accessibility standards (WCAG 2.1 Level AA compliance)
 - **FR-017**: System MUST allow non-authenticated users to view topics but require authentication for voting, commenting, adding topics, and suggesting presenters
-- **FR-030**: System MUST display popups inviting non-authenticated users to sign in or sign up when they click interactive buttons/links (vote, comment, add topic, suggest presenter). Use HTMX-first approach: HTMX to load a sign-in modal fragment from the server. AlpineJS only if explicitly requested.
+- **FR-030**: System MUST redirect non-authenticated users to the login page when they click interactive buttons/links (vote, comment, add topic, suggest presenter). For HTMX requests, use `HttpResponseClientRedirect` from `django-htmx` to trigger a full-page redirect via the `HX-Redirect` header. For regular requests, use standard Django redirect. Include a `next` parameter to return users to the original page after authentication.
 - **FR-031**: System MUST provide edit functionality on dedicated pages (not modals/popups) for topics, comments, and presenter suggestions
 - **FR-032**: System MUST ensure browser back button works seamlessly when navigating to and from edit pages
 - **FR-033**: System MUST use HTMX to minimize page refreshes for all transitions, maintaining smooth user experience
@@ -272,7 +274,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **Vote**: Represents a user's vote on a topic. Inherits from `BaseModel` (provides UUID v6 id, created_at, updated_at). Links a user to a topic. Each user can have only one vote per topic. Vote records provide clear auditing of who voted on each topic. When a user un-votes, the Vote record is hard-deleted (permanently removed). Vote counts are calculated at runtime by counting Vote records when building DTOs.
 - **Comment**: Represents a user's comment on a topic. Inherits from `SoftDeleteModel` (provides UUID v6 id, created_at, updated_at, is_deleted). Has text content (max 1000 characters), author. Belongs to one topic. Soft-deleted comments are hidden from regular users but visible to admins.
 - **Presenter Suggestion**: Represents a suggested presenter for a topic. Inherits from `SoftDeleteModel` (provides UUID v6 id, created_at, updated_at, is_deleted). Has a `presenter_contact` field (CharField) that can contain email, name, LinkedIn URL, WhatsApp contact, or any other way to contact the person. Belongs to one topic. Limited to 3 suggestions per user per topic and 10 total suggestions per topic. Soft-deleted suggestions are hidden from regular users but visible to admins.
-- **User**: Represents an authenticated user. Has authentication information from SSO provider (Google or LinkedIn), display name, and account creation timestamp. Can create topics, vote, comment, and suggest presenters.
+- **User**: Represents an authenticated user. Has authentication information from SSO provider (Google), display name, and account creation timestamp. Can create topics, vote, comment, and suggest presenters.
 
 ## Success Criteria *(mandatory)*
 
@@ -295,7 +297,7 @@ A logged-in user can switch between different events using an event selector. Ea
 
 ## Assumptions
 
-- Users have Google or LinkedIn accounts for SSO authentication
+- Users have Google accounts for SSO authentication (LinkedIn support planned for future release)
 - Event organizers will use Django admin for content management and moderation
 - Admin access is limited to Django superusers (created via `createsuperuser` command)
 - Users cannot edit their profile information in MVP - they use SSO-provided information only
@@ -312,3 +314,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - Primary interface language is Portuguese (pt-BR) with timezone America/Sao_Paulo, but system supports i18n for future expansion
 - Vote counts are displayed in real-time but do not require WebSocket connections (HTMX polling or page refresh is acceptable)
 - Deletion uses soft delete pattern: content is marked with is_deleted flag (indexed field), hidden from regular users, but recoverable by admins. Django ORM managers filter by is_deleted=False by default.
+
+## Future Enhancements
+
+- **LinkedIn SSO Support**: LinkedIn SSO authentication is planned for a future release. This will be implemented using django-allauth's OpenID Connect provider for LinkedIn.

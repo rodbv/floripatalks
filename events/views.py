@@ -5,6 +5,7 @@ Views for events app.
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, render
 
+from core.decorators import require_authentication
 from events.models import Event, Topic, Vote
 from events.use_cases.get_event_topics import get_event_topics
 from events.use_cases.unvote_topic import unvote_topic
@@ -62,6 +63,7 @@ def load_more_topics(request: HttpRequest, slug: str) -> HttpResponse:
     return render(request, "events/partials/topic_list_fragment.html", context)
 
 
+@require_authentication
 def vote_topic_view(request: HttpRequest, slug: str) -> HttpResponse:
     """
     HTMX endpoint to vote or unvote on a topic.
@@ -79,10 +81,6 @@ def vote_topic_view(request: HttpRequest, slug: str) -> HttpResponse:
     """
     if not request.htmx:
         return HttpResponseNotFound()
-
-    if not request.user.is_authenticated:
-        # Return sign-in prompt (will be handled by US6)
-        return render(request, "accounts/login_popup.html", status=401)
 
     topic = get_object_or_404(Topic, slug=slug)
 

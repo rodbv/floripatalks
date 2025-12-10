@@ -7,7 +7,9 @@
 
 ## Summary
 
-FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (**Google**/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX (for server-driven interactions), AlpineJS (optional, only when explicitly requested), and Django-Cotton following TDD principles with a use case layer architecture.
+FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google), and a readonly experience for non-authenticated users. Built with Django, HTMX (for server-driven interactions), AlpineJS (optional, only when explicitly requested), and Django-Cotton following TDD principles with a use case layer architecture.
+
+**Note**: LinkedIn SSO support is planned for a future release.
 
 ## Technical Context
 
@@ -118,7 +120,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 - **Status**: COMPLIANT
 - **Verification**: AlpineJS is optional and used only when explicitly requested. HTMX prioritized for all interactions.
 - **Usage Patterns** (HTMX-first):
-  - Sign-in popups: HTMX to load modal fragment. AlpineJS only if explicitly requested.
+  - Authentication redirects: Use `HttpResponseClientRedirect` from `django-htmx` for HTMX requests, standard redirect for regular requests.
   - Form validation: HTMX for server-side validation. AlpineJS only if explicitly requested.
   - Event selector: HTMX with native HTML select. AlpineJS only if explicitly requested.
   - Confirmation dialogs: HTMX to load dialog fragment. AlpineJS only if explicitly requested.
@@ -216,7 +218,7 @@ floripatalks/
 │   ├── urls.py
 │   └── templates/
 │       └── accounts/
-│           └── login_popup.html  # AlpineJS popup component
+│           └── (removed: redirect approach used instead)
 ├── core/                   # Shared utilities and base models
 │   ├── __init__.py
 │   ├── models.py           # BaseModel, SoftDeleteModel, SoftDeleteManager
@@ -273,7 +275,7 @@ No violations - all constitution principles are followed.
 
 Based on clarifications, the following patterns are established:
 
-1. **Sign-in Popups**: **HTMX-first**: Use HTMX to load a sign-in modal fragment from the server. AlpineJS only if explicitly requested.
+1. **Authentication Redirects**: Use `@require_authentication` decorator that handles both HTMX and regular requests. For HTMX requests, use `HttpResponseClientRedirect` from `django-htmx` to trigger full-page redirect via `HX-Redirect` header. For regular requests, use standard Django redirect. Include `next` parameter to return users after authentication.
 2. **Form Validation**: **HTMX-first**: Server-side validation with HTMX responses showing errors. Character count can be done with HTML/CSS or vanilla JS if needed. AlpineJS only if explicitly requested.
 3. **Event Selector**: **HTMX-first**: Use HTMX to load content when event is selected (native HTML select with hx-get/hx-trigger). AlpineJS only if explicitly requested.
 4. **Confirmation Dialogs**: **HTMX-first**: Use HTMX to load a confirmation dialog fragment from the server. AlpineJS only if explicitly requested.
@@ -322,12 +324,12 @@ All user stories have been reviewed against **Principle XVI: User Story Design: 
 
 ### ✅ User Story 6 - Readonly Experience for Non-Authenticated Users (Priority: P2)
 - **Standalone**: ⚠️ Partial - Depends on US1 (viewing topics) and US3 (voting) to be meaningful
-- **Independent Test**: ✅ Yes - "A non-authenticated user can view topics, see vote counts and comments, and when clicking interactive buttons, receives a sign-in prompt popup"
-- **Visual Verification**: ✅ Yes - Frontend: Topics visible, sign-in popup appears on interaction attempts
+- **Independent Test**: ✅ Yes - "A non-authenticated user can view topics, see vote counts and comments, and when clicking interactive buttons, is redirected to the login page"
+- **Visual Verification**: ✅ Yes - Frontend: Topics visible, redirect to login page on interaction attempts
 - **Value Delivery**: ✅ Yes - Increases discoverability and engagement
 - **Output-First**: ✅ Yes - Enhances viewing experience
 
-**Note on US6**: While US6 depends on US1/US3 for full functionality, it still delivers standalone value by providing the sign-in popup mechanism and readonly viewing experience. The popup can be tested independently even if topics are minimal.
+**Note on US6**: While US6 depends on US1/US3 for full functionality, it still delivers standalone value by providing the authentication redirect mechanism and readonly viewing experience. The redirect behavior can be tested independently even if topics are minimal.
 
 ### ✅ User Story 7 - Switch Between Events (Priority: P2)
 - **Standalone**: ✅ Yes - Can be completed independently, event selector and navigation

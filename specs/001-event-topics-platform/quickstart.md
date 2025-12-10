@@ -18,13 +18,13 @@ This guide provides a quick overview of how to get started with the Event Topics
    - Read topic descriptions, comments, and presenter suggestions
 
 2. **Attempt Interaction**
-   - Click "Vote" button → Popup appears: "Please sign in to vote"
-   - Click "Add Topic" → Popup appears: "Please sign in to add topics"
-   - Click "Comment" → Popup appears: "Please sign in to comment"
-   - Popup offers Google or LinkedIn SSO login options
+   - Click "Vote" button → Redirected to login page
+   - Click "Add Topic" → Redirected to login page
+   - Click "Comment" → Redirected to login page
+   - Login page offers Google SSO login option
 
 3. **Sign In**
-   - Click "Sign in with Google" or "Sign in with LinkedIn" in popup
+   - Click "Sign in with Google" on login page
    - Complete SSO authentication
    - Redirected back to page, now authenticated
 
