@@ -5,6 +5,13 @@
 
 **Tests**: TDD is required per constitution - all tests must be written before implementation code.
 
+**User Story Design (Principle XVI)**: All user stories are designed as standalone, independently testable deliveries that deliver value by themselves. Each user story phase includes:
+- **Standalone Delivery**: Independently completable without depending on other stories
+- **Independent Test**: Clear test criteria verifiable by Product Owner (included in each phase)
+- **Visual Verification**: Verifiable through frontend or Django Admin
+- **Value Delivery**: Each story delivers tangible value
+- **Output-First Approach**: Viewing/interaction features prioritized before content creation
+
 **GitHub Issues**: Create a GitHub issue ONLY for the task currently being worked on (not in advance for entire phases). Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}` (e.g., `029-custom-user-model`). This prevents issues from becoming outdated when tasks are reordered or changed.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.

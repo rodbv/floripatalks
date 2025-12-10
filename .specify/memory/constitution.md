@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report:
-Version Change: 1.8.4 → 1.8.5 (added User Story Design principle with standalone, testable, value-delivering requirements and output-first approach)
+Version Change: 1.8.5 → 1.8.6 (added rule against implementation decision comments)
 Modified Principles:
-  - Added new principle XVI: User Story Design: Standalone, Testable, Value-Delivering (includes output-first approach)
+  - Code Comments and Documentation: Added explicit rule against "implementation decision comments" that explain why one approach was chosen over another
 Added Sections: None
 Removed Sections: None
 Templates Requiring Updates:
@@ -387,11 +387,12 @@ Code comments and docstrings are NOT recommended as they may contradict code or 
 - **Code should be obvious and simple**: Well-written code should be self-explanatory and not require comments to understand
 - **Only comment non-obvious, surprising code**: Comments should only be used for code that intentionally breaks best practices or contains non-obvious logic that cannot be made clearer through refactoring
 - **No intermediary comments**: Do not leave temporary or intermediary comments explaining implementation decisions (e.g., "# using uuidv6 due to problem with uuidv7")
+- **No implementation decision comments**: Do NOT add comments explaining why one approach was chosen over another (e.g., "# using Event model instead of creating test-only models"). These are transient explanations of implementation choices that provide no value to future readers without context. If the approach is standard practice, it doesn't need explanation. If it's non-standard, refactor to make it obvious or use better naming
 - **Same rule for docstrings**: Docstrings follow the same principle - only add them when the code's purpose cannot be made clear through better naming or structure
 - **No obvious docstrings**: Do NOT write docstrings that simply restate what the code already makes obvious (e.g., docstrings that repeat parameter names, return types, or describe obvious operations). Type annotations and clear naming already provide this information
 - **Prefer refactoring over commenting**: If code needs a comment to be understood, refactor it to be more obvious instead
 
-**Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Obvious docstrings that restate type annotations, parameter names, or obvious operations add no value and create maintenance burden. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
+**Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Implementation decision comments are transient explanations that lose value over time as context is forgotten. Obvious docstrings that restate type annotations, parameter names, or obvious operations add no value and create maintenance burden. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
 
 ### Code Review and Quality Gates
 
@@ -443,4 +444,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.8.5 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
+**Version**: 1.8.6 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10

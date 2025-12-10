@@ -7,7 +7,7 @@
 
 ## Summary
 
-FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (Google/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX (for server-driven interactions), AlpineJS (optional, only when explicitly requested), and Django-Cotton following TDD principles with a use case layer architecture.
+FloripaTalks is a mobile-first web application for managing talk topics for local events. Users can view, vote on, comment on, and suggest topics for future events. The system supports multiple events with slug-based URLs, SSO authentication (**Google**/LinkedIn), and a readonly experience for non-authenticated users. Built with Django, HTMX (for server-driven interactions), AlpineJS (optional, only when explicitly requested), and Django-Cotton following TDD principles with a use case layer architecture.
 
 ## Technical Context
 
@@ -98,6 +98,15 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 ### ✅ XIII. UUID v6 for Primary Keys
 - **Status**: COMPLIANT
 - **Verification**: All models use UUIDField with uuid6.uuid6 default
+
+### ✅ XVI. User Story Design: Standalone, Testable, Value-Delivering
+- **Status**: COMPLIANT
+- **Verification**: All user stories are designed as standalone, independently testable deliveries
+- **Standalone Delivery**: Each user story is independently completable without depending on others
+- **Independent Testability**: Each user story has a clear "Independent Test" verifiable by PO
+- **Visual Verification**: Each user story is verifiable through frontend or Django Admin
+- **Value Delivery**: Each user story delivers value by itself
+- **Output-First Approach**: User stories prioritized to enable viewing/interaction before content creation
 
 ### ✅ XIV. SlugField for URL Routes
 - **Status**: COMPLIANT
@@ -270,6 +279,68 @@ Based on clarifications, the following patterns are established:
 
 **General Rule**: **HTMX first, AlpineJS only when explicitly requested**. Showcase hypermedia and server-driven interactions.
 
+## User Story Review (Principle XVI Compliance)
+
+All user stories have been reviewed against **Principle XVI: User Story Design: Standalone, Testable, Value-Delivering**:
+
+### ✅ User Story 1 - View and Browse Topics (Priority: P1)
+- **Standalone**: ✅ Yes - Can be completed independently, displays topics from database
+- **Independent Test**: ✅ Yes - "A user (logged in or not) can navigate to an event page and see a list of topics with their vote counts and comment counts displayed"
+- **Visual Verification**: ✅ Yes - Frontend: Event page displays topics list with infinite scroll
+- **Value Delivery**: ✅ Yes - Core value proposition, enables content discovery
+- **Output-First**: ✅ Yes - Viewing existing content prioritized over creation
+
+### ✅ User Story 2 - Add, Edit, and Delete Topics (Priority: P2)
+- **Standalone**: ✅ Yes - Can be completed independently, includes full CRUD workflow
+- **Independent Test**: ✅ Yes - "A logged-in user can fill out a form to add a new topic, submit it, immediately see their topic appear in the topics list, edit their own topic on a dedicated page, and delete their own topic"
+- **Visual Verification**: ✅ Yes - Frontend: Form, topic appears in list, edit page, delete confirmation
+- **Value Delivery**: ✅ Yes - Enables content creation and user control
+- **Output-First**: ✅ Follows viewing/voting (US1/US3) - content creation after engagement
+
+### ✅ User Story 3 - Vote and Un-vote on Topics (Priority: P1)
+- **Standalone**: ✅ Yes - Can be completed independently, vote button and count updates
+- **Independent Test**: ✅ Yes - "A logged-in user can click a vote button on any topic, see the vote count increment, and can later click to un-vote, which decreases the vote count"
+- **Visual Verification**: ✅ Yes - Frontend: Vote button state changes, count updates in real-time
+- **Value Delivery**: ✅ Yes - Core engagement feature, enables community prioritization
+- **Output-First**: ✅ Yes - Interacting with existing content prioritized over creation
+
+### ✅ User Story 4 - Comment, Edit, and Delete Comments (Priority: P2)
+- **Standalone**: ✅ Yes - Can be completed independently, includes full CRUD workflow
+- **Independent Test**: ✅ Yes - "A logged-in user can add a comment to a topic, see their comment appear immediately, edit their own comment, delete their own comment, and view all comments from other users on that topic"
+- **Visual Verification**: ✅ Yes - Frontend: Comment form, comments list, edit page, delete confirmation
+- **Value Delivery**: ✅ Yes - Enables discussion and context
+- **Output-First**: ✅ Follows viewing/voting - discussion after engagement
+
+### ✅ User Story 5 - Suggest, Edit, and Delete Presenters (Priority: P3)
+- **Standalone**: ✅ Yes - Can be completed independently, includes full CRUD workflow
+- **Independent Test**: ✅ Yes - "A logged-in user can add a presenter suggestion to a topic by providing contact information (email, name, LinkedIn URL, WhatsApp contact, etc.). The suggestion appears associated with that topic. The user can edit and delete their own suggestions"
+- **Visual Verification**: ✅ Yes - Frontend: Suggestion form, suggestions displayed with topic, edit page, delete confirmation
+- **Value Delivery**: ✅ Yes - Helps event organizers identify potential speakers
+- **Output-First**: ✅ Follows core features - enhancement feature
+
+### ✅ User Story 6 - Readonly Experience for Non-Authenticated Users (Priority: P2)
+- **Standalone**: ⚠️ Partial - Depends on US1 (viewing topics) and US3 (voting) to be meaningful
+- **Independent Test**: ✅ Yes - "A non-authenticated user can view topics, see vote counts and comments, and when clicking interactive buttons, receives a sign-in prompt popup"
+- **Visual Verification**: ✅ Yes - Frontend: Topics visible, sign-in popup appears on interaction attempts
+- **Value Delivery**: ✅ Yes - Increases discoverability and engagement
+- **Output-First**: ✅ Yes - Enhances viewing experience
+
+**Note on US6**: While US6 depends on US1/US3 for full functionality, it still delivers standalone value by providing the sign-in popup mechanism and readonly viewing experience. The popup can be tested independently even if topics are minimal.
+
+### ✅ User Story 7 - Switch Between Events (Priority: P2)
+- **Standalone**: ✅ Yes - Can be completed independently, event selector and navigation
+- **Independent Test**: ✅ Yes - "A user can access different event pages via their slug URLs and see topics specific to each event. The event selector allows switching between available events"
+- **Visual Verification**: ✅ Yes - Frontend: Event selector, URL changes, topics update per event
+- **Value Delivery**: ✅ Yes - Enables multi-event support, essential for scalability
+- **Output-First**: ✅ Yes - Navigation feature that enhances viewing
+
+### Summary
+- **All user stories** meet the standalone, testable, value-delivering criteria
+- **All user stories** have clear Independent Tests verifiable by PO
+- **All user stories** are visually verifiable through frontend or Django Admin
+- **Output-first approach** is followed: US1 (view) and US3 (vote) prioritized before US2 (create)
+- **No boilerplate/chore stories**: All stories deliver tangible value
+
 ## Next Steps
 
 1. ✅ Constitution check passed
@@ -281,3 +352,4 @@ Based on clarifications, the following patterns are established:
 7. ⏭️ **Run `/speckit.tasks`** to generate implementation task breakdown
 
 **Recommended next command**: `/speckit.tasks`
+****
