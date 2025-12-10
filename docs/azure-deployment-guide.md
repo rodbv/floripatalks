@@ -406,61 +406,16 @@ Azure will automatically:
 - Static file collection
 - Custom environment variables
 
-**Option C: Manual Setup with Custom Workflow** (Recommended if starting from scratch):
+**Option C: Manual Setup with Custom Workflow** (Only if starting from scratch):
 
-For projects using `uv`, tests, and custom build steps, create `.github/workflows/main_floripatalks-app.yml` manually (or any name ending in `.yml` in the workflows directory):
+The workflow file is already created in the repository. See: [`.github/workflows/main_floripatalks-app.yml`](../.github/workflows/main_floripatalks-app.yml)
 
-```yaml
-name: Deploy to Azure App Service
-
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
-env:
-  AZURE_WEBAPP_NAME: floripatalks-app
-  PYTHON_VERSION: '3.13'
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v4
-      with:
-        version: "latest"
-
-    - name: Install dependencies
-      run: |
-        uv sync --frozen
-
-    - name: Run tests
-      run: |
-        uv run pytest
-
-    - name: Collect static files
-      run: |
-        uv run python manage.py collectstatic --noinput
-      env:
-        DJANGO_SETTINGS_MODULE: floripatalks.settings.production
-
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: .
-```
+**Key features of the workflow**:
+- Uses `uv` for dependency management
+- Runs tests before deployment
+- Collects static files
+- Deploys to Azure App Service
+- Uses Python 3.13
 
 **Recommendation for this project**:
 
@@ -516,60 +471,14 @@ az webapp deployment list-publishing-profiles \
 
 **Why**: Separates production config from development, enables security features (HTTPS, secure cookies), and prevents debug mode in production
 
-Create `floripatalks/settings/production.py`:
+The production settings file is already created in the repository. See: [`floripatalks/settings/production.py`](../floripatalks/settings/production.py)
 
-```python
-"""
-Django production settings for Azure App Service.
-"""
-
-from .base import *
-
-# Security
-DEBUG = False
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
-
-# Database (SQLite)
-# SQLite database stored in persistent storage (/home/site/wwwroot/)
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-# Note: Azure App Service persistent storage ensures database survives restarts
-
-# Static files
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# Media files (use Azure Blob Storage in production)
-# Install: django-storages[azure]
-# DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
-# AZURE_ACCOUNT_NAME = os.environ.get("AZURE_STORAGE_ACCOUNT_NAME")
-# AZURE_ACCOUNT_KEY = os.environ.get("AZURE_STORAGE_ACCOUNT_KEY")
-# AZURE_CONTAINER = "media"
-
-# Email (use Azure Communication Services or SendGrid)
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# Configure SMTP settings
-
-# Logging
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
-    },
-}
-```
+**Key features**:
+- Requires `SECRET_KEY` environment variable
+- Requires `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` environment variables
+- Enforces HTTPS and secure cookies
+- Configures SQLite database in persistent storage
+- Sets up logging to console (visible in Azure logs)
 
 ### Step 6: Create Startup Script (Optional)
 
@@ -577,26 +486,17 @@ LOGGING = {
 
 **Why**: Automates setup tasks (database migrations, static file collection) and ensures your app is ready before serving traffic
 
-Create `startup.sh` in project root:
+**Note**: This project uses GitHub Actions for CI/CD, which handles migrations and static file collection during deployment. A startup script is optional but can be useful for running migrations on app restart.
 
-```bash
-#!/bin/bash
-# Azure App Service startup script
+If you need a startup script, create `startup.sh` in the project root with commands to:
+- Run database migrations: `python manage.py migrate --noinput`
+- Collect static files (if not done in CI/CD): `python manage.py collectstatic --noinput`
+- Start the web server (Gunicorn or the default Azure handler)
 
-# Run migrations
-python manage.py migrate --noinput
-
-# Collect static files (if not done in CI/CD)
-python manage.py collectstatic --noinput
-
-# Start Gunicorn
-gunicorn floripatalks.wsgi:application --bind 0.0.0.0:8000 --workers 2
-```
-
-**Configure Startup Command in Azure Portal**:
+**Configure Startup Command in Azure Portal** (if using startup script):
 - Navigate: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Configuration** → **General settings**
 - Scroll to **Startup Command**
-- Enter: `bash startup.sh`
+- Enter: `bash startup.sh` (or your custom command)
 - Click **Save** → **Continue**
 
 ### Step 7: Initial Deployment
@@ -633,16 +533,7 @@ gunicorn floripatalks.wsgi:application --bind 0.0.0.0:8000 --workers 2
 - ⚠️ Suitable for <100 concurrent write operations
 - ⚠️ Database file stored in persistent storage (`/home/site/wwwroot/`)
 
-**Setup**:
-```python
-# In floripatalks/settings/production.py
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",  # Stored in persistent storage
-    }
-}
-```
+**Setup**: Already configured in [`floripatalks/settings/production.py`](../floripatalks/settings/production.py)
 
 **Important**:
 - **Live SQLite file**: Stored on App Service persistent storage at `/home/site/wwwroot/db.sqlite3` (survives restarts and deployments)
@@ -1399,25 +1290,13 @@ Create an Azure Function that runs every 3 hours and calls your backup endpoint.
 
 **Why**: Protects against deployment failures that might corrupt the database, allows rollback to pre-deployment state if needed
 
-Update `.github/workflows/main_floripatalks-app.yml` to backup before deployment:
+Update [`.github/workflows/main_floripatalks-app.yml`](../.github/workflows/main_floripatalks-app.yml) to add a backup step before deployment.
 
-```yaml
-# Add this step BEFORE "Deploy to Azure Web App"
-- name: Backup database before deployment
-  run: |
-    # Download database
-    az webapp deployment source download \
-      --resource-group floripatalks-rg \
-      --name floripatalks-app \
-      --output db.sqlite3
-
-    # Run backup
-    uv run python manage.py backup_database --type snapshot
-  env:
-    AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-    DJANGO_SETTINGS_MODULE: floripatalks.settings.production
-  continue-on-error: true # Don't fail deployment if backup fails
-```
+Add a step BEFORE "Deploy to Azure Web App" that:
+- Downloads the database from Azure using `az webapp deployment source download`
+- Runs the backup command: `uv run python manage.py backup_database --type snapshot`
+- Uses `continue-on-error: true` to not fail deployment if backup fails
+- Sets required environment variables: `AZURE_STORAGE_CONNECTION_STRING` and `DJANGO_SETTINGS_MODULE`
 
 ### Step 7: Configure GitHub Secrets
 
