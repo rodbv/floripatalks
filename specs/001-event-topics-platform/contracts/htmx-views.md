@@ -233,8 +233,8 @@
 - `hx-target="#vote-button-<slug>"`
 
 **Data Flow**:
-1. View calls use case: `VoteTopicUseCase(user, topic_slug)` or `UnvoteTopicUseCase(user, topic_slug)`
-2. Use case toggles vote, updates vote_count, returns VoteStatusDTO
+1. View calls use case: `vote_topic(user, topic_slug)` or `unvote_topic(user, topic_slug)`
+2. Use case creates or hard-deletes Vote record, returns VoteStatusDTO with updated vote count (calculated from Vote records)
 3. View converts to context, renders partial template
 4. Returns updated vote button HTML
 

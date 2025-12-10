@@ -37,7 +37,6 @@ Represents a suggested talk topic for an event.
 - `title`: CharField(max_length=200) - Topic title
 - `description`: TextField(max_length=2000, blank=True, null=True) - Optional description
 - `creator`: ForeignKey(User, on_delete=CASCADE, related_name='created_topics')
-- `vote_count`: IntegerField(default=0) - Denormalized count for performance
 - `is_deleted`: BooleanField(default=False, db_index=True) - Soft delete flag
 - `created_at`: DateTimeField(auto_now_add=True)
 - `updated_at`: DateTimeField(auto_now=True)
@@ -52,13 +51,12 @@ Represents a suggested talk topic for an event.
 **Validation**:
 - `title` is required, max 200 characters
 - `description` max 2000 characters if provided
-- `vote_count` must be non-negative
 
 **Manager**: Custom SoftDeleteManager that filters `is_deleted=False` by default
 
 **Indexes**:
 - `is_deleted` (for soft delete filtering)
-- `(event, is_deleted, vote_count, created_at)` - Composite index for list queries
+- `(event, is_deleted, created_at)` - Composite index for list queries
 
 ### Vote
 
@@ -177,11 +175,11 @@ Represents an authenticated user (custom model inheriting from AbstractUser, not
 
 ### Vote Lifecycle
 
-1. **Created**: User votes on topic → Vote record created, topic `vote_count` incremented
-2. **Removed**: User un-votes → Vote record deleted, topic `vote_count` decremented
-3. **Re-voted**: User votes again after un-voting → New vote record created, `vote_count` incremented
+1. **Created**: User votes on topic → Vote record created
+2. **Removed**: User un-votes → Vote record hard-deleted (permanently removed)
+3. **Re-voted**: User votes again after un-voting → New vote record created
 
-**Note**: Votes are hard-deleted (no soft delete) since un-voting is an explicit user action.
+**Note**: Votes are hard-deleted (no soft delete) since un-voting is an explicit user action. Vote counts are calculated at runtime by counting Vote records when building DTOs, providing clear auditing of who voted on each topic.
 
 ### PresenterSuggestion Lifecycle
 
@@ -203,11 +201,11 @@ Represents an authenticated user (custom model inheriting from AbstractUser, not
 
 To prevent N+1 queries when loading topics list:
 
-1. **Prefetch related**: `prefetch_related('comments', 'presenter_suggestions')`
+1. **Prefetch related**: `prefetch_related('votes', 'comments', 'presenter_suggestions')`
 2. **Select related**: `select_related('event', 'creator')`
-3. **Aggregate vote counts**: Use `vote_count` denormalized field (updated on vote/un-vote)
+3. **Aggregate vote counts**: Use `Count('votes')` or `Prefetch('votes', queryset=Vote.objects.all(), to_attr='votes_list')` to count votes at runtime when building DTOs
 4. **Count comments**: Use `Count('comments', filter=Q(comments__is_deleted=False))` or denormalize
-5. **Convert to DTOs**: After optimization, convert QuerySet to dataclass DTOs before passing to templates
+5. **Convert to DTOs**: After optimization, convert QuerySet to dataclass DTOs before passing to templates. Vote counts are calculated in DTOs by counting prefetched Vote records, providing clear auditing of who voted.
 
 ## Model Base Classes
 

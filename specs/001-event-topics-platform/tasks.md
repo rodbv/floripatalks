@@ -126,7 +126,7 @@
 ### Implementation for User Story 1
 
 - [ ] T046 [P] [US1] Create Event model in `events/models.py` inheriting from `BaseModel` with slug, name, description
-- [ ] T047 [P] [US1] Create Topic model in `events/models.py` inheriting from `SoftDeleteModel` with slug (auto-generated), title, description, vote_count, event FK, creator FK
+- [ ] T047 [P] [US1] Create Topic model in `events/models.py` inheriting from `SoftDeleteModel` with slug (auto-generated), title, description, event FK, creator FK (no vote_count field - votes are counted at runtime)
 - [ ] T049 [US1] Create migrations for Event and Topic models: `events/migrations/0001_initial.py`
 - [ ] T050 [P] [US1] Create TopicDTO dataclass in `events/dto/topic_dto.py`
 - [ ] T051 [P] [US1] Create get_topics_for_event function in `events/services/topic_service.py` (prefetch, select_related, convert to DTOs)
@@ -169,8 +169,8 @@
 - [ ] T070 [US3] Create Vote model in `events/models.py` inheriting from `BaseModel` with topic FK, user FK, unique constraint (topic, user)
 - [ ] T071 [US3] Create migration for Vote model: `events/migrations/0002_vote.py`
 - [ ] T072 [US3] Create vote service functions in `events/services/vote_service.py`: vote_topic, unvote_topic, get_user_vote_status
-- [ ] T073 [US3] Create vote_topic function in `events/use_cases/vote_topic.py` (validates, creates vote, updates vote_count, returns status DTO)
-- [ ] T074 [US3] Create unvote_topic function in `events/use_cases/unvote_topic.py` (validates, removes vote, updates vote_count, returns status DTO)
+- [ ] T073 [US3] Create vote_topic function in `events/use_cases/vote_topic.py` (validates, creates Vote record, returns status DTO)
+- [ ] T074 [US3] Create unvote_topic function in `events/use_cases/unvote_topic.py` (validates, hard-deletes Vote record, returns status DTO)
 - [ ] T075 [US3] Create vote/unvote HTMX view in `events/views.py` for POST `/topics/<slug>/vote/` (toggles vote/unvote)
 - [ ] T076 [US3] Add URL pattern in `events/urls.py` for vote endpoint
 - [ ] T077 [US3] Create vote button partial template `events/templates/events/partials/vote_button.html` with HTMX attributes
@@ -399,7 +399,7 @@
 - [ ] T203 [P] Create session expiration handler in `accounts/middleware.py` for FR-043: redirect to login and preserve action context for automatic execution after authentication
 - [ ] T204 [P] Update authentication views to support action preservation (FR-043): store intended action and execute after successful login
 - [ ] T205 [P] Create number formatting utility in `core/utils.py` for FR-044: function to format numbers in Portuguese (pt-BR) conventions (e.g., "1.234 votos") without abbreviations
-- [ ] T206 [P] Update TopicDTO and CommentDTO to use number formatting utility (FR-044): format vote_count and comment counts in pt-BR format
+- [ ] T206 [P] Update TopicDTO and CommentDTO to use number formatting utility (FR-044): format vote counts (calculated from Vote records) and comment counts in pt-BR format
 
 ---
 
