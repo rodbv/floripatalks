@@ -93,7 +93,7 @@
 - [x] T029 [P] Setup database configuration: SQLite for all environments (development and production) in `floripatalks/settings/base.py`
 - [x] T030 [P] Configure django-htmx in `floripatalks/settings/base.py`: add `django_htmx` to `INSTALLED_APPS`
 - [x] T031 [P] Configure django-cotton in `floripatalks/settings/base.py`: add `django_cotton` to `INSTALLED_APPS`
-- [ ] T032 [P] Create base templates directory: `templates/base.html` with HTMX and AlpineJS includes
+- [ ] T032 [P] Create base templates directory: `templates/base.html` with HTMX includes (AlpineJS optional/commented)
 - [x] T033 [P] Create base model classes in `core/models.py`: `BaseModel` (UUID v6, created_at, updated_at) and `SoftDeleteModel` (extends BaseModel with is_deleted and SoftDeleteManager)
 - [x] T034 [P] Setup i18n configuration: Portuguese (pt-BR) as primary language, timezone America/Sao_Paulo in `floripatalks/settings/base.py`
 - [ ] T035 [P] Create `core/utils.py` for shared utilities

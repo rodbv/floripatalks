@@ -38,13 +38,15 @@
 - Q: How should presenter suggestions be ordered/displayed? → A: Chronological order (oldest first)
 - Q: How many topics should be loaded per infinite scroll batch? → A: 20 topics per load
 
-### Session 2025-12-09 (AlpineJS Integration)
+### Session 2025-12-09 (AlpineJS Integration - REVISED)
 
-- Q: How should the sign-in popup be implemented when non-authenticated users click interactive buttons? → A: AlpineJS for popup toggle (x-show/x-if), HTMX for authentication when user clicks "Sign in"
-- Q: How should form validation feedback be implemented (e.g., character count, real-time error messages)? → A: AlpineJS for client-side validation/feedback (character count, real-time errors), HTMX for form submission and server-side validation
-- Q: How should the event selector work in the interface? → A: Dropdown/select with AlpineJS for toggle, HTMX to load content of selected event
-- Q: How should confirmation dialogs (e.g., delete confirmation) be implemented? → A: AlpineJS for confirmation modal toggle, HTMX to execute action after confirmation
-- Q: How should loading indicators be implemented for HTMX requests? → A: HTMX native (hx-indicator) as default, AlpineJS optional for custom loading states when needed
+**Note**: This project prioritizes HTMX and hypermedia. AlpineJS is optional and should be used only when explicitly requested.
+
+- Q: How should the sign-in popup be implemented when non-authenticated users click interactive buttons? → A: **HTMX-first approach**: Use HTMX to load a sign-in modal fragment from the server. AlpineJS only if explicitly requested.
+- Q: How should form validation feedback be implemented (e.g., character count, real-time error messages)? → A: **HTMX-first approach**: Server-side validation with HTMX responses showing errors. Character count can be done with HTML/CSS or vanilla JS if needed. AlpineJS only if explicitly requested.
+- Q: How should the event selector work in the interface? → A: **HTMX-first approach**: Use HTMX to load content when event is selected (native HTML select with hx-get/hx-trigger). AlpineJS only if explicitly requested.
+- Q: How should confirmation dialogs (e.g., delete confirmation) be implemented? → A: **HTMX-first approach**: Use HTMX to load a confirmation dialog fragment from the server. AlpineJS only if explicitly requested.
+- Q: How should loading indicators be implemented for HTMX requests? → A: HTMX native (hx-indicator) as default. AlpineJS only if explicitly requested for custom loading states.
 
 ## User Scenarios & Testing *(mandatory)*
 
