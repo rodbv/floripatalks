@@ -8,6 +8,11 @@ from dotenv import load_dotenv
 
 from .base import *
 
+# Add development-only apps
+INSTALLED_APPS += [
+    "django_browser_reload",  # Hot-reload for development
+]
+
 # Load environment variables from .env file
 # This allows using .env file for local development
 env_path = BASE_DIR / ".env"

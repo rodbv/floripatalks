@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Sair" %} - FloripaTalks{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>{% trans "Sair" %}</h1>
+            <p class="auth-subtitle">{% trans "Tem certeza de que deseja sair?" %}</p>
+        </div>
+
+        <div class="auth-body">
+            <form method="post" action="{% url 'account_logout' %}" class="auth-form">
+                {% csrf_token %}
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+                <button type="submit" class="auth-button auth-button-primary">
+                    {% trans "Sair" %}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(135deg, var(--color-bg-light) 0%, #ffffff 100%);
+    }
+
+    .auth-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 440px;
+        padding: 2.5rem;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .auth-header h1 {
+        font-size: 2rem;
+        color: var(--color-text-dark);
+        margin: 0 0 0.5rem 0;
+    }
+
+    .auth-subtitle {
+        color: var(--color-text-light);
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .auth-form {
+        margin-top: 1.5rem;
+    }
+
+    .auth-button {
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-height: 48px;
+    }
+
+    .auth-button-primary {
+        background: var(--color-primary);
+        color: #ffffff;
+    }
+
+    .auth-button-primary:hover {
+        background: var(--color-primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(4, 107, 210, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .auth-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .auth-header h1 {
+            font-size: 1.75rem;
+        }
+    }
+</style>
+{% endblock %}

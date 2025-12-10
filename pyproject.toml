@@ -9,14 +9,10 @@ dependencies = [
     "django-allauth>=65.13.1",
     "django-cotton>=2.5.1",
     "django-htmx>=1.27.0",
-    "pytest>=9.0.2",
-    "pytest-django>=4.11.1",
     "requests>=2.32.5",
     "pyjwt>=2.10.1",
     "cryptography>=46.0.3",
     "uuid6>=2025.0.1",
-    "model-bakery>=1.20.5",
-    "faker>=38.2.0",
     "python-dotenv>=1.2.1",
 ]
 
@@ -93,4 +89,13 @@ markers = [
     "unit: Unit tests",
     "integration: Integration tests",
     "slow: Slow running tests",
+]
+
+[dependency-groups]
+dev = [
+    "django-browser-reload>=1.21.0",
+    "faker>=38.2.0",
+    "model-bakery>=1.20.5",
+    "pytest>=9.0.2",
+    "pytest-django>=4.11.1",
 ]

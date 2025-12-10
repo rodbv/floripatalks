@@ -128,6 +128,9 @@ SOCIALACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none"  # For MVP, skip email verification
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_STORE_TOKENS = False  # Don't store OAuth tokens (not needed for basic SSO)
+# Allow direct redirect to OAuth provider without intermediate confirmation page
+# Note: This uses GET instead of POST, which is acceptable when user explicitly clicks login button
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # Social provider settings
 # These will be configured via environment variables in production

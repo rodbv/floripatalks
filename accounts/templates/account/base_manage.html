@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Gerenciar Conta" %} - FloripaTalks{% endblock %}
+
+{% block content %}
+<div class="account-manage-container">
+    <div class="account-manage-card">
+        <div class="account-manage-header">
+            <h1>{% trans "Gerenciar Conta" %}</h1>
+        </div>
+
+        <nav class="account-menu" role="navigation" aria-label="{% trans 'Menu da conta' %}">
+            <ul class="account-menu-list">
+                <li class="account-menu-item">
+                    <a href="{% url 'account_email' %}" class="account-menu-link">
+                        {% trans "Alterar e-mail" %}
+                    </a>
+                </li>
+                <li class="account-menu-item">
+                    <a href="{% url 'account_change_password' %}" class="account-menu-link">
+                        {% trans "Alterar senha" %}
+                    </a>
+                </li>
+                <li class="account-menu-item">
+                    <a href="{% url 'socialaccount_connections' %}" class="account-menu-link">
+                        {% trans "Conexões de conta" %}
+                    </a>
+                </li>
+                <li class="account-menu-item">
+                    <a href="{% url 'account_logout' %}" class="account-menu-link account-menu-link-logout">
+                        {% trans "Sair" %}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="account-content">
+            {% block account_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .account-manage-container {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(135deg, var(--color-bg-light) 0%, #ffffff 100%);
+    }
+
+    .account-manage-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        padding: 2.5rem;
+    }
+
+    .account-manage-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--color-border-light);
+    }
+
+    .account-manage-header h1 {
+        font-size: 2rem;
+        color: var(--color-text-dark);
+        margin: 0;
+    }
+
+    .account-menu {
+        margin-bottom: 2rem;
+    }
+
+    .account-menu-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .account-menu-item {
+        margin: 0;
+    }
+
+    .account-menu-link {
+        display: block;
+        padding: 0.875rem 1rem;
+        color: var(--color-primary);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.2s;
+        font-weight: 500;
+        min-height: 44px;
+        line-height: 44px;
+        padding: 0 1rem;
+    }
+
+    .account-menu-link:hover {
+        background: var(--color-bg-light);
+        color: var(--color-primary-dark);
+    }
+
+    .account-menu-link-logout {
+        color: #dc2626;
+    }
+
+    .account-menu-link-logout:hover {
+        background: #fee;
+        color: #b91c1c;
+    }
+
+    .account-content {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--color-border-light);
+    }
+
+    @media (max-width: 768px) {
+        .account-manage-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .account-manage-header h1 {
+            font-size: 1.75rem;
+        }
+    }
+</style>
+{% endblock %}

@@ -6,36 +6,47 @@
     <title>{% block title %}FloripaTalks{% endblock %}</title>
 
     {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/pure-css/pure-min.css' %}">
     <style>
-        /* Color palette from python.floripa.br */
+        /* Color palette inspired by Python Floripa branding */
         :root {
-            /* Primary colors */
-            --color-primary: #046bd2;
-            --color-primary-dark: #045cb4;
-            --color-primary-text: #012c66;
+            /* Primary colors - Blue (#073CA5) */
+            --color-primary: #073CA5;
+            --color-primary-dark: #052d7a;
+            --color-primary-light: #0a4fd4;
+            --color-primary-text: #031a52;
 
-            /* Text colors */
+            /* Accent colors - Golden Yellow (#D5A10C) */
+            --color-accent: #D5A10C;
+            --color-accent-dark: #b8870a;
+            --color-accent-light: #f5b814;
+            --color-accent-yellow: #D5A10C;
+
+            /* Text colors - Soft dark blues and warm grays */
             --color-text-dark: #1e293b;
             --color-text: #334155;
-            --color-text-light: #6b7280;
+            --color-text-light: #64748b;
 
-            /* Background colors */
+            /* Background colors - White and soft blue-tinted grays */
             --color-bg: #FFFFFF;
-            --color-bg-light: #F0F5FA;
-            --color-bg-dark: #111111;
+            --color-bg-light: #f8fafc;
+            --color-bg-warm: #fefbf3;
+            --color-bg-dark: #031a52;
 
-            /* Border colors */
-            --color-border: #D1D5DB;
-            --color-border-light: #E5E7EB;
+            /* Border colors - Soft blue-gray */
+            --color-border: #cbd5e1;
+            --color-border-light: #e2e8f0;
+            --color-border-accent: #D5A10C;
 
-            /* Accent colors */
-            --color-accent-yellow: #FDBC2C;
-            --color-accent-red: #FE5F58;
+            /* Accent red (for errors/alerts) */
+            --color-accent-red: #ef4444;
 
             /* Typography */
             font-size: clamp(14px, 2.5vw, 16px);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         }
 
         /* Code/monospace font */
@@ -70,7 +81,9 @@
         /* Typography */
         h1, h2, h3, h4, h5, h6 {
             color: var(--color-text-dark);
-            font-weight: 600;
+            font-weight: 700;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            letter-spacing: -0.02em;
         }
 
         h1 {
@@ -144,7 +157,7 @@
         }
 
         .vote-icon-button.voted svg {
-            filter: drop-shadow(0 0 2px rgba(253, 188, 44, 0.5));
+            filter: drop-shadow(0 0 2px rgba(213, 161, 12, 0.5));
         }
 
         /* Topic card footer layout */
@@ -198,8 +211,8 @@
 
         /* Avatar styling - circular with placeholder */
         .creator-avatar {
-            width: 48px;
-            height: 48px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--color-border-light);
@@ -207,8 +220,8 @@
         }
 
         .creator-avatar-placeholder {
-            width: 48px;
-            height: 48px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             display: flex;
@@ -221,7 +234,7 @@
         .avatar-initial {
             color: #ffffff;
             font-weight: 600;
-            font-size: 1.25rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
         }
 
@@ -411,20 +424,297 @@
             font-weight: 500;
         }
 
-        /* Navigation styling */
-        nav {
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        /* Top Navigation Bar - Always Visible */
+        .top-navigation {
+            background: var(--color-primary);
+            box-shadow: 0 2px 8px rgba(7, 60, 165, 0.2);
+            border-bottom: 1px solid var(--color-primary-dark);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            box-sizing: border-box;
+            width: 100%;
         }
 
-        nav a {
-            color: var(--color-text-dark);
+        .nav-brand {
+            flex-shrink: 0;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: -0.02em;
+            display: inline-block;
+        }
+
+        .logo-floripa {
+            color: #ffffff;
+        }
+
+        .logo-talks {
+            color: var(--color-accent-yellow);
+        }
+
+        .nav-logo:hover .logo-floripa,
+        .nav-logo:hover .logo-talks {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                         0 0 20px rgba(255, 255, 255, 0.6),
+                         0 0 30px rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
             font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-block;
+            min-height: 44px;
+            line-height: 44px;
+            padding: 0 1rem;
         }
 
-        nav a:hover {
+        .nav-link:hover {
+            color: var(--color-accent-yellow);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link-admin {
+            color: var(--color-accent-yellow);
+            font-weight: 600;
+        }
+
+        .nav-link-admin:hover {
+            background-color: var(--color-accent-yellow);
             color: var(--color-primary);
+        }
+
+        /* User Menu Dropdown */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-menu-trigger {
+            background: none;
+            border: none;
+            padding: 0.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .user-menu-trigger:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-menu-trigger:focus {
+            outline: none;
+        }
+
+        .user-menu-trigger:focus-visible {
+            outline: 2px solid var(--color-accent-yellow);
+            outline-offset: 2px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-border-light);
+            display: block;
+        }
+
+        .user-avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--color-border-light);
+        }
+
+        .user-avatar-placeholder .avatar-initial {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .user-menu-indicator {
+            color: #ffffff;
+            transition: opacity 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .user-menu-indicator.open {
+            opacity: 0.7;
+        }
+
+        .user-menu-trigger:hover .user-menu-indicator {
+            color: var(--color-accent-yellow);
+        }
+
+        .user-menu-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            max-width: calc(100vw - 2rem);
+            z-index: 1001;
+            border: 1px solid var(--color-border-light);
+            box-sizing: border-box;
+        }
+
+        .user-menu-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .user-menu-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .user-menu-name {
+            font-weight: 600;
+            color: var(--color-text-dark);
+            font-size: 0.95rem;
+        }
+
+        .user-menu-email {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+        }
+
+        .user-menu-divider {
+            height: 1px;
+            background: var(--color-border-light);
+            margin: 0.5rem 0;
+        }
+
+        .user-menu-items {
+            padding: 0.5rem 0;
+        }
+
+        .user-menu-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--color-text-dark);
+            text-decoration: none;
+            transition: background-color 0.2s;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .user-menu-item:hover,
+        .user-menu-item:focus {
+            background-color: var(--color-bg-light);
+            color: var(--color-primary);
+        }
+
+        .user-menu-item:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -2px;
+        }
+
+        .user-menu-item-admin {
+            color: var(--color-accent-yellow);
+            font-weight: 600;
+        }
+
+        .user-menu-item-admin:hover {
+            background-color: var(--color-accent-yellow);
+            color: var(--color-primary);
+        }
+
+        /* Mobile Navigation */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .nav-menu {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
+
+            .nav-actions {
+                gap: 0.5rem;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+                padding: 0 0.75rem;
+            }
+
+            .user-menu {
+                position: relative;
+            }
+
+            .user-menu-dropdown {
+                right: 0;
+                left: auto;
+                min-width: 180px;
+                max-width: calc(100vw - 2rem);
+            }
+
+            .user-avatar,
+            .user-avatar-placeholder {
+                width: 36px;
+                height: 36px;
+            }
+
+            .user-avatar-placeholder .avatar-initial {
+                font-size: 0.9rem;
+            }
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -434,6 +724,8 @@
 
     {% csrf_token %}
     <script src="{% static 'js/htmx.min.js' %}"></script>
+    {% load django_browser_reload %}
+    {% django_browser_reload_script %}
     <script>
         // Configure HTMX to include CSRF token in all requests
         document.body.addEventListener('htmx:configRequest', function(event) {
@@ -444,10 +736,159 @@
             }
         });
     </script>
-    {# AlpineJS optional - uncomment only when explicitly requested #}
-    {# <script src="{% static 'js/alpine.min.js' %}" defer></script> #}
+    <script src="{% static 'js/alpine.min.js' %}" defer></script>
 
     <header>
+        <nav class="top-navigation" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <a href="{% url 'home' %}" class="nav-logo" aria-label="FloripaTalks - Página inicial">
+                        <span class="logo-floripa">Floripa</span><span class="logo-talks">Talks</span>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{% url 'home' %}" class="nav-link">Eventos</a>
+                    </li>
+                </ul>
+                <div class="nav-actions">
+                    {% if user.is_authenticated %}
+                        <div class="user-menu" x-data="{
+                            open: false,
+                            currentIndex: -1,
+                            menuItems: [],
+                            init() {
+                                this.$watch('open', value => {
+                                    if (value) {
+                                        this.$nextTick(() => {
+                                            this.menuItems = Array.from(this.$refs.menuItems.querySelectorAll('.user-menu-item'));
+                                            if (this.menuItems.length > 0) {
+                                                this.currentIndex = 0;
+                                                this.menuItems[0].focus();
+                                            }
+                                        });
+                                    } else {
+                                        this.currentIndex = -1;
+                                        this.$refs.trigger.focus();
+                                    }
+                                });
+                            },
+                            handleKeydown(event) {
+                                if (!this.open) {
+                                    if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
+                                        event.preventDefault();
+                                        this.open = true;
+                                    }
+                                    return;
+                                }
+                                switch(event.key) {
+                                    case 'ArrowDown':
+                                        event.preventDefault();
+                                        this.currentIndex = (this.currentIndex + 1) % this.menuItems.length;
+                                        this.menuItems[this.currentIndex]?.focus();
+                                        break;
+                                    case 'ArrowUp':
+                                        event.preventDefault();
+                                        this.currentIndex = this.currentIndex <= 0 ? this.menuItems.length - 1 : this.currentIndex - 1;
+                                        this.menuItems[this.currentIndex]?.focus();
+                                        break;
+                                    case 'Home':
+                                        event.preventDefault();
+                                        this.currentIndex = 0;
+                                        this.menuItems[0]?.focus();
+                                        break;
+                                    case 'End':
+                                        event.preventDefault();
+                                        this.currentIndex = this.menuItems.length - 1;
+                                        this.menuItems[this.currentIndex]?.focus();
+                                        break;
+                                    case 'Escape':
+                                        event.preventDefault();
+                                        this.open = false;
+                                        break;
+                                    case 'Tab':
+                                        if (event.shiftKey && this.currentIndex === 0) {
+                                            event.preventDefault();
+                                            this.open = false;
+                                        } else if (!event.shiftKey && this.currentIndex === this.menuItems.length - 1) {
+                                            event.preventDefault();
+                                            this.open = false;
+                                        }
+                                        break;
+                                }
+                            }
+                        }" @click.away="open = false">
+                            <button
+                                x-ref="trigger"
+                                class="user-menu-trigger"
+                                type="button"
+                                aria-label="Menu do usuário"
+                                :aria-expanded="open"
+                                aria-haspopup="true"
+                                aria-controls="user-menu-dropdown"
+                                @click="open = !open"
+                                @keydown="handleKeydown($event)"
+                            >
+                                {% if user.socialaccount_set.all %}
+                                    {% with social_account=user.socialaccount_set.all|first %}
+                                        {% if social_account.get_avatar_url %}
+                                            <img src="{{ social_account.get_avatar_url }}" alt="{{ user.get_full_name|default:user.username }}" class="user-avatar">
+                                        {% else %}
+                                            <div class="user-avatar user-avatar-placeholder">
+                                                <span class="avatar-initial">{{ user.get_full_name|default:user.username|first|upper }}</span>
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    <div class="user-avatar user-avatar-placeholder">
+                                        <span class="avatar-initial">{{ user.get_full_name|default:user.username|first|upper }}</span>
+                                    </div>
+                                {% endif %}
+                                <svg class="user-menu-indicator" :class="{ 'open': open }" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <div
+                                id="user-menu-dropdown"
+                                class="user-menu-dropdown"
+                                x-show="open"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="opacity-0 transform scale-95 translate-y-[-10px]"
+                                x-transition:enter-end="opacity-100 transform scale-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="opacity-100 transform scale-100 translate-y-0"
+                                x-transition:leave-end="opacity-0 transform scale-95 translate-y-[-10px]"
+                                role="menu"
+                                style="display: none;"
+                                @keydown="handleKeydown($event)"
+                            >
+                                <div class="user-menu-header">
+                                    <div class="user-menu-info">
+                                        <div class="user-menu-name">{{ user.get_full_name|default:user.username }}</div>
+                                        <div class="user-menu-email">{{ user.email }}</div>
+                                    </div>
+                                </div>
+                                <div class="user-menu-items" x-ref="menuItems">
+                                    {# Future: Add "Meus Votos" link here #}
+                                    {% if user.is_staff or user.is_superuser %}
+                                        <a href="{% url 'admin:index' %}" class="user-menu-item user-menu-item-admin" role="menuitem" tabindex="-1">
+                                            <span>Admin</span>
+                                        </a>
+                                    {% endif %}
+                                    <a href="{% url 'account_logout' %}" class="user-menu-item" role="menuitem" tabindex="-1">
+                                        <span>Sair</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'account_login' %}" class="nav-link">Entrar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
         {% block header %}{% endblock %}
     </header>
 
