@@ -14,7 +14,7 @@ class TopicInline(admin.TabularInline):
 
     model = Topic
     extra = 0
-    fields = ["title", "slug", "creator", "vote_count", "is_deleted", "created_at"]
+    fields = ["title", "slug", "creator", "is_deleted", "created_at"]
     readonly_fields = ["slug", "created_at"]
     show_change_link = True
     verbose_name = "Tópico"
@@ -53,7 +53,7 @@ class EventAdmin(admin.ModelAdmin):
 class TopicAdmin(admin.ModelAdmin):
     """Admin interface for Topic model."""
 
-    list_display = ["title", "slug", "event", "creator", "vote_count", "is_deleted", "created_at"]
+    list_display = ["title", "slug", "event", "creator", "is_deleted", "created_at"]
     verbose_name = "Tópico"
     verbose_name_plural = "Tópicos"
     list_filter = ["is_deleted", "created_at", "event"]
@@ -63,7 +63,7 @@ class TopicAdmin(admin.ModelAdmin):
         (
             "Informações Básicas",
             {
-                "fields": ("event", "title", "slug", "description", "creator", "vote_count"),
+                "fields": ("event", "title", "slug", "description", "creator"),
             },
         ),
         (

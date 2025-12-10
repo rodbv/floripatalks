@@ -48,14 +48,13 @@ class Topic(SoftDeleteModel):
         related_name="created_topics",
         verbose_name="Criador",
     )
-    vote_count = models.IntegerField("Contagem de votos", default=0)
 
     class Meta:
         ordering = ["-created_at"]
         verbose_name = "Tópico"
         verbose_name_plural = "Tópicos"
         indexes = [
-            models.Index(fields=["event", "is_deleted", "vote_count", "created_at"]),
+            models.Index(fields=["event", "is_deleted", "created_at"]),
         ]
 
     def __str__(self) -> str:

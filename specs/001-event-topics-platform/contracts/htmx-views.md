@@ -26,7 +26,7 @@
 **HTMX Behavior**: None (full page load)
 
 **Data Flow**:
-1. View calls use case: `GetEventTopicsUseCase(event_slug)`
+1. View calls use case: `get_event_topics(event_slug)`
 2. Use case returns list of TopicDTOs
 3. View converts to context, renders template
 4. Template receives DTOs (not QuerySets)
@@ -55,7 +55,7 @@
 - `hx-swap="afterend"` (append after last item)
 
 **Data Flow**:
-1. View calls use case: `GetEventTopicsUseCase(event_slug, offset=offset)`
+1. View calls use case: `get_event_topics(event_slug, offset=offset)`
 2. Use case returns list of TopicDTOs (next batch)
 3. View converts to context, renders partial template
 4. Returns HTML fragment
@@ -82,7 +82,7 @@
 **HTMX Behavior**: None (full page load)
 
 **Data Flow**:
-1. View calls use case: `GetTopicDetailUseCase(topic_slug)`
+1. View calls use case: `get_topic_detail(topic_slug)`
 2. Use case returns TopicDetailDTO (includes comments, suggestions)
 3. View converts to context, renders template
 
@@ -131,7 +131,7 @@
 - On error: Display error message
 
 **Data Flow**:
-1. View calls use case: `CreateTopicUseCase(user, title, description, event_slug)`
+1. View calls use case: `create_topic(user, title, description, event_slug)`
 2. Use case validates, creates topic, returns TopicDTO
 3. View converts to context, renders partial template
 4. Returns HTML fragment
@@ -178,7 +178,7 @@
 **HTMX Behavior**: None (dedicated page, browser back button works)
 
 **Data Flow**:
-1. View calls use case: `EditTopicUseCase(user, topic_slug, title, description)`
+1. View calls use case: `edit_topic(user, topic_slug, title, description)`
 2. Use case validates ownership, updates topic, returns TopicDTO
 3. View redirects to topic detail or event page
 
@@ -206,7 +206,7 @@
 - `hx-confirm="Are you sure you want to delete this topic?"`
 
 **Data Flow**:
-1. View calls use case: `DeleteTopicUseCase(user, topic_slug)`
+1. View calls use case: `delete_topic(user, topic_slug)`
 2. Use case validates ownership, soft deletes topic
 3. View returns success response, HTMX removes element
 
@@ -266,7 +266,7 @@
 - `hx-target="#comments-list"`
 
 **Data Flow**:
-1. View calls use case: `AddCommentUseCase(user, topic_slug, content)`
+1. View calls use case: `add_comment(user, topic_slug, content)`
 2. Use case validates, creates comment, returns CommentDTO
 3. View converts to context, renders partial template
 
@@ -341,7 +341,7 @@
 - Method: POST
 - Path: `/topics/<slug>/presenters/suggest/`
 - Headers: `HX-Request: true`, CSRF token
-- Body: Form data (`email`, `url`, `full_name` - at least one required)
+- Body: Form data (`presenter_contact` - required, can be email, name, LinkedIn URL, WhatsApp contact, etc.)
 
 **Response**:
 - Status: 200 OK (success) or 400 Bad Request (validation/limit error)
@@ -354,7 +354,7 @@
 - `hx-swap="afterbegin"` (prepend to suggestions list)
 
 **Data Flow**:
-1. View calls use case: `SuggestPresenterUseCase(user, topic_slug, email, url, full_name)`
+1. View calls use case: `suggest_presenter(suggested_by, topic_slug, presenter_contact)`
 2. Use case validates limits (3 per user, 10 per topic), creates suggestion, returns PresenterSuggestionDTO
 3. View converts to context, renders partial template
 
@@ -384,7 +384,7 @@
 - Method: POST
 - Path: `/presenters/<id>/edit/`
 - Headers: CSRF token
-- Body: Form data (`email`, `url`, `full_name`)
+- Body: Form data (`presenter_contact` - required, can be email, name, LinkedIn URL, WhatsApp contact, etc.)
 
 **Response**:
 - Status: 200 OK

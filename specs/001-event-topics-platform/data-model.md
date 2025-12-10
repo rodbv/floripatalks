@@ -114,20 +114,18 @@ Represents a suggested presenter for a topic.
 **Fields**:
 - `id`: UUIDField(primary_key=True, default=uuid6.uuid6, editable=False) - UUID v6 primary key
 - `topic`: ForeignKey(Topic, on_delete=CASCADE, related_name='presenter_suggestions')
-- `suggester`: ForeignKey(User, on_delete=CASCADE, related_name='presenter_suggestions')
-- `email`: EmailField(blank=True, null=True) - Optional email address
-- `url`: URLField(blank=True, null=True) - Optional URL (e.g., LinkedIn)
-- `full_name`: CharField(max_length=200, blank=True, null=True) - Optional full name
+- `suggested_by`: ForeignKey(User, on_delete=CASCADE, related_name='presenter_suggestions')
+- `presenter_contact`: CharField(max_length=500) - Contact information (email, name, LinkedIn URL, WhatsApp contact, etc.)
 - `is_deleted`: BooleanField(default=False, db_index=True) - Soft delete flag
 - `created_at`: DateTimeField(auto_now_add=True)
 - `updated_at`: DateTimeField(auto_now=True)
 
 **Relationships**:
 - Many-to-one with Topic (many suggestions belong to one topic)
-- Many-to-one with User (suggester)
+- Many-to-one with User (suggested_by)
 
 **Validation**:
-- At least one of `email`, `url`, or `full_name` must be provided
+- `presenter_contact` is required (not empty)
 - Max 3 suggestions per user per topic (enforced in use case layer)
 - Max 10 total suggestions per topic (enforced in use case layer)
 
@@ -135,7 +133,7 @@ Represents a suggested presenter for a topic.
 
 **Indexes**:
 - `is_deleted` (for soft delete filtering)
-- `(topic, suggester, is_deleted)` - For per-user per-topic queries
+- `(topic, suggested_by, is_deleted)` - For per-user per-topic queries
 
 ### User
 
@@ -154,7 +152,7 @@ Represents an authenticated user (custom model inheriting from AbstractUser, not
 - One-to-many with Topic (creator)
 - One-to-many with Vote (user's votes)
 - One-to-many with Comment (author)
-- One-to-many with PresenterSuggestion (suggester)
+- One-to-many with PresenterSuggestion (suggested_by)
 
 **Note**: Custom user model MUST be defined before first migration. Inherits from `AbstractUser` following Django best practices. django-allauth will work with custom user model.
 

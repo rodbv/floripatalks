@@ -67,7 +67,7 @@ A user (logged in or not) visits the event page and can see a list of topics tha
 
 1. **Given** a user (logged in or not) navigates to the Python Floripa event page, **When** they view the page, **Then** they see an initial set of topics for that event ordered by vote count (descending), then by creation date (oldest first) for ties, with vote counts and comment counts displayed, and more topics load automatically as they scroll down
 2. **Given** a user is on a mobile device, **When** they view the topics list, **Then** the layout is optimized for mobile viewing with readable text and touch-friendly interactions
-3. **Given** a topic has suggested presenters, **When** a user views that topic, **Then** they can see the presenter suggestions (email, URL, or fullname) associated with that topic
+3. **Given** a topic has suggested presenters, **When** a user views that topic, **Then** they can see the presenter suggestions with contact information (email, name, LinkedIn URL, WhatsApp contact, etc.) associated with that topic
 4. **Given** multiple events exist, **When** a user switches between events using the event selector, **Then** they see topics specific to the selected event
 5. **Given** a non-authenticated user is viewing topics, **When** they click a vote button or other interactive element, **Then** a popup appears inviting them to sign in or sign up
 
@@ -89,7 +89,7 @@ A logged-in user can create a new topic suggestion for an event. They provide a 
 4. **Given** a user is on mobile, **When** they add a topic, **Then** the form is easy to use with mobile-friendly input fields
 5. **Given** a user has created a topic, **When** they click edit on their own topic, **Then** they are taken to a dedicated edit page (not a modal) where they can modify the topic
 6. **Given** a user is editing their topic on a dedicated page, **When** they submit the changes, **Then** they are returned to the topic list or detail page with their updated topic displayed, and the browser back button works seamlessly
-7. **Given** a user has created a topic, **When** they click delete on their own topic, **Then** a confirmation modal appears (AlpineJS), and after confirmation, the topic is removed via HTMX
+7. **Given** a user has created a topic, **When** they click delete on their own topic, **Then** a confirmation dialog appears (HTMX-first: load dialog fragment from server, AlpineJS only if explicitly requested), and after confirmation, the topic is removed via HTMX
 
 ---
 
@@ -125,27 +125,27 @@ A logged-in user can add comments to topics to discuss them or provide additiona
 3. **Given** a user is on mobile, **When** they add or view comments, **Then** the comment interface is optimized for mobile with readable text and easy input
 4. **Given** a user has created a comment, **When** they click edit on their own comment, **Then** they are taken to a dedicated edit page (not a modal) where they can modify the comment
 5. **Given** a user is editing their comment on a dedicated page, **When** they submit the changes, **Then** they are returned to the topic page with their updated comment displayed, and the browser back button works seamlessly
-6. **Given** a user has created a comment, **When** they click delete on their own comment, **Then** a confirmation modal appears (AlpineJS), and after confirmation, the comment is removed via HTMX
+6. **Given** a user has created a comment, **When** they click delete on their own comment, **Then** a confirmation dialog appears (HTMX-first: load dialog fragment from server, AlpineJS only if explicitly requested), and after confirmation, the comment is removed via HTMX
 
 ---
 
 ### User Story 5 - Suggest, Edit, and Delete Presenters (Priority: P3)
 
-A logged-in user can suggest a person who could present a topic. They can provide either an email address, a URL (such as LinkedIn profile), or a full name. Multiple presenter suggestions can be associated with a single topic. Users can edit and delete their own presenter suggestions.
+A logged-in user can suggest a person who could present a topic. They provide contact information for the presenter (email, name, LinkedIn URL, WhatsApp contact, or any other way to contact the person). Multiple presenter suggestions can be associated with a single topic. Users can edit and delete their own suggestions.
 
 **Why this priority**: Presenter suggestions help event organizers identify potential speakers, but this is less critical than the core topic voting and commenting functionality. Allowing users to edit and delete their own suggestions gives them control over their contributions.
 
-**Independent Test**: A logged-in user can add a presenter suggestion to a topic by providing at least one of: email, URL, or full name. The suggestion appears associated with that topic. The user can edit and delete their own suggestions.
+**Independent Test**: A logged-in user can add a presenter suggestion to a topic by providing contact information (email, name, LinkedIn URL, WhatsApp contact, etc.). The suggestion appears associated with that topic. The user can edit and delete their own suggestions.
 
 **Acceptance Scenarios**:
 
-1. **Given** a user is viewing a topic, **When** they suggest a presenter with an email address, **Then** the suggestion is saved and displayed with the topic
-2. **Given** a user suggests a presenter, **When** they provide a LinkedIn URL, **Then** the URL is stored and displayed as a clickable link
-3. **Given** a user suggests a presenter, **When** they provide only a full name, **Then** the suggestion is saved with just the name
+1. **Given** a user is viewing a topic, **When** they suggest a presenter with contact information (email, name, LinkedIn URL, WhatsApp contact, etc.), **Then** the suggestion is saved and displayed with the topic
+2. **Given** a user suggests a presenter, **When** they provide a LinkedIn URL as contact information, **Then** the URL is stored and displayed appropriately
+3. **Given** a user suggests a presenter, **When** they provide a name or email as contact information, **Then** the suggestion is saved and displayed appropriately
 4. **Given** multiple presenter suggestions exist for a topic, **When** a user views that topic, **Then** they see all suggested presenters
 5. **Given** a user has created a presenter suggestion, **When** they click edit on their own suggestion, **Then** they are taken to a dedicated edit page (not a modal) where they can modify the suggestion
 6. **Given** a user is editing their presenter suggestion on a dedicated page, **When** they submit the changes, **Then** they are returned to the topic page with their updated suggestion displayed, and the browser back button works seamlessly
-7. **Given** a user has created a presenter suggestion, **When** they click delete on their own suggestion, **Then** a confirmation modal appears (AlpineJS), and after confirmation, the suggestion is removed via HTMX
+7. **Given** a user has created a presenter suggestion, **When** they click delete on their own suggestion, **Then** a confirmation dialog appears (HTMX-first: load dialog fragment from server, AlpineJS only if explicitly requested), and after confirmation, the suggestion is removed via HTMX
 
 ---
 
@@ -193,7 +193,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - What happens when a user tries to vote multiple times on the same topic? The system prevents duplicate votes and shows the user has already voted.
 - How does the system handle very long topic titles or comments? Text should be displayed with appropriate truncation or wrapping for readability on mobile devices.
 - How should the system format large numbers in display (e.g., vote counts > 1000, many comments)? The system uses simple formatting in Portuguese (pt-BR) conventions (e.g., "1.234 votos", "567 comentários") without abbreviations like "1.2k". This maintains clarity and aligns with pt-BR number formatting standards.
-- What happens when a user suggests a presenter with invalid email format or broken URL? The system accepts the input but does not validate format (admins can review and clean up via admin interface).
+- What happens when a user suggests a presenter with contact information? The system accepts any text input for `presenter_contact` (email, name, LinkedIn URL, WhatsApp contact, etc.) and does not validate format (admins can review and clean up via admin interface).
 - How does the system handle users who are not logged in? Non-authenticated users can view topics in readonly mode but cannot vote, comment, add topics, or suggest presenters. When they click interactive buttons/links, a popup appears inviting them to sign in or sign up.
 - What happens when an event has no topics? The event page displays an empty state message encouraging users to add the first topic.
 - How does infinite scroll handle loading states? The system loads 20 topics per batch, uses HTMX native loading indicators (hx-indicator) while fetching additional topics, and handles end-of-list gracefully when all topics are loaded. AlpineJS may be used for custom loading states if needed.
@@ -228,7 +228,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-024**: System MUST allow logged-in users to edit their own comments
 - **FR-025**: System MUST allow logged-in users to delete their own comments (soft delete - content is marked as deleted and hidden from users but recoverable by admins)
 - **FR-008**: System MUST display comments with commenter name and timestamp, ordered chronologically (oldest first)
-- **FR-009**: System MUST allow logged-in users to suggest presenters for topics by providing email, URL, or full name, with a limit of 3 suggestions per user per topic and 10 total suggestions per topic
+- **FR-009**: System MUST allow logged-in users to suggest presenters for topics by providing contact information (email, name, LinkedIn URL, WhatsApp contact, or any other way to contact the person), with a limit of 3 suggestions per user per topic and 10 total suggestions per topic
 - **FR-028**: System MUST allow logged-in users to edit their own presenter suggestions
 - **FR-029**: System MUST allow logged-in users to delete their own presenter suggestions (soft delete - content is marked as deleted and hidden from users but recoverable by admins)
 - **FR-010**: System MUST display presenter suggestions associated with topics, ordered chronologically (oldest first)
@@ -262,7 +262,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **Topic**: Represents a suggested talk topic for an event. Inherits from `SoftDeleteModel` (provides UUID v6 id, created_at, updated_at, is_deleted). Has a title (max 200 characters), slug (auto-generated from title using django.utils.text.slugify, unique per event), optional description (max 2000 characters), creator. Belongs to one event. Can have multiple votes, comments and presenter suggestions. Vote count is calculated at runtime by counting Vote records associated with the topic when building DTOs. This provides clear auditing of who voted on each topic. Soft-deleted topics are hidden from regular users but visible to admins.
 - **Vote**: Represents a user's vote on a topic. Inherits from `BaseModel` (provides UUID v6 id, created_at, updated_at). Links a user to a topic. Each user can have only one vote per topic. Vote records provide clear auditing of who voted on each topic. When a user un-votes, the Vote record is hard-deleted (permanently removed). Vote counts are calculated at runtime by counting Vote records when building DTOs.
 - **Comment**: Represents a user's comment on a topic. Inherits from `SoftDeleteModel` (provides UUID v6 id, created_at, updated_at, is_deleted). Has text content (max 1000 characters), author. Belongs to one topic. Soft-deleted comments are hidden from regular users but visible to admins.
-- **Presenter Suggestion**: Represents a suggested presenter for a topic. Inherits from `SoftDeleteModel` (provides UUID v6 id, created_at, updated_at, is_deleted). Has either an email address, URL, or full name (at least one required). Belongs to one topic. Limited to 3 suggestions per user per topic and 10 total suggestions per topic. Soft-deleted suggestions are hidden from regular users but visible to admins.
+- **Presenter Suggestion**: Represents a suggested presenter for a topic. Inherits from `SoftDeleteModel` (provides UUID v6 id, created_at, updated_at, is_deleted). Has a `presenter_contact` field (CharField) that can contain email, name, LinkedIn URL, WhatsApp contact, or any other way to contact the person. Belongs to one topic. Limited to 3 suggestions per user per topic and 10 total suggestions per topic. Soft-deleted suggestions are hidden from regular users but visible to admins.
 - **User**: Represents an authenticated user. Has authentication information from SSO provider (Google or LinkedIn), display name, and account creation timestamp. Can create topics, vote, comment, and suggest presenters.
 
 ## Success Criteria *(mandatory)*
@@ -292,7 +292,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - Presenter suggestions are informational only and do not require validation or contact
 - The system starts with one event (Python Floripa) but architecture supports multiple events from launch
 - Mobile-first means the interface is designed for mobile but works on desktop
-- Pure CSS library will be used for styling. HTMX for server-driven interactions, AlpineJS for client-side state management (popups, toggles, form validation feedback)
+- Pure CSS library will be used for styling. HTMX for server-driven interactions, AlpineJS optional (only when explicitly requested) for client-side state management
 - Users can edit and delete their own topics, comments, and presenter suggestions
 - Editing occurs on dedicated pages (not modals) to ensure mobile-friendliness and proper browser navigation
 - HTMX is used for all page transitions to minimize refreshes and provide smooth user experience

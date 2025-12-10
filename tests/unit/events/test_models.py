@@ -169,18 +169,6 @@ class TestTopicModel:
         field = Topic._meta.get_field("description")
         assert field.max_length == 2000
 
-    def test_topic_has_vote_count_field(self) -> None:
-        event = baker.make("events.Event")
-        user = baker.make("accounts.User")
-        topic = baker.make("events.Topic", event=event, creator=user, vote_count=5)
-        assert topic.vote_count == 5
-
-    def test_topic_vote_count_defaults_to_zero(self) -> None:
-        event = baker.make("events.Event")
-        user = baker.make("accounts.User")
-        topic = baker.make("events.Topic", event=event, creator=user)
-        assert topic.vote_count == 0
-
     def test_topic_has_creator_foreign_key(self) -> None:
         event = baker.make("events.Event")
         user = baker.make("accounts.User")

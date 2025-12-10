@@ -129,7 +129,7 @@
 - [ ] T047 [P] [US1] Create Topic model in `events/models.py` inheriting from `SoftDeleteModel` with slug (auto-generated), title, description, event FK, creator FK (no vote_count field - votes are counted at runtime)
 - [ ] T049 [US1] Create migrations for Event and Topic models: `events/migrations/0001_initial.py`
 - [ ] T050 [P] [US1] Create TopicDTO dataclass in `events/dto/topic_dto.py`
-- [ ] T051 [P] [US1] Create get_topics_for_event function in `events/services/topic_service.py` (prefetch, select_related, convert to DTOs)
+- [ ] T051 [P] [US1] Create get_topics_for_event function in `events/services/topic_service.py` (use Count('votes') annotation for vote_count, prefetch, select_related, convert to DTOs)
 - [ ] T052 [US1] Create get_event_topics function in `events/use_cases/get_event_topics.py` (calls get_topics_for_event service function, returns DTOs)
 - [ ] T053 [US1] Create event detail view in `events/views.py` for GET `/events/<slug>/` (calls use case, passes DTOs to template)
 - [ ] T054 [US1] Create HTMX view for infinite scroll in `events/views.py` for GET `/events/<slug>/topics/load-more/` (returns partial fragment)
@@ -339,11 +339,11 @@
 
 ### Implementation for User Story 5
 
-- [ ] T158 [US5] Create PresenterSuggestion model in `events/models.py` inheriting from `SoftDeleteModel` with topic FK, suggester FK, email, url, full_name
+- [ ] T158 [US5] Create PresenterSuggestion model in `events/models.py` inheriting from `SoftDeleteModel` with topic FK, suggested_by FK, presenter_contact CharField (can be email, name, LinkedIn URL, WhatsApp contact, etc.)
 - [ ] T159 [US5] Create migration for PresenterSuggestion model: `events/migrations/0004_presenter_suggestion.py`
 - [ ] T160 [US5] Create PresenterDTO dataclass in `events/dto/presenter_dto.py`
 - [ ] T161 [US5] Create presenter service functions in `events/services/presenter_service.py`: suggest_presenter, update_suggestion, soft_delete_suggestion, check_limits
-- [ ] T162 [US5] Create suggest_presenter function in `events/use_cases/suggest_presenter.py` (validates limits: 3 per user, 10 per topic, creates suggestion, returns DTO)
+- [ ] T162 [US5] Create suggest_presenter function in `events/use_cases/suggest_presenter.py` (signature: `suggest_presenter(suggested_by, topic_slug, presenter_contact)`, validates limits: 3 per user, 10 per topic, creates suggestion, returns DTO)
 - [ ] T163 [US5] Create edit_presenter_suggestion function in `events/use_cases/edit_presenter_suggestion.py` (validates ownership, updates suggestion, returns DTO)
 - [ ] T164 [US5] Create delete_presenter_suggestion function in `events/use_cases/delete_presenter_suggestion.py` (validates ownership, soft deletes suggestion)
 - [ ] T165 [US5] Create suggest presenter HTMX view in `events/views.py` for POST `/topics/<slug>/presenters/suggest/` (returns suggestion partial)
@@ -352,7 +352,7 @@
 - [ ] T168 [US5] Add URL patterns in `events/urls.py` for presenter suggestion endpoints
 - [ ] T169 [US5] Create presenter suggestion partial template `events/templates/events/partials/presenter_suggestion_item.html`
 - [ ] T170 [US5] Create Django-Cotton presenter suggestion component `events/cotton/presenter/suggestion.html`
-- [ ] T171 [US5] Create presenter suggestion form template with HTML5 native validation (AlpineJS only if explicitly requested)
+- [ ] T171 [US5] Create presenter suggestion form template with HTML5 native validation (single `presenter_contact` field with UI guidance indicating it can be email, name, LinkedIn URL, WhatsApp contact, etc., AlpineJS only if explicitly requested)
 - [ ] T172 [US5] Create presenter suggestion edit template `events/templates/events/presenter_suggestion_edit.html`
 - [ ] T173 [US5] Integrate presenter suggestions in topic detail template (shows sign-in popup for non-authenticated users)
 - [ ] T174 [US5] Update get_topic_detail function to include presenter suggestions (ordered chronologically, oldest first)
