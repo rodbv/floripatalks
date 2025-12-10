@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FloripaTalks{% endblock %}</title>
-    
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/pure-css/pure-min.css' %}">
     <style>
@@ -14,35 +14,35 @@
             --color-primary: #046bd2;
             --color-primary-dark: #045cb4;
             --color-primary-text: #012c66;
-            
+
             /* Text colors */
             --color-text-dark: #1e293b;
             --color-text: #334155;
             --color-text-light: #6b7280;
-            
+
             /* Background colors */
             --color-bg: #FFFFFF;
             --color-bg-light: #F0F5FA;
             --color-bg-dark: #111111;
-            
+
             /* Border colors */
             --color-border: #D1D5DB;
             --color-border-light: #E5E7EB;
-            
+
             /* Accent colors */
             --color-accent-yellow: #FDBC2C;
             --color-accent-red: #FE5F58;
-            
+
             /* Typography */
             font-size: clamp(14px, 2.5vw, 16px);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         }
-        
+
         /* Code/monospace font */
         code, pre, .monospace {
             font-family: "Roboto Mono", "Courier New", monospace;
         }
-        
+
         body {
             margin: 0;
             padding: 0;
@@ -53,7 +53,7 @@
             color: var(--color-text);
             line-height: 1.65;
         }
-        
+
         main {
             flex: 1;
             width: 100%;
@@ -61,41 +61,41 @@
             padding: 1rem;
             box-sizing: border-box;
         }
-        
+
         header, footer {
             width: 100%;
             box-sizing: border-box;
         }
-        
+
         /* Typography */
         h1, h2, h3, h4, h5, h6 {
             color: var(--color-text-dark);
             font-weight: 600;
         }
-        
-        h1 { 
-            font-size: clamp(1.5rem, 5vw, 2.5rem); 
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
             line-height: 1.4;
         }
-        h2 { 
-            font-size: clamp(1.25rem, 4vw, 2rem); 
+        h2 {
+            font-size: clamp(1.25rem, 4vw, 2rem);
             line-height: 1.3;
         }
-        h3 { 
-            font-size: clamp(1.1rem, 3vw, 1.5rem); 
+        h3 {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
             line-height: 1.3;
         }
-        
+
         /* Links */
         a {
             color: var(--color-primary);
             text-decoration: none;
         }
-        
+
         a:hover, a:focus {
             color: var(--color-primary-dark);
         }
-        
+
         /* Buttons */
         button, .button, input[type="submit"], input[type="button"] {
             background-color: var(--color-primary);
@@ -108,39 +108,357 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        
+
         button:hover, .button:hover, input[type="submit"]:hover, input[type="button"]:hover {
             background-color: var(--color-primary-dark);
         }
-        
+
         /* Touch-friendly interactive elements */
         button, a, input, select, textarea {
             min-height: 44px;
             min-width: 44px;
+        }
+
+        /* Vote icon button - icon style, not regular button */
+        .vote-icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text);
+            transition: transform 0.2s, opacity 0.2s;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .vote-icon-button:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .vote-icon-button:active {
+            transform: scale(0.95);
+        }
+
+        .vote-icon-button.voted svg {
+            filter: drop-shadow(0 0 2px rgba(253, 188, 44, 0.5));
+        }
+
+        /* Topic card footer layout */
+        .topic-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-border-light);
+        }
+
+        .topic-stats {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            color: var(--color-text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Topic card styling - delightful and friendly */
+        .topic-card {
+            background: #ffffff;
+            border: 1px solid var(--color-border-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .topic-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .topic-card-header {
+            margin-bottom: 1rem;
+        }
+
+        .topic-header-content {
+            margin-bottom: 0.75rem;
+        }
+
+        .topic-creator-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Avatar styling - circular with placeholder */
+        .creator-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-border-light);
+            flex-shrink: 0;
+        }
+
+        .creator-avatar-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--color-border-light);
+            flex-shrink: 0;
+        }
+
+        .avatar-initial {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+        }
+
+        .creator-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .creator-name {
+            font-weight: 500;
+            color: var(--color-text-dark);
+            font-size: 0.95rem;
+        }
+
+        .topic-date {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+        }
+
+        .topic-title {
+            margin: 0.75rem 0 0 0;
+            font-size: 1.25rem;
+            line-height: 1.4;
+        }
+
+        .topic-title a {
+            color: var(--color-text-dark);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .topic-title a:hover {
+            color: var(--color-primary);
+        }
+
+        .topic-description {
+            margin: 1rem 0;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .topic-description p {
+            margin: 0;
+        }
+
+        /* Topics list container */
+        .topics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .topic-item {
+            margin-bottom: 0;
+        }
+
+        /* Event detail page styling */
+        .event-detail {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .event-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--color-border-light);
+        }
+
+        .event-header h1 {
+            margin: 0 0 0.75rem 0;
+            font-size: 2rem;
+            color: var(--color-text-dark);
+        }
+
+        .event-description {
+            font-size: 1.125rem;
+            color: var(--color-text);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .topics-section h2 {
+            font-size: 1.5rem;
+            margin: 0 0 1.5rem 0;
+            color: var(--color-text-dark);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--color-text-light);
+            font-size: 1.125rem;
+            background: var(--color-bg-light);
+            border-radius: 12px;
+            border: 2px dashed var(--color-border);
+        }
+
+        /* Home page styling */
+        .home-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .home-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .home-hero h1 {
+            margin: 0 0 1rem 0;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .home-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-text);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .events-section h2 {
+            font-size: 1.75rem;
+            margin: 0 0 1.5rem 0;
+            color: var(--color-text-dark);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .event-card {
+            background: #ffffff;
+            border: 1px solid var(--color-border-light);
+            border-radius: 12px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .event-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            border-color: var(--color-primary);
+        }
+
+        .event-card-title {
+            margin: 0 0 0.75rem 0;
+            color: var(--color-text-dark);
+            font-size: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .event-card-description {
+            color: var(--color-text);
+            margin: 0.75rem 0 0 0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .event-card-link {
+            margin-top: 1.25rem;
+            color: var(--color-primary);
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .empty-state-link {
+            margin-top: 0.75rem;
+        }
+
+        .empty-state-link a {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        /* Navigation styling */
+        nav {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 1rem 2rem;
+        }
+
+        nav a {
+            color: var(--color-text-dark);
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--color-primary);
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     {% load static %}
-    
+
+    {% csrf_token %}
     <script src="{% static 'js/htmx.min.js' %}"></script>
+    <script>
+        // Configure HTMX to include CSRF token in all requests
+        document.body.addEventListener('htmx:configRequest', function(event) {
+            // Get CSRF token from the hidden input created by {% csrf_token %}
+            const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+            if (csrfInput) {
+                event.detail.headers['X-CSRFToken'] = csrfInput.value;
+            }
+        });
+    </script>
     {# AlpineJS optional - uncomment only when explicitly requested #}
     {# <script src="{% static 'js/alpine.min.js' %}" defer></script> #}
-    
+
     <header>
         {% block header %}{% endblock %}
     </header>
-    
+
     <main>
         {% block content %}{% endblock %}
     </main>
-    
+
     <footer>
         {% block footer %}{% endblock %}
     </footer>
-    
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
-

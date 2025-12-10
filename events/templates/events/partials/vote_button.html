@@ -1,0 +1,12 @@
+{% load cotton %}
+{% load core_tags %}
+
+{# Vote icon with OOB swap for vote count #}
+<c-topic.vote-button
+    topic-slug="{{ topic.slug }}"
+    has-voted="{{ has_voted|yesno:'true,false' }}"
+    vote-count="{{ vote_count }}"
+></c-topic.vote-button>
+
+{# OOB swap target for vote count - updates separately from icon #}
+<span class="vote-count" id="vote-count-{{ topic.slug }}" hx-swap-oob="true">{{ vote_count|format_vote_count }}</span>

@@ -130,3 +130,42 @@ class TestEventDetailView:
         topics = response.context["topics"]
         assert isinstance(topics, list)
         assert len(topics) == 2
+
+    def test_event_detail_view_handles_anonymous_user(self, client: Client) -> None:
+        """
+        Regression test: Verify event detail view works with anonymous users.
+
+        This catches issues where user.is_authenticated might fail for AnonymousUser.
+        """
+        event = baker.make("events.Event", slug="anonymous-test")
+        user = baker.make("accounts.User")
+        baker.make("events.Topic", event=event, creator=user, _quantity=2)
+
+        url = reverse("events:event_detail", kwargs={"slug": "anonymous-test"})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert "topics" in response.context
+        topics = response.context["topics"]
+        assert isinstance(topics, list)
+        assert len(topics) == 2
+
+    def test_event_detail_view_returns_list_not_none(self, client: Client) -> None:
+        """
+        Regression test: Verify event detail view always returns a list, never None.
+
+        This catches the "cannot unpack non-iterable NoneType object" error.
+        """
+        event = baker.make("events.Event", slug="none-test")
+        user = baker.make("accounts.User")
+        baker.make("events.Topic", event=event, creator=user)
+
+        url = reverse("events:event_detail", kwargs={"slug": "none-test"})
+        response = client.get(url)
+
+        assert response.status_code == 200
+        topics = response.context.get("topics")
+        assert topics is not None, "Topics should never be None"
+        assert isinstance(topics, list), f"Topics should be a list, got {type(topics)}"
+        # Verify we can iterate over it without errors
+        list(topics)  # This would fail if topics is None

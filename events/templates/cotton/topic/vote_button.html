@@ -1,0 +1,35 @@
+{% comment %}
+Django-Cotton component for vote/like icon.
+
+Props:
+- topic-slug: Topic slug (becomes topic_slug in template)
+- has-voted: Whether the current user has voted (boolean string "true"/"false")
+- vote-count: Number of votes (for OOB swap target ID)
+
+Icon logic:
+- If vote_count is 0, always show outline icon (user can't have voted if there are 0 votes)
+- If vote_count > 0 and has_voted is true, show filled/yellow icon
+- Otherwise show outline icon
+{% endcomment %}
+
+{% load core_tags %}
+
+<button
+    class="vote-icon-button {% if vote_count != 0 and vote_count != '0' and has_voted == 'true' %}voted{% endif %}"
+    hx-post="{% url 'events:vote_topic' slug=topic_slug %}"
+    hx-target="this"
+    hx-swap="outerHTML"
+    data-requires-auth="true"
+    aria-label="{% if vote_count != 0 and vote_count != '0' and has_voted == 'true' %}Remover voto{% else %}Votar{% endif %}"
+    id="vote-icon-{{ topic_slug }}"
+>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        {% if vote_count != 0 and vote_count != '0' and has_voted == 'true' %}
+            {# Filled/yellow heart when voted #}
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#FDBC2C" stroke="#FDBC2C" stroke-width="1.5" stroke-linejoin="round"/>
+        {% else %}
+            {# Outline heart when not voted #}
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        {% endif %}
+    </svg>
+</button>

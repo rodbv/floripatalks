@@ -310,6 +310,20 @@ All HTML MUST use semantic elements and modern HTML5 controls to leverage native
 
 **Rationale**: Semantic HTML improves accessibility, SEO, and code maintainability. Modern HTML5 controls provide native browser validation, better mobile experience (e.g., native date pickers on mobile), and reduce the need for custom JavaScript validators. This approach aligns with progressive enhancement principles and reduces client-side complexity while improving user experience across devices.
 
+### XVIII. Social and People-Oriented UI Design
+
+The UI MUST prioritize social and people-oriented design to create a delightful, friendly, and engaging user experience:
+
+- **User Avatars**: Display user profile pictures (avatars) prominently throughout the interface, especially in content cards and lists
+- **Avatar Placeholders**: When profile pictures are not available, show attractive placeholder avatars with user initials or default icons
+- **Display Names**: Use user-friendly display names (first name + last name) when available, falling back to username
+- **Social Context**: Show who created content (topics, comments, etc.) with avatar and name to make the platform feel social and community-driven
+- **Delightful Design**: Prioritize friendly, approachable, and visually appealing design over purely functional layouts
+- **People First**: Design interfaces that emphasize the people behind the content, not just the content itself
+- **SSO Integration**: Leverage SSO provider profile pictures (Google, LinkedIn) when available, with graceful fallbacks
+
+**Rationale**: Social and people-oriented design creates a sense of community, makes the platform more engaging, and helps users connect with each other. Displaying avatars and names makes content feel more personal and trustworthy. A delightful, friendly UI improves user satisfaction and encourages participation. This principle aligns with modern social platforms and community-driven applications.
+
 ## Development Workflow
 
 ### Task Implementation Workflow
@@ -444,4 +458,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.8.6 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
+**Version**: 1.8.7 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10

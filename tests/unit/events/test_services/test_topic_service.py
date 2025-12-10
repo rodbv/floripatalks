@@ -80,8 +80,11 @@ class TestGetTopicsForEvent:
         assert dto.slug == topic.slug
         assert dto.title == "Test Topic"
         assert dto.description == "Test description"
-        assert dto.vote_count == 0  # Vote model doesn't exist yet
+        assert dto.vote_count == 0
+        assert dto.has_voted is False
         assert dto.creator_username == "testuser"
+        assert dto.creator_display_name == "testuser"  # Falls back to username
+        assert dto.creator_avatar_url is None  # No social account in test
         assert dto.event_slug == "test-event"
         assert dto.event_name == "Test Event"
         assert dto.created_at == topic.created_at
@@ -89,10 +92,15 @@ class TestGetTopicsForEvent:
     def test_get_topics_for_event_no_n_plus_one_queries(self) -> None:
         """Verify get_topics_for_event doesn't cause N+1 queries."""
         event = baker.make("events.Event", slug="test-event")
-        user = baker.make("accounts.User")
-        baker.make("events.Topic", event=event, creator=user, _quantity=10)
+        # Create multiple different users to test N+1 prevention
+        users = baker.make("accounts.User", _quantity=10)
+        # Create topics with different creators to ensure prefetch works
+        for user in users:
+            baker.make("events.Topic", event=event, creator=user)
 
-        with assertNumQueries(2):  # 1 for event, 1 for topics with select_related
+        with assertNumQueries(
+            3
+        ):  # 1 for event, 1 for topics with select_related, 1 for social accounts prefetch
             dtos = get_topics_for_event("test-event")
 
         assert len(dtos) == 10
@@ -100,3 +108,6 @@ class TestGetTopicsForEvent:
         for dto in dtos:
             _ = dto.event_name
             _ = dto.creator_username
+            _ = dto.creator_display_name
+            _ = dto.creator_avatar_url
+            _ = dto.has_voted

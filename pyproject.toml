@@ -63,6 +63,11 @@ ignore = [
     "ANN401", # Dynamically typed expressions (apps.get_model returns dynamic types)
     "ARG001", # Unused function argument (schema_editor may not be used in data migrations)
 ]
+"tests/**/*.py" = [
+    "ANN001", # Missing type annotation for function argument (test fixtures and parameters)
+    "ANN201", # Missing return type annotation for public function (test functions)
+    "ANN204", # Missing return type annotation for special method (test fixtures)
+]
 
 [tool.ruff.lint.isort]
 known-first-party = ["floripatalks", "events", "accounts", "core"]
@@ -78,7 +83,7 @@ line_length = 100
 known_first_party = ["floripatalks", "events", "accounts", "core"]
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "floripatalks.settings.development"
+DJANGO_SETTINGS_MODULE = "floripatalks.settings.test"
 python_files = ["tests.py", "test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
