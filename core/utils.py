@@ -69,4 +69,3 @@ def format_comment_count(count: int) -> str:
     formatted = format_number_pt_br(count)
     plural = "comentários" if count != 1 else "comentário"
     return f"{formatted} {plural}"
-

@@ -14,7 +14,6 @@ repos:
         args: [--fix, --exit-non-zero-on-fix]
         pass_filenames: true
         verbose: false
-        quiet: true
 
       - id: ruff-format
         name: ruff (formatting)
@@ -24,7 +23,6 @@ repos:
         args: [--check]
         pass_filenames: true
         verbose: false
-        quiet: true
 
   # Django-specific checks
   - repo: https://github.com/adamchainz/django-upgrade

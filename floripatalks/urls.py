@@ -3,12 +3,12 @@ URL configuration for floripatalks project.
 """
 
 from django.contrib import admin
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import include, path
 
 
-def home(request: HttpRequest):
+def home(request: HttpRequest) -> HttpResponse:
     """Temporary home view for testing."""
     return render(request, "home.html")
 
