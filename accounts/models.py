@@ -1,6 +1,7 @@
 """
 Accounts models.
 """
+
 import uuid6
 from django.contrib.auth.models import AbstractUser
 from django.db import models
