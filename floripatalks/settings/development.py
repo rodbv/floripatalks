@@ -11,7 +11,12 @@ from .base import *
 # Add development-only apps
 INSTALLED_APPS += [
     "django_browser_reload",  # Hot-reload for development
+    "django_extensions",  # Enhanced Django management commands (shell_plus, etc.)
 ]
+
+# django-extensions configuration
+SHELL_PLUS = "ipython"
+SHELL_PLUS_PRINT_SQL = True
 
 # Load environment variables from .env file
 # This allows using .env file for local development
