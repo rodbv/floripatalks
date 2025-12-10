@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report:
-Version Change: 1.8.0 → 1.8.1 (clarified docstring rules to avoid obvious docstrings)
+Version Change: 1.8.2 → 1.8.3 (added naming convention for use case functions: verb + noun pattern)
 Modified Principles:
-  - Code Comments and Documentation (added explicit rule against obvious docstrings that restate type annotations or parameter names)
+  - Use Case Layer Architecture (added explicit naming convention: use case functions must follow "verb + noun" pattern)
 Added Sections: None
 Removed Sections: None
 Templates Requiring Updates:
@@ -215,12 +215,14 @@ All templates (full pages and partial fragments) MUST receive dataclasses as Dat
 Business logic MUST be separated from models using a use case layer:
 
 - **Models**: Contain only data structure, validation, and basic ORM operations (no business rules)
-- **Services**: Provide reusable business logic, can access ORM models and return QuerySets
-- **Use Cases**: Orchestrate business workflows, use services for common code, return only dataclasses, single values, or simple objects (NOT QuerySets or Django model instances)
-- **Views**: Call use cases, convert results to DTOs, pass to templates
+- **Services**: Provide reusable business logic as functions (not classes), can access ORM models and return QuerySets or DTOs
+- **Use Cases**: Orchestrate business workflows as functions (not classes), use service functions for common code, return only dataclasses, single values, or simple objects (NOT QuerySets or Django model instances)
+- **Views**: Call use case functions, convert results to DTOs, pass to templates
 - Business rules MUST NOT be in models - they belong in use cases or services
+- **Prefer functions over classes**: Use functions for services and use cases (e.g., `get_event_topics()` instead of `GetEventTopicsUseCase.execute()`)
+- **Naming convention**: Use case functions MUST follow "verb + noun" pattern in snake_case to clearly indicate what they do (e.g., `get_event_topics()`, `create_topic()`, `vote_topic()`, `edit_comment()`)
 
-**Rationale**: Separating business logic from models improves testability, maintainability, and follows single responsibility principle. Use cases are data-oriented and easily unit testable. Services provide reusable logic while use cases orchestrate workflows. This architecture enables comprehensive unit testing with fewer integration tests.
+**Rationale**: Separating business logic from models improves testability, maintainability, and follows single responsibility principle. Use cases are data-oriented and easily unit testable. Services provide reusable logic while use cases orchestrate workflows. Functions are simpler than classes for stateless operations and reduce boilerplate. Verb + noun naming makes use case purpose immediately clear. This architecture enables comprehensive unit testing with fewer integration tests.
 
 ### XII. No REST API (Current Version)
 
@@ -428,4 +430,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.8.1 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
+**Version**: 1.8.3 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
