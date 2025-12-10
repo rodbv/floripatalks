@@ -134,12 +134,12 @@
 - [ ] T053 [US1] Create event detail view in `events/views.py` for GET `/events/<slug>/` (calls use case, passes DTOs to template)
 - [ ] T054 [US1] Create HTMX view for infinite scroll in `events/views.py` for GET `/events/<slug>/topics/load-more/` (returns partial fragment)
 - [ ] T055 [US1] Create URL patterns in `events/urls.py` for event detail and load-more endpoints
-- [ ] T056 [US1] Create base template `templates/base.html` with HTMX, AlpineJS, Pure CSS includes
+- [ ] T056 [US1] Create base template `templates/base.html` with HTMX, Pure CSS includes (AlpineJS optional/commented)
 - [ ] T057 [US1] Create event detail template `events/templates/events/event_detail.html` with topics list
 - [ ] T058 [US1] Create topic list partial template `events/templates/events/partials/topic_list_fragment.html` for HTMX infinite scroll
 - [ ] T059 [US1] Create Django-Cotton topic card component `events/cotton/topic/card.html`
-- [ ] T060 [US1] Create AlpineJS sign-in popup component `accounts/templates/accounts/login_popup.html` with x-show toggle
-- [ ] T061 [US1] Integrate sign-in popup in event detail template (AlpineJS triggers on interactive button clicks)
+- [ ] T060 [US1] Create HTMX sign-in popup component `accounts/templates/accounts/login_popup.html` (HTMX-first: load modal fragment from server, AlpineJS only if explicitly requested)
+- [ ] T061 [US1] Integrate sign-in popup in event detail template (HTMX to load modal fragment when interactive buttons clicked, AlpineJS only if explicitly requested)
 - [ ] T062 [US1] Configure admin for Event and Topic models in `events/admin.py`
 - [ ] T063 [US1] Create initial Event (Python Floripa) via Django admin or data migration
 
@@ -185,7 +185,7 @@
 
 ## Phase 5: User Story 6 - Readonly Experience for Non-Authenticated Users (Priority: P2)
 
-**Goal**: Non-authenticated users can view all content in readonly mode. Interactive buttons trigger AlpineJS sign-in popup.
+**Goal**: Non-authenticated users can view all content in readonly mode. Interactive buttons trigger HTMX sign-in popup (HTMX-first: load modal fragment from server).
 
 **Independent Test**: A non-authenticated user can view topics, comments, and presenter suggestions. Clicking vote/comment/add buttons shows sign-in popup.
 
@@ -200,7 +200,7 @@
 - [ ] T085 [US6] Create SSO authentication views in `accounts/views.py` for Google and LinkedIn OAuth flows
 - [ ] T086 [US6] Add URL patterns in `accounts/urls.py` for SSO authentication endpoints
 - [ ] T087 [US6] Integrate sign-in popup triggers in all interactive elements: vote buttons, comment forms, add topic buttons, suggest presenter buttons
-- [ ] T088 [US6] Update templates to show interactive buttons for non-authenticated users (with AlpineJS click handlers)
+- [ ] T088 [US6] Update templates to show interactive buttons for non-authenticated users (HTMX-first: load sign-in modal fragment, AlpineJS only if explicitly requested)
 - [ ] T089 [US6] Handle SSO authentication failures with user-friendly error messages and retry options
 
 **Checkpoint**: At this point, non-authenticated users have full readonly experience with sign-in prompts.
@@ -239,10 +239,10 @@
 - [ ] T106 [US2] Create topic edit view in `events/views.py` for GET/POST `/topics/<slug>/edit/`
 - [ ] T107 [US2] Create topic delete view in `events/views.py` for POST `/topics/<slug>/delete/` (HTMX, returns success response)
 - [ ] T108 [US2] Add URL patterns in `events/urls.py` for create, edit, delete endpoints
-- [ ] T109 [US2] Create topic form template `events/templates/events/topic_form.html` with AlpineJS character count validation
+- [ ] T109 [US2] Create topic form template `events/templates/events/topic_form.html` with HTML5 native validation and/or vanilla JS for character count (AlpineJS only if explicitly requested)
 - [ ] T110 [US2] Create topic edit template `events/templates/events/topic_edit.html` with HTMX form submission
-- [ ] T111 [US2] Create AlpineJS confirmation modal component for delete in `events/templates/events/partials/delete_confirm_modal.html`
-- [ ] T112 [US2] Integrate delete confirmation modal in topic detail/card (AlpineJS toggle, HTMX for delete action)
+- [ ] T111 [US2] Create HTMX confirmation modal component for delete in `events/templates/events/partials/delete_confirm_modal.html` (HTMX-first: load dialog fragment from server, AlpineJS only if explicitly requested)
+- [ ] T112 [US2] Integrate delete confirmation modal in topic detail/card (HTMX to load dialog fragment, AlpineJS only if explicitly requested)
 - [ ] T113 [US2] Add "Add Topic" button/link in event detail template (shows sign-in popup for non-authenticated users)
 - [ ] T114 [US2] Add edit/delete buttons in topic card (only visible to topic creator)
 - [ ] T115 [US2] Implement rate limiting for topic creation: 10 topics/hour per user in `core/middleware.py`
@@ -282,7 +282,7 @@
 - [ ] T133 [US4] Add URL patterns in `events/urls.py` for comment endpoints
 - [ ] T134 [US4] Create comment item partial template `events/templates/events/partials/comment_item.html` for HTMX insertion
 - [ ] T135 [US4] Create Django-Cotton comment item component `events/cotton/comment/item.html`
-- [ ] T136 [US4] Create comment form template `events/templates/events/comment_form.html` with AlpineJS character count
+- [ ] T136 [US4] Create comment form template `events/templates/events/comment_form.html` with HTML5 native validation and/or vanilla JS for character count (AlpineJS only if explicitly requested)
 - [ ] T137 [US4] Create comment edit template `events/templates/events/comment_edit.html` with HTMX form submission
 - [ ] T138 [US4] Integrate comment form in topic detail template (shows sign-in popup for non-authenticated users)
 - [ ] T139 [US4] Update GetTopicDetailUseCase to include comments (ordered chronologically, oldest first)
@@ -310,9 +310,9 @@
 - [ ] T145 [US7] Create EventDTO dataclass in `events/dto/event_dto.py`
 - [ ] T146 [US7] Create event selector view in `events/views.py` for GET `/events/` (returns event list)
 - [ ] T147 [US7] Add URL pattern in `events/urls.py` for events list
-- [ ] T148 [US7] Create AlpineJS event selector dropdown component in base template or navigation
+- [ ] T148 [US7] Create HTMX event selector component in base template or navigation (HTMX-first: native HTML select with hx-get/hx-trigger, AlpineJS only if explicitly requested)
 - [ ] T149 [US7] Create HTMX handler for event selection (loads event content without full page refresh)
-- [ ] T150 [US7] Update navigation to include event selector (AlpineJS for dropdown, HTMX for content loading)
+- [ ] T150 [US7] Update navigation to include event selector (HTMX-first: native HTML select with hx-get/hx-trigger for content loading, AlpineJS only if explicitly requested)
 
 **Checkpoint**: At this point, users can switch between events seamlessly.
 
@@ -349,7 +349,7 @@
 - [ ] T168 [US5] Add URL patterns in `events/urls.py` for presenter suggestion endpoints
 - [ ] T169 [US5] Create presenter suggestion partial template `events/templates/events/partials/presenter_suggestion_item.html`
 - [ ] T170 [US5] Create Django-Cotton presenter suggestion component `events/cotton/presenter/suggestion.html`
-- [ ] T171 [US5] Create presenter suggestion form template with AlpineJS validation
+- [ ] T171 [US5] Create presenter suggestion form template with HTML5 native validation (AlpineJS only if explicitly requested)
 - [ ] T172 [US5] Create presenter suggestion edit template `events/templates/events/presenter_suggestion_edit.html`
 - [ ] T173 [US5] Integrate presenter suggestions in topic detail template (shows sign-in popup for non-authenticated users)
 - [ ] T174 [US5] Update GetTopicDetailUseCase to include presenter suggestions (ordered chronologically, oldest first)
@@ -382,6 +382,21 @@
 - [ ] T192 [P] Security audit: verify UUID v6 prevents ID enumeration, verify rate limiting works
 - [ ] T193 [P] Documentation: Update README with setup instructions
 - [ ] T194 [P] Documentation: Add API documentation for HTMX endpoints (contracts)
+
+### Cross-Cutting Requirements (FR-037, FR-040-FR-044)
+
+- [ ] T195 [P] Create rate limiting middleware in `core/middleware.py` for FR-037: implement 10 topics/hour and 20 comments/hour per user
+- [ ] T196 [P] Create error message utility in `core/utils.py` for FR-040: function to generate inline error messages using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR)
+- [ ] T197 [P] Update all form templates to use error message utility (FR-040): replace generic error displays with inline semantic HTML messages
+- [ ] T198 [P] Add concurrent edit handling to EditTopicUseCase in `events/use_cases/edit_topic.py` for FR-041: implement last-write-wins approach with optional warning if content changed
+- [ ] T199 [P] Add concurrent edit handling to EditCommentUseCase in `events/use_cases/edit_comment.py` for FR-041: implement last-write-wins approach
+- [ ] T200 [P] Add concurrent edit handling to EditPresenterSuggestionUseCase in `events/use_cases/edit_presenter_suggestion.py` for FR-041: implement last-write-wins approach
+- [ ] T201 [P] Create HTMX error handling middleware in `core/middleware.py` for FR-042: catch network failures and return inline error messages with retry button using semantic HTML
+- [ ] T202 [P] Update all HTMX views to handle network failures (FR-042): ensure error responses use inline semantic HTML messages with retry functionality
+- [ ] T203 [P] Create session expiration handler in `accounts/middleware.py` for FR-043: redirect to login and preserve action context for automatic execution after authentication
+- [ ] T204 [P] Update authentication views to support action preservation (FR-043): store intended action and execute after successful login
+- [ ] T205 [P] Create number formatting utility in `core/utils.py` for FR-044: function to format numbers in Portuguese (pt-BR) conventions (e.g., "1.234 votos") without abbreviations
+- [ ] T206 [P] Update TopicDTO and CommentDTO to use number formatting utility (FR-044): format vote_count and comment counts in pt-BR format
 
 ---
 
@@ -489,7 +504,7 @@ With multiple developers:
 
 ## Summary
 
-- **Total Tasks**: 194
+- **Total Tasks**: 206
 - **Tasks per User Story** (Output-First Priority Order):
   - US1 (View Topics - P1): 24 tasks
   - US3 (Vote - P1): 12 tasks
@@ -501,6 +516,7 @@ With multiple developers:
   - Setup: 25 tasks
   - Foundational: 14 tasks
   - Polish: 19 tasks
+  - Cross-Cutting Requirements: 12 tasks (FR-037, FR-040-FR-044)
 
 - **Parallel Opportunities**: Many tasks marked [P] can run in parallel
 - **Independent Test Criteria**: Each user story has clear independent test criteria
@@ -522,7 +538,7 @@ With multiple developers:
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
 - All templates receive DTOs (not QuerySets) to prevent N+1 queries
 - All DTO tests must include `assertNumQueries`
-- AlpineJS for client-side state, HTMX for server interactions
+- AlpineJS optional (only when explicitly requested), HTMX prioritized for all interactions
 - Custom user model MUST be created before first migration
 - **Create GitHub issue ONLY for the task currently being worked on** (not in advance for entire phases)
 - **Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}`** (e.g., `029-custom-user-model`)

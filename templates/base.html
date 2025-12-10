@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FloripaTalks{% endblock %}</title>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/pure-css/pure-min.css' %}">
+    <style>
+        /* Mobile-first base styles with modern CSS */
+        :root {
+            font-size: clamp(14px, 2.5vw, 16px);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 100%;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        
+        header, footer {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Fluid typography */
+        h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+        h2 { font-size: clamp(1.25rem, 4vw, 2rem); }
+        h3 { font-size: clamp(1.1rem, 3vw, 1.5rem); }
+        
+        /* Touch-friendly interactive elements */
+        button, a, input, select, textarea {
+            min-height: 44px;
+            min-width: 44px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% load static %}
+    
+    <script src="{% static 'js/htmx.min.js' %}"></script>
+    {# AlpineJS optional - uncomment only when explicitly requested #}
+    {# <script src="{% static 'js/alpine.min.js' %}" defer></script> #}
+    
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        {% block footer %}{% endblock %}
+    </footer>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

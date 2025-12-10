@@ -233,7 +233,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-029**: System MUST allow logged-in users to delete their own presenter suggestions (soft delete - content is marked as deleted and hidden from users but recoverable by admins)
 - **FR-010**: System MUST display presenter suggestions associated with topics, ordered chronologically (oldest first)
 - **FR-011**: System MUST support multiple events, each with a unique URL slug
-- **FR-012**: System MUST allow users to switch between events using an event selector (dropdown with AlpineJS for toggle, HTMX to load event content)
+- **FR-012**: System MUST allow users to switch between events using an event selector. Use HTMX-first approach: native HTML select with hx-get/hx-trigger to load content when event is selected. AlpineJS only if explicitly requested.
 - **FR-013**: System MUST display topics specific to the selected event
 - **FR-014**: System MUST provide Django admin interface for admins to manage topics, comments, presenter suggestions, users, and events
 - **FR-036**: System MUST implement soft delete for topics, comments, and presenter suggestions (marked as deleted, hidden from regular users, recoverable by admins)
@@ -246,7 +246,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-015**: System MUST be mobile-first, with all functionality accessible and usable on mobile devices
 - **FR-016**: System MUST meet accessibility standards (WCAG 2.1 Level AA compliance)
 - **FR-017**: System MUST allow non-authenticated users to view topics but require authentication for voting, commenting, adding topics, and suggesting presenters
-- **FR-030**: System MUST display popups inviting non-authenticated users to sign in or sign up when they click interactive buttons/links (vote, comment, add topic, suggest presenter). Popup toggle uses AlpineJS (x-show/x-if), authentication uses HTMX
+- **FR-030**: System MUST display popups inviting non-authenticated users to sign in or sign up when they click interactive buttons/links (vote, comment, add topic, suggest presenter). Use HTMX-first approach: HTMX to load a sign-in modal fragment from the server. AlpineJS only if explicitly requested.
 - **FR-031**: System MUST provide edit functionality on dedicated pages (not modals/popups) for topics, comments, and presenter suggestions
 - **FR-032**: System MUST ensure browser back button works seamlessly when navigating to and from edit pages
 - **FR-033**: System MUST use HTMX to minimize page refreshes for all transitions, maintaining smooth user experience
