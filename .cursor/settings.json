@@ -8,5 +8,7 @@
   "git.confirmForceSync": false,
   "pre-commit.showOutput": "never",
   "git.useEditorAsCommitInput": true,
-  "git.commitMessageTemplate": ".gitmessage-template"
+  "git.commitMessageTemplate": ".gitmessage-template",
+  "cursor.aiCommitMessage": true,
+  "cursor.aiCommitMessageFormat": "conventional"
 }

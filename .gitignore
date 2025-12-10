@@ -88,3 +88,8 @@ htmlcov/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Node.js (for commitlint)
+node_modules/
+package-lock.json
+yarn.lock
