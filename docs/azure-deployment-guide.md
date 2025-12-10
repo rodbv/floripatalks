@@ -192,7 +192,7 @@ This guide provides hands-on experience with these **Azure Developer Associate (
 
 ### Required Files
 
-1. **`.github/workflows/azure-deploy.yml`**: GitHub Actions workflow
+1. **`.github/workflows/main_floripatalks-app.yml`**: GitHub Actions workflow
 2. **`requirements.txt`** or use existing `pyproject.toml` with `uv`
 3. **`startup.sh`** (optional): Custom startup script for App Service
 
@@ -361,7 +361,7 @@ AZURE_STORAGE_ACCOUNT_KEY=<storage-key>
 
 **Option A: Use Existing Workflow via Azure Portal** (Recommended if you already have a workflow file):
 
-If you already have `.github/azure-deploy.yml` (or `.github/workflows/azure-deploy.yml`) in your repository:
+If you already have a workflow file in `.github/workflows/` (e.g., `main_floripatalks-app.yml` or `azure-deploy.yml`):
 
 1. Navigate: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Deployment Center**
 2. Select **GitHub** as the source
@@ -375,9 +375,11 @@ If you already have `.github/azure-deploy.yml` (or `.github/workflows/azure-depl
 5. Click **Save**
 
 Azure will:
-- Use your existing workflow file (e.g., `azure-deploy.yml`)
+- Use your existing workflow file from `.github/workflows/` directory
 - Set up the necessary GitHub secrets automatically
 - Configure the deployment pipeline to use your custom workflow
+
+**Note**: Azure expects workflow files to be in `.github/workflows/` directory. If your workflow file is named `main_floripatalks-app.yml` (Azure's default naming), it will be automatically detected. Otherwise, Azure may show a list of available workflow files to choose from.
 
 **Option B: Auto-Generate Basic Workflow via Azure Portal** (Quick start, but basic):
 
@@ -406,7 +408,7 @@ Azure will automatically:
 
 **Option C: Manual Setup with Custom Workflow** (Recommended if starting from scratch):
 
-For projects using `uv`, tests, and custom build steps, create `.github/workflows/azure-deploy.yml` manually:
+For projects using `uv`, tests, and custom build steps, create `.github/workflows/main_floripatalks-app.yml` manually (or any name ending in `.yml` in the workflows directory):
 
 ```yaml
 name: Deploy to Azure App Service
@@ -463,7 +465,7 @@ jobs:
 **Recommendation for this project**:
 
 **Use Option A** (Use available workflow) - Select **"Use available workflow"** at the bottom of the Azure Portal configuration. This will:
-- Detect your existing `.github/azure-deploy.yml` workflow file
+- Detect your existing workflow file in `.github/workflows/` directory (e.g., `main_floripatalks-app.yml`)
 - Use your custom workflow with `uv`, tests, and static file collection
 - Automatically set up GitHub secrets
 - Configure the deployment pipeline
@@ -1397,7 +1399,7 @@ Create an Azure Function that runs every 3 hours and calls your backup endpoint.
 
 **Why**: Protects against deployment failures that might corrupt the database, allows rollback to pre-deployment state if needed
 
-Update `.github/workflows/azure-deploy.yml` to backup before deployment:
+Update `.github/workflows/main_floripatalks-app.yml` to backup before deployment:
 
 ```yaml
 # Add this step BEFORE "Deploy to Azure Web App"
