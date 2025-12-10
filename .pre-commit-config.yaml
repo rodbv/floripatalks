@@ -20,7 +20,6 @@ repos:
         entry: uv run ruff format
         language: system
         types: [python]
-        args: [--check]
         pass_filenames: true
         verbose: false
 

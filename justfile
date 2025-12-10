@@ -19,9 +19,24 @@ migrate:
 makemigrations *args:
     uv run python manage.py makemigrations {{args}}
 
+# Make migrations and migrate in one command
+mmm *args:
+    @echo "Creating migrations..."
+    uv run python manage.py makemigrations {{args}}
+    @echo "Applying migrations..."
+    uv run python manage.py migrate
+
 # Run development server
 dev:
     uv run python manage.py runserver
+
+# Alias for dev
+run:
+    just dev
+
+# Run Django shell_plus with IPython
+shell:
+    uv run python manage.py shell_plus --ipython
 
 # Run tests
 test *args:
