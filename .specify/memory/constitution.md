@@ -1,10 +1,9 @@
 <!--
 Sync Impact Report:
-Version Change: 1.7.0 → 1.8.0 (added Django Admin Interface Requirements principle)
+Version Change: 1.8.0 → 1.8.1 (clarified docstring rules to avoid obvious docstrings)
 Modified Principles:
-  - Django Framework (added subsection II-A for admin requirements)
-Added Sections:
-  - Django Admin Interface Requirements (II-A) - comprehensive admin pages for all models with excellent 1:N relationship support
+  - Code Comments and Documentation (added explicit rule against obvious docstrings that restate type annotations or parameter names)
+Added Sections: None
 Removed Sections: None
 Templates Requiring Updates:
   - .specify/templates/plan-template.md (✅ no changes needed)
@@ -374,9 +373,10 @@ Code comments and docstrings are NOT recommended as they may contradict code or 
 - **Only comment non-obvious, surprising code**: Comments should only be used for code that intentionally breaks best practices or contains non-obvious logic that cannot be made clearer through refactoring
 - **No intermediary comments**: Do not leave temporary or intermediary comments explaining implementation decisions (e.g., "# using uuidv6 due to problem with uuidv7")
 - **Same rule for docstrings**: Docstrings follow the same principle - only add them when the code's purpose cannot be made clear through better naming or structure
+- **No obvious docstrings**: Do NOT write docstrings that simply restate what the code already makes obvious (e.g., docstrings that repeat parameter names, return types, or describe obvious operations). Type annotations and clear naming already provide this information
 - **Prefer refactoring over commenting**: If code needs a comment to be understood, refactor it to be more obvious instead
 
-**Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
+**Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Obvious docstrings that restate type annotations, parameter names, or obvious operations add no value and create maintenance burden. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
 
 ### Code Review and Quality Gates
 
@@ -428,4 +428,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.8.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.8.1 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
