@@ -43,6 +43,30 @@ format:
 format-check:
     uv run ruff format --check .
 
+# Run all pre-commit checks (linting + formatting)
+check:
+    @echo "Running linting checks..."
+    uv run ruff check .
+    @echo "Running format checks..."
+    uv run ruff format --check .
+    @echo "✅ All checks passed!"
+
+# Run all pre-commit checks with auto-fix
+check-fix:
+    @echo "Running linting checks with auto-fix..."
+    uv run ruff check --fix .
+    @echo "Running format auto-fix..."
+    uv run ruff format .
+    @echo "✅ All checks fixed!"
+
+# Run pre-commit hooks manually (all files)
+pre-commit:
+    uv run pre-commit run --all-files
+
+# Run pre-commit hooks manually (staged files only)
+pre-commit-staged:
+    uv run pre-commit run
+
 # Install/update dependencies
 sync:
     uv sync

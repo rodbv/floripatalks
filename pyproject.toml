@@ -31,10 +31,10 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = [
-    "E",   # pycodestyle errors
+    "E",   # pycodestyle errors (includes E402: module level import not at top of file)
     "W",   # pycodestyle warnings
     "F",   # pyflakes
-    "I",   # isort
+    "I",   # isort (import sorting)
     "B",   # flake8-bugbear
     "C4",  # flake8-comprehensions
     "UP",  # pyupgrade
@@ -48,6 +48,7 @@ ignore = [
     "F403",  # star imports (common in Django settings)
     "F405",  # undefined names from star imports (common in Django settings)
 ]
+# E402 is enforced: module-level imports MUST be at top of file
 
 [tool.ruff.lint.isort]
 known-first-party = ["floripatalks", "events", "accounts", "core"]

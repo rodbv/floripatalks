@@ -51,11 +51,13 @@ repos:
       - id: check-case-conflict
       - id: check-docstring-first
 
-  # Sort Python imports (if needed, ruff handles this but keeping as backup)
+  # Sort Python imports (isort - ruff also checks import sorting with "I" rules)
+  # Both isort and ruff check import organization to ensure consistency
   - repo: https://github.com/PyCQA/isort
     rev: 5.13.2
     hooks:
       - id: isort
+        name: isort (import sorting)
         args: [--profile=black, --line-length=100]
 
   # Commit message linting with commitlint (Conventional Commits)

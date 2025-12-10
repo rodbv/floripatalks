@@ -235,7 +235,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-011**: System MUST support multiple events, each with a unique URL slug
 - **FR-012**: System MUST allow users to switch between events using an event selector. Use HTMX-first approach: native HTML select with hx-get/hx-trigger to load content when event is selected. AlpineJS only if explicitly requested.
 - **FR-013**: System MUST display topics specific to the selected event
-- **FR-014**: System MUST provide Django admin interface for admins to manage topics, comments, presenter suggestions, users, and events
+- **FR-014**: System MUST provide comprehensive Django admin interface for admins to manage all models (topics, comments, presenter suggestions, users, events, votes). Admin interfaces MUST provide excellent support for one-to-many relationships using inlines, enabling complete system management through the admin interface without requiring direct database access or custom scripts. All models MUST be registered with appropriate configuration: list_display, list_filter, search_fields, fieldsets, and inlines for related objects.
 - **FR-036**: System MUST implement soft delete for topics, comments, and presenter suggestions (marked as deleted, hidden from regular users, recoverable by admins)
 - **FR-037**: System MUST implement rate limiting to prevent abuse: maximum 10 topics per hour per user, maximum 20 comments per hour per user
 - **FR-040**: System MUST display error messages inline below the relevant field/area using semantic HTML (`<div role="alert">` or similar) in Portuguese (pt-BR) for accessibility and progressive enhancement

@@ -1,14 +1,14 @@
 <!--
 Sync Impact Report:
-Version Change: 1.6.1 → 1.7.0 (added semantic HTML and modern HTML controls principle, changed AlpineJS from "Minimized" to "Optional")
+Version Change: 1.7.0 → 1.8.0 (added Django Admin Interface Requirements principle)
 Modified Principles:
-  - Development Workflow (expanded with GitHub issues and branch naming)
+  - Django Framework (added subsection II-A for admin requirements)
 Added Sections:
-  - GitHub Issues and Branch Naming (added to Development Workflow)
+  - Django Admin Interface Requirements (II-A) - comprehensive admin pages for all models with excellent 1:N relationship support
 Removed Sections: None
 Templates Requiring Updates:
   - .specify/templates/plan-template.md (✅ no changes needed)
-  - .specify/templates/spec-template.md (✅ no changes. NM needed)
+  - .specify/templates/spec-template.md (✅ no changes needed)
   - .specify/templates/tasks-template.md (✅ no changes needed)
 Follow-up TODOs: None
 -->
@@ -428,4 +428,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.7.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.8.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09

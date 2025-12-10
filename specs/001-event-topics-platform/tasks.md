@@ -140,7 +140,7 @@
 - [ ] T059 [US1] Create Django-Cotton topic card component `events/cotton/topic/card.html`
 - [ ] T060 [US1] Create HTMX sign-in popup component `accounts/templates/accounts/login_popup.html` (HTMX-first: load modal fragment from server, AlpineJS only if explicitly requested)
 - [ ] T061 [US1] Integrate sign-in popup in event detail template (HTMX to load modal fragment when interactive buttons clicked, AlpineJS only if explicitly requested)
-- [ ] T062 [US1] Configure admin for Event and Topic models in `events/admin.py`
+- [ ] T062 [US1] Configure comprehensive admin for Event and Topic models in `events/admin.py` with inlines for Topic (manage topics from Event page), list_display, list_filter, search_fields, fieldsets, and readonly_fields. Topic admin should show event relationship and support filtering by event.
 - [ ] T063 [US1] Create initial Event (Python Floripa) via Django admin or data migration
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Users can view topics list with infinite scroll.
@@ -363,8 +363,8 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T176 [P] Configure Django admin for all models: Event, Topic, Vote, Comment, PresenterSuggestion in `events/admin.py`
-- [ ] T177 [P] Add comprehensive admin actions: bulk soft delete recovery, export functionality
+- [ ] T176 [P] Configure comprehensive Django admin for all models: Event, Topic, Vote, Comment, PresenterSuggestion in `events/admin.py`. Use inlines for 1:N relationships (TopicInline in EventAdmin, CommentInline and PresenterSuggestionInline in TopicAdmin). Configure list_display, list_filter, search_fields, fieldsets, readonly_fields, and prepopulated_fields for all models. Ensure complete system management through admin interface.
+- [ ] T177 [P] Add comprehensive admin actions: bulk soft delete recovery, export functionality. Configure all_objects manager for soft-deleted models in admin to access deleted records.
 - [ ] T178 [P] Implement proper error handling and user-friendly error messages across all views
 - [ ] T179 [P] Add loading indicators using HTMX hx-indicator for all HTMX requests
 - [ ] T180 [P] Optimize database queries: add composite indexes per data-model.md specifications
