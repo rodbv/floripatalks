@@ -210,14 +210,20 @@ This guide provides hands-on experience with these **Azure Developer Associate (
 
 **Via Azure Portal** (Recommended for exam practice):
 1. **Create Resource Group**:
+   - **What**: A container that holds related Azure resources for your project (like a folder for organizing files)
+   - **Why**: Organizes resources together, makes management easier, and allows bulk operations (delete all resources at once)
    - Portal: [Create Resource Group](https://portal.azure.com/#create/Microsoft.ResourceGroup)
    - Or: Search "Resource groups" → Create → Name: `floripatalks-rg`, Region: `Brazil South`
 
 2. **Create App Service Plan**:
+   - **What**: Defines the compute resources (CPU, RAM, features) available to your web apps
+   - **Why**: Determines pricing tier and capabilities; multiple apps can share one plan to save costs
    - Portal: [Create App Service Plan](https://portal.azure.com/#create/Microsoft.AppServicePlan)
    - Or: Search "App Service plans" → Create → Resource Group: `floripatalks-rg`, Name: `floripatalks-plan`, Region: `Brazil South`, Pricing tier: `Free F1`
 
-3. **Create Web App**:
+3. **Create Web App** (App Service):
+   - **What**: The actual web application hosting service that runs your Django app
+   - **Why**: Provides managed hosting with automatic scaling, SSL, and deployment features without managing servers
    - Portal: [Create Web App](https://portal.azure.com/#create/Microsoft.WebSite)
    - Or: Search "Web App" → Create → Resource Group: `floripatalks-rg`, Name: `floripatalks-app`, Runtime: `Python 3.12`, Region: `Brazil South`, App Service Plan: `floripatalks-plan`
 
@@ -229,17 +235,17 @@ This guide provides hands-on experience with these **Azure Developer Associate (
 # Login
 az login
 
-# Create resource group (Brazil South region for Brazilian users)
+# Create resource group (container for organizing resources)
 az group create --name floripatalks-rg --location brazilsouth
 
-# Create App Service Plan (Free tier, Brazil South region)
+# Create App Service Plan (defines compute resources and pricing tier)
 az appservice plan create \
   --name floripatalks-plan \
   --resource-group floripatalks-rg \
   --location brazilsouth \
   --sku FREE
 
-# Create Web App (Brazil South region)
+# Create Web App (the actual hosting service for your Django app)
 az webapp create \
   --name floripatalks-app \
   --resource-group floripatalks-rg \
@@ -249,6 +255,9 @@ az webapp create \
 ```
 
 ### Step 2: Configure Application Settings (AZ-204: App Configuration)
+
+**What**: Environment variables stored securely in Azure that your app can access at runtime
+**Why**: Keeps secrets out of code, allows different configs per environment (dev/staging/prod), and enables changes without redeploying
 
 **Azure Portal** (Recommended):
 - Navigate: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Configuration** → **Application settings**
@@ -298,6 +307,9 @@ AZURE_STORAGE_ACCOUNT_KEY=<storage-key>
 ```
 
 ### Step 3: Set Up GitHub Actions CI/CD (AZ-204: Implement CI/CD)
+
+**What**: Automated pipeline that tests, builds, and deploys your app whenever you push code to GitHub
+**Why**: Ensures code is tested before deployment, automates repetitive tasks, and enables continuous delivery without manual steps
 
 Create `.github/workflows/azure-deploy.yml`:
 
@@ -355,6 +367,9 @@ jobs:
 
 ### Step 4: Configure GitHub Secrets
 
+**What**: Publish Profile is an XML file containing credentials and connection details needed to deploy to your App Service
+**Why**: Allows GitHub Actions to authenticate and deploy to Azure without storing credentials in your code repository
+
 **Get Publish Profile from Azure Portal**:
 - Navigate: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Get publish profile** (top menu)
 - Download the `.PublishSettings` file
@@ -376,6 +391,9 @@ az webapp deployment list-publishing-profiles \
 ```
 
 ### Step 5: Create Production Settings
+
+**What**: Django settings file specifically for production environment with security optimizations
+**Why**: Separates production config from development, enables security features (HTTPS, secure cookies), and prevents debug mode in production
 
 Create `floripatalks/settings/production.py`:
 
@@ -434,6 +452,9 @@ LOGGING = {
 
 ### Step 6: Create Startup Script (Optional)
 
+**What**: Bash script that runs when your App Service starts, typically to run migrations and start the web server
+**Why**: Automates setup tasks (database migrations, static file collection) and ensures your app is ready before serving traffic
+
 Create `startup.sh` in project root:
 
 ```bash
@@ -457,6 +478,9 @@ gunicorn floripatalks.wsgi:application --bind 0.0.0.0:8000 --workers 2
 - Click **Save** → **Continue**
 
 ### Step 7: Initial Deployment
+
+**What**: The process of uploading your application code to Azure App Service for the first time
+**Why**: Makes your app accessible on the internet; after initial deployment, CI/CD handles future updates automatically
 
 **Option A: Manual Deploy via Azure Portal** (First Time):
 - Navigate: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Deployment Center**
@@ -511,6 +535,8 @@ DATABASES = {
 - Files in `staticfiles/` directory
 
 **Media Files** (Optional - AZ-204: Azure Blob Storage):
+- **What**: Azure Blob Storage is cloud storage for unstructured data (files, images, videos) with high availability and scalability
+- **Why**: Better than App Service filesystem for user uploads because files persist across deployments, scale independently, and are cheaper for large files
 - **Create Storage Account**: [Azure Portal](https://portal.azure.com/#create/Microsoft.StorageAccount) → Resource Group: `floripatalks-rg`, Name: `floripatalksstorage`, Region: `Brazil South`, Performance: `Standard`, Redundancy: `LRS`
 - **Create Container**: Storage Account → **Containers** → **+ Container** → Name: `media`, Public access: `Blob`
 - **Install**: `django-storages[azure]`
@@ -529,6 +555,8 @@ DATABASES = {
 - **HTTP logs**: Request/response logs
 
 **Application Insights** (Optional, recommended - AZ-204: Application Insights):
+- **What**: Azure's Application Performance Monitoring (APM) service that tracks performance, errors, and user behavior
+- **Why**: Helps identify performance bottlenecks, track errors in production, understand user behavior, and set up alerts for issues
 - **Enable**: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Application Insights** → **Turn on Application Insights**
 - Create new Application Insights resource or use existing
 - **Features**: Performance monitoring, error tracking, user analytics, custom metrics
@@ -542,6 +570,9 @@ DATABASES = {
 ---
 
 ## Cloudflare Setup (Recommended - Free Security & Performance)
+
+**What**: Cloudflare is a global CDN and security service that sits between users and your app, providing protection and performance optimization
+**Why**: Adds free DDoS protection, WAF (blocks attacks), CDN (faster loading), and SSL certificates without additional Azure costs
 
 Cloudflare provides free DDoS protection, WAF, CDN, and security features in front of your Azure App Service.
 
@@ -582,6 +613,9 @@ Cloudflare provides free DDoS protection, WAF, CDN, and security features in fro
 
 ### Step 3: Configure DNS
 
+**What**: DNS (Domain Name System) translates domain names to IP addresses; nameservers tell the internet where to find your domain's DNS records
+**Why**: Cloudflare needs to manage your domain's DNS to route traffic through their network and provide security/CDN services
+
 **If using custom domain**:
 1. Cloudflare will scan your existing DNS records
 2. Review and confirm DNS records
@@ -592,6 +626,9 @@ Cloudflare provides free DDoS protection, WAF, CDN, and security features in fro
 - Cloudflare requires a custom domain, so skip this section if you're only using Azure's default domain
 
 ### Step 4: Configure Cloudflare Settings
+
+**What**: Configuration options in Cloudflare dashboard for SSL encryption, security rules, and performance optimizations
+**Why**: Ensures secure connections, enables WAF protection, and optimizes content delivery for better performance
 
 **SSL/TLS**:
 1. **Cloudflare Dashboard** → Your site → **SSL/TLS**
@@ -609,6 +646,9 @@ Cloudflare provides free DDoS protection, WAF, CDN, and security features in fro
 
 ### Step 5: Point Cloudflare to Azure App Service
 
+**What**: CNAME record is a DNS record that maps your domain to another domain (like an alias)
+**Why**: Routes traffic from your custom domain through Cloudflare's network to your Azure App Service, enabling Cloudflare's protection and CDN
+
 1. **Cloudflare Dashboard** → Your site → **DNS** → **Records**
 2. Add a CNAME record:
    - **Type**: CNAME
@@ -618,6 +658,9 @@ Cloudflare provides free DDoS protection, WAF, CDN, and security features in fro
    - Click **Save**
 
 ### Step 6: Update Azure App Service ALLOWED_HOSTS
+
+**What**: Django security setting that specifies which domain names are allowed to serve your application
+**Why**: Prevents HTTP Host header attacks by only accepting requests from trusted domains (your custom domain and Azure domain)
 
 **Azure Portal**:
 1. App Service → **Configuration** → **Application settings**
@@ -633,7 +676,8 @@ ALLOWED_HOSTS=talks.example.com,floripatalks-app.azurewebsites.net
 
 ### Step 7: (Optional) Restrict Azure to Cloudflare IPs
 
-**Why**: Prevents direct access to your App Service, forcing all traffic through Cloudflare
+**What**: Azure Access Restrictions feature that limits which IP addresses can reach your App Service
+**Why**: Prevents direct access to your App Service, forcing all traffic through Cloudflare for maximum security and ensuring all requests benefit from Cloudflare's protection
 
 **Azure Portal**:
 1. App Service → **Networking** → **Access Restrictions**
@@ -753,6 +797,9 @@ ALLOWED_HOSTS=talks.example.com,floripatalks-app.azurewebsites.net
 These Azure services can be added to your app for hands-on AZ-204 exam practice without significant cost:
 
 ### 1. Azure Key Vault (AZ-204: Implement Secure Cloud Solutions)
+**What**: Secure storage service for secrets, keys, and certificates with access control and audit logging
+**Why**: Better than App Settings for secrets because it provides centralized management, automatic rotation, and fine-grained access control
+
 **Cost**: Free tier available (first 10,000 operations/month free)
 
 **What to learn**:
@@ -770,6 +817,9 @@ These Azure services can be added to your app for hands-on AZ-204 exam practice 
 ---
 
 ### 2. Deployment Slots (AZ-204: Implement CI/CD)
+**What**: Separate instances of your app (like staging and production) that can run simultaneously and be swapped instantly
+**Why**: Enables zero-downtime deployments, allows testing in production-like environment, and provides instant rollback if issues occur
+
 **Cost**: Included in Free tier - no additional cost (available on all tiers)
 
 **What to learn**:
@@ -786,6 +836,9 @@ These Azure services can be added to your app for hands-on AZ-204 exam practice 
 ---
 
 ### 3. Application Insights (AZ-204: Implement Monitoring)
+**What**: Application Performance Monitoring (APM) service that tracks performance metrics, errors, and user behavior
+**Why**: Helps identify performance issues, track errors in production, understand user patterns, and set up proactive alerts
+
 **Cost**: Free tier (5GB data ingestion/month, 90-day retention)
 
 **What to learn**:
@@ -804,6 +857,9 @@ These Azure services can be added to your app for hands-on AZ-204 exam practice 
 ---
 
 ### 4. Azure Blob Storage (AZ-204: Implement Data Storage)
+**What**: Cloud storage service for unstructured data (files, images, videos) with high availability and global access
+**Why**: Better than App Service filesystem for user uploads because files persist across deployments, scale independently, and are accessible via CDN
+
 **Cost**: ~$0.02/GB/month (very cheap for small apps)
 
 **What to learn**:
@@ -822,6 +878,9 @@ These Azure services can be added to your app for hands-on AZ-204 exam practice 
 ---
 
 ### 5. Azure Functions (AZ-204: Implement Serverless Solutions)
+**What**: Serverless compute service that runs code in response to events (HTTP requests, timers, queues) without managing servers
+**Why**: Perfect for background tasks, scheduled jobs, and event-driven workflows; scales automatically and only charges for execution time
+
 **Cost**: Consumption plan - 1 million free requests/month, 400,000 GB-seconds compute/month
 
 **What to learn**:
@@ -840,6 +899,9 @@ These Azure services can be added to your app for hands-on AZ-204 exam practice 
 ---
 
 ### 6. Azure Service Bus (AZ-204: Implement Message-Based Solutions)
+**What**: Message broker service that enables asynchronous communication between applications using queues and topics
+**Why**: Decouples services, enables reliable message delivery, handles high throughput, and supports pub/sub patterns for event-driven architecture
+
 **Cost**: Basic tier ~$0.05/month (very cheap)
 
 **What to learn**:
@@ -937,6 +999,9 @@ This section covers automated SQLite database backups to Azure Blob Storage with
 
 ### Step 1: Create Storage Account and Container
 
+**What**: Storage Account is Azure's cloud storage service; Container is like a folder within storage for organizing files
+**Why**: Provides durable, scalable storage for backups that survives App Service failures and is cheaper than keeping backups on the server
+
 **Azure Portal**:
 1. [Create Storage Account](https://portal.azure.com/#create/Microsoft.StorageAccount)
    - Resource Group: `floripatalks-rg`
@@ -954,6 +1019,9 @@ This section covers automated SQLite database backups to Azure Blob Storage with
 
 ### Step 2: Install Required Package
 
+**What**: Azure Storage Blob SDK package that provides Python libraries to interact with Azure Blob Storage
+**Why**: Required to upload backup files to Azure Blob Storage programmatically from your Django app
+
 Add to `pyproject.toml`:
 ```toml
 azure-storage-blob = "^12.0.0"
@@ -965,6 +1033,9 @@ uv add azure-storage-blob
 ```
 
 ### Step 3: Create Django Management Command
+
+**What**: A Django command that can be run via `python manage.py backup_database` to automate database backups
+**Why**: Provides a reusable, scriptable way to backup your database with retention policies, can be called from CI/CD or scheduled tasks
 
 Create `core/management/commands/backup_database.py`:
 
@@ -1102,12 +1173,18 @@ class Command(BaseCommand):
 
 ### Step 4: Configure Environment Variable
 
+**What**: Connection string that contains credentials and endpoint information to connect to your Azure Storage Account
+**Why**: Allows your backup script to authenticate and upload files to Blob Storage without hardcoding credentials
+
 **Azure Portal**:
 - App Service → **Configuration** → **Application settings**
 - Add: `AZURE_STORAGE_CONNECTION_STRING` = `<connection-string-from-storage-account>`
 - Click **Save** → **Continue**
 
 ### Step 5: Schedule Automated Backups (Every 3 Hours)
+
+**What**: GitHub Actions scheduled workflow runs automatically on a cron schedule (every 3 hours) to trigger backups
+**Why**: Ensures regular backups without manual intervention, runs in the cloud (no local machine needed), and provides backup history in GitHub
 
 **Option A: GitHub Actions Scheduled Workflow** (Recommended)
 
@@ -1178,6 +1255,9 @@ Create an Azure Function that runs every 3 hours and calls your backup endpoint.
 
 ### Step 6: Add Pre-Deployment Backup
 
+**What**: Backup step added to CI/CD pipeline that runs before code deployment to preserve database state
+**Why**: Protects against deployment failures that might corrupt the database, allows rollback to pre-deployment state if needed
+
 Update `.github/workflows/azure-deploy.yml` to backup before deployment:
 
 ```yaml
@@ -1200,6 +1280,9 @@ Update `.github/workflows/azure-deploy.yml` to backup before deployment:
 
 ### Step 7: Configure GitHub Secrets
 
+**What**: Secure storage in GitHub for sensitive values (connection strings, credentials) that can be accessed by GitHub Actions workflows
+**Why**: Keeps secrets out of your code repository, allows CI/CD to authenticate with Azure services securely
+
 **GitHub**: Repository → **Settings** → **Secrets and variables** → **Actions**
 
 Add these secrets:
@@ -1219,6 +1302,9 @@ Add these secrets:
    - Copy entire JSON output to GitHub secret `AZURE_CREDENTIALS`
 
 ### Step 8: Manual Weekly/Monthly Backups
+
+**What**: Separate GitHub Actions workflows that run on a schedule (weekly/monthly) to create long-term backup archives
+**Why**: Provides different retention periods (keep weeklies longer than daily snapshots) and ensures long-term data preservation
 
 Create scheduled workflows for weekly and monthly backups:
 
@@ -1259,6 +1345,9 @@ jobs:
 ```
 
 ### Step 9: Restore from Backup
+
+**What**: Process of downloading a backup file from Blob Storage and replacing the live database file on App Service
+**Why**: Enables recovery from data corruption, accidental deletions, or deployment issues by restoring to a previous database state
 
 **Azure Portal**:
 1. Storage Account → **Containers** → `db-backups`
