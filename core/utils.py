@@ -5,7 +5,7 @@ This module contains common utility functions used across the application.
 """
 
 
-def format_number_pt_br(number: int) -> str:
+def format_number_pt_br(number: int | str) -> str:
     """
     Format a number using Portuguese (pt-BR) formatting conventions.
 
@@ -13,7 +13,7 @@ def format_number_pt_br(number: int) -> str:
     Example: 1234 -> "1.234", 567 -> "567"
 
     Args:
-        number: The number to format
+        number: The number to format (int or string)
 
     Returns:
         Formatted number string in pt-BR format
@@ -25,8 +25,11 @@ def format_number_pt_br(number: int) -> str:
         '567'
         >>> format_number_pt_br(1234567)
         '1.234.567'
+        >>> format_number_pt_br("1234")
+        '1.234'
     """
-    return f"{number:,}".replace(",", ".")
+    num = int(number) if isinstance(number, str) else number
+    return f"{num:,}".replace(",", ".")
 
 
 def format_vote_count(count: int) -> str:

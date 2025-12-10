@@ -10,7 +10,12 @@ from django.db import migrations
 
 def create_default_site(apps: object, schema_editor: object) -> None:
     """Create default Site object with id=1 if it doesn't exist."""
-    Site = apps.get_model("sites", "Site")
+    try:
+        Site = apps.get_model("sites", "Site")
+    except LookupError:
+        # Sites app not available (e.g., during test migrations)
+        return
+
     site, created = Site.objects.get_or_create(
         id=1,
         defaults={

@@ -1,0 +1,14 @@
+{% load cotton %}
+
+{% for topic in topics %}
+    {% include "events/partials/topic_item.html" with topic=topic %}
+{% endfor %}
+
+{% if topics|length >= 20 %}
+    <div
+        hx-get="{% url 'events:load_more_topics' slug=event.slug %}?offset={{ topics|length|add:offset }}"
+        hx-trigger="revealed"
+        hx-swap="afterend"
+        class="load-more-trigger"
+    ></div>
+{% endif %}

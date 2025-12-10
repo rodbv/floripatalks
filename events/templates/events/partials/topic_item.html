@@ -1,0 +1,15 @@
+{% load cotton %}
+{% load core_tags %}
+
+<div class="topic-item" data-topic-slug="{{ topic.slug }}">
+    <c-topic.card
+        id="{{ topic.id }}"
+        slug="{{ topic.slug }}"
+        title="{{ topic.title }}"
+        description="{{ topic.description|default:'' }}"
+        vote_count="{{ topic.vote_count }}"
+        creator_username="{{ topic.creator_username }}"
+        event_slug="{{ topic.event_slug }}"
+        created_at="{{ topic.created_at|date:'d/m/Y H:i' }}"
+    />
+</div>

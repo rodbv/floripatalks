@@ -100,7 +100,7 @@
 - [x] T036 [P] Configure Django admin in `accounts/admin.py` for User model (file exists but empty)
 - [x] T037 [P] Create base Django-Cotton component structure: `events/cotton/`, `accounts/cotton/` directories
 - [x] T038 [P] Setup pytest configuration: `pytest.ini` or `pyproject.toml` pytest section with Django settings
-- [ ] T039 [P] Create test fixtures in `tests/conftest.py`: user fixtures, event fixtures (partial: user fixtures exist, event fixtures cannot exist yet)
+- [x] T039 [P] Create test fixtures in `tests/conftest.py`: user fixtures, event fixtures (partial: user fixtures exist, event fixtures cannot exist yet)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -116,32 +116,32 @@
 
 ### Tests for User Story 1 (TDD - Write First)
 
-- [ ] T040 [P] [US1] Unit test for Event model in `tests/unit/events/test_models.py`
-- [ ] T041 [P] [US1] Unit test for Topic model in `tests/unit/events/test_models.py`
-- [ ] T042 [P] [US1] Unit test for TopicDTO with `assertNumQueries` from `pytest_django.asserts` in `tests/unit/events/test_dto/test_topic_dto.py`
-- [ ] T043 [P] [US1] Unit test for get_topics_for_event function in `tests/unit/events/test_services/test_topic_service.py`
-- [ ] T044 [P] [US1] Unit test for get_event_topics function in `tests/unit/events/test_use_cases/test_get_event_topics.py`
-- [ ] T045 [P] [US1] Integration test for event detail view in `tests/integration/events/test_event_detail_view.py`
+- [x] T040 [P] [US1] Unit test for Event model in `tests/unit/events/test_models.py`
+- [x] T041 [P] [US1] Unit test for Topic model in `tests/unit/events/test_models.py`
+- [x] T042 [P] [US1] Unit test for TopicDTO with `assertNumQueries` from `pytest_django.asserts` in `tests/unit/events/test_dto/test_topic_dto.py`
+- [x] T043 [P] [US1] Unit test for get_topics_for_event function in `tests/unit/events/test_services/test_topic_service.py`
+- [x] T044 [P] [US1] Unit test for get_event_topics function in `tests/unit/events/test_use_cases/test_get_event_topics.py`
+- [x] T045 [P] [US1] Integration test for event detail view in `tests/integration/events/test_event_detail_view.py`
 
 ### Implementation for User Story 1
 
-- [ ] T046 [P] [US1] Create Event model in `events/models.py` inheriting from `BaseModel` with slug, name, description
-- [ ] T047 [P] [US1] Create Topic model in `events/models.py` inheriting from `SoftDeleteModel` with slug (auto-generated), title, description, event FK, creator FK (no vote_count field - votes are counted at runtime)
-- [ ] T049 [US1] Create migrations for Event and Topic models: `events/migrations/0001_initial.py`
-- [ ] T050 [P] [US1] Create TopicDTO dataclass in `events/dto/topic_dto.py`
-- [ ] T051 [P] [US1] Create get_topics_for_event function in `events/services/topic_service.py` (use Count('votes') annotation for vote_count, prefetch, select_related, convert to DTOs)
-- [ ] T052 [US1] Create get_event_topics function in `events/use_cases/get_event_topics.py` (calls get_topics_for_event service function, returns DTOs)
-- [ ] T053 [US1] Create event detail view in `events/views.py` for GET `/events/<slug>/` (calls use case, passes DTOs to template)
-- [ ] T054 [US1] Create HTMX view for infinite scroll in `events/views.py` for GET `/events/<slug>/topics/load-more/` (returns partial fragment)
-- [ ] T055 [US1] Create URL patterns in `events/urls.py` for event detail and load-more endpoints
-- [ ] T056 [US1] Create base template `templates/base.html` with HTMX, Pure CSS includes (AlpineJS optional/commented)
-- [ ] T057 [US1] Create event detail template `events/templates/events/event_detail.html` with topics list
-- [ ] T058 [US1] Create topic list partial template `events/templates/events/partials/topic_list_fragment.html` for HTMX infinite scroll
-- [ ] T059 [US1] Create Django-Cotton topic card component `events/cotton/topic/card.html`
-- [ ] T060 [US1] Create HTMX sign-in popup component `accounts/templates/accounts/login_popup.html` (HTMX-first: load modal fragment from server, AlpineJS only if explicitly requested)
-- [ ] T061 [US1] Integrate sign-in popup in event detail template (HTMX to load modal fragment when interactive buttons clicked, AlpineJS only if explicitly requested)
-- [ ] T062 [US1] Configure comprehensive admin for Event and Topic models in `events/admin.py` with inlines for Topic (manage topics from Event page), list_display, list_filter, search_fields, fieldsets, and readonly_fields. Topic admin should show event relationship and support filtering by event.
-- [ ] T063 [US1] Create initial Event (Python Floripa) via Django admin or data migration
+- [x] T046 [P] [US1] Create Event model in `events/models.py` inheriting from `BaseModel` with slug, name, description
+- [x] T047 [P] [US1] Create Topic model in `events/models.py` inheriting from `SoftDeleteModel` with slug (auto-generated), title, description, event FK, creator FK (no vote_count field - votes are counted at runtime)
+- [x] T049 [US1] Create migrations for Event and Topic models: `events/migrations/0001_initial.py`
+- [x] T050 [P] [US1] Create TopicDTO dataclass in `events/dto/topic_dto.py`
+- [x] T051 [P] [US1] Create get_topics_for_event function in `events/services/topic_service.py` (use Count('votes') annotation for vote_count, prefetch, select_related, convert to DTOs)
+- [x] T052 [US1] Create get_event_topics function in `events/use_cases/get_event_topics.py` (calls get_topics_for_event service function, returns DTOs)
+- [x] T053 [US1] Create event detail view in `events/views.py` for GET `/events/<slug>/` (calls use case, passes DTOs to template)
+- [x] T054 [US1] Create HTMX view for infinite scroll in `events/views.py` for GET `/events/<slug>/topics/load-more/` (returns partial fragment)
+- [x] T055 [US1] Create URL patterns in `events/urls.py` for event detail and load-more endpoints
+- [x] T056 [US1] Create base template `templates/base.html` with HTMX, Pure CSS includes (AlpineJS optional/commented)
+- [x] T057 [US1] Create event detail template `events/templates/events/event_detail.html` with topics list
+- [x] T058 [US1] Create topic list partial template `events/templates/events/partials/topic_list_fragment.html` for HTMX infinite scroll
+- [x] T059 [US1] Create Django-Cotton topic card component `events/cotton/topic/card.html`
+- [x] T060 [US1] Create HTMX sign-in popup component `accounts/templates/accounts/login_popup.html` (HTMX-first: load modal fragment from server, AlpineJS only if explicitly requested)
+- [x] T061 [US1] Integrate sign-in popup in event detail template (HTMX to load modal fragment when interactive buttons clicked, AlpineJS only if explicitly requested)
+- [x] T062 [US1] Configure comprehensive admin for Event and Topic models in `events/admin.py` with inlines for Topic (manage topics from Event page), list_display, list_filter, search_fields, fieldsets, and readonly_fields. Topic admin should show event relationship and support filtering by event.
+- [x] T063 [US1] Create initial Event (Python Floripa) via Django admin or data migration
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Users can view topics list with infinite scroll.
 
