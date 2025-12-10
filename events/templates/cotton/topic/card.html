@@ -19,24 +19,7 @@ Props:
 
 <article class="topic-card">
     <header class="topic-card-header">
-        <div class="topic-header-content">
-            <div class="topic-creator-info">
-                {% if creator_avatar_url %}
-                    <img src="{{ creator_avatar_url }}" alt="{{ creator_display_name|default:creator_username }}" class="creator-avatar" loading="lazy">
-                {% else %}
-                    <div class="creator-avatar creator-avatar-placeholder">
-                        <span class="avatar-initial">{{ creator_display_name|default:creator_username|first|upper }}</span>
-                    </div>
-                {% endif %}
-                <div class="creator-details">
-                    <span class="creator-name">{{ creator_display_name|default:creator_username }}</span>
-                    <time class="topic-date" datetime="{{ created_at }}">{{ created_at|date:"d/m/Y" }}</time>
-                </div>
-            </div>
-        </div>
-        <h3 class="topic-title">
-            <a href="#">{{ title }}</a>
-        </h3>
+        <h3 class="topic-title">{{ title }}</h3>
     </header>
 
     {% if description %}
@@ -55,6 +38,19 @@ Props:
                 vote-count="{{ vote_count }}"
             ></c-topic.vote-button>
             <span class="comment-count">0 comentários</span>
+        </div>
+        <div class="topic-creator-info">
+            {% if creator_avatar_url %}
+                <img src="{{ creator_avatar_url }}" alt="{{ creator_display_name|default:creator_username }}" class="creator-avatar" loading="lazy">
+            {% else %}
+                <div class="creator-avatar creator-avatar-placeholder">
+                    <span class="avatar-initial">{{ creator_display_name|default:creator_username|first|upper }}</span>
+                </div>
+            {% endif %}
+            <div class="creator-details">
+                <span class="creator-name">{{ creator_display_name|default:creator_username }}</span>
+                <time class="topic-date" datetime="{{ created_at }}">{{ created_at|date:"d/m/Y H:i" }}</time>
+            </div>
         </div>
     </footer>
 </article>

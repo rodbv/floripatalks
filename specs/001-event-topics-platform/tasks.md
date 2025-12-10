@@ -519,9 +519,26 @@ With multiple developers:
 
 ---
 
+## Phase 8: Navigation Bar and Login Flow (US8)
+
+**Purpose**: Add persistent top navigation bar and beautiful login/signup flow
+
+**Independent Test**: A user can see a navigation bar at the top of all pages with FloripaTalks branding, Eventos link, and appropriate login/logout links. Admin users see an Admin link. The login/signup flow is beautiful with Google social login including logo.
+
+- [ ] T208 [US8] Create navigation bar component in base template with FloripaTalks branding, Eventos link, and login/logout links: `templates/base.html` - add semantic `<nav>` with proper structure
+- [ ] T209 [US8] Add admin link to navigation bar (only visible to users with admin rights): check `user.is_staff` or `user.is_superuser` in template
+- [ ] T210 [US8] Make navigation bar SEO-friendly: use semantic HTML (`<nav>`, proper `<a>` links with href attributes), ensure all links are crawlable by search engines
+- [ ] T211 [US8] Style navigation bar for mobile-first responsive design: ensure touch-friendly targets, proper spacing, hamburger menu if needed for mobile
+- [ ] T212 [US8] Create beautiful login page template: `accounts/templates/accounts/login.html` - modern design with Google social login button including logo
+- [ ] T213 [US8] Create beautiful signup page template: `accounts/templates/accounts/signup.html` - consistent with login page design
+- [ ] T214 [US8] Style Google social login button with logo: use official Google branding guidelines, include Google logo, proper colors
+- [ ] T215 [US8] Ensure login/logout flow is consistent with delightful UI design (Principle XVIII): friendly, approachable, visually appealing
+
+---
+
 ## Summary
 
-- **Total Tasks**: 207
+- **Total Tasks**: 215
 - **Tasks per User Story** (Output-First Priority Order):
   - US1 (View Topics - P1): 24 tasks
   - US3 (Vote - P1): 12 tasks
@@ -530,10 +547,11 @@ With multiple developers:
   - US4 (Comments - P2): 26 tasks
   - US7 (Event Switch - P2): 10 tasks
   - US5 (Presenters - P3): 25 tasks
+  - US8 (Navigation & Login - P1): 8 tasks
   - Setup: 25 tasks
   - Foundational: 14 tasks
   - Polish: 19 tasks
-  - Cross-Cutting Requirements: 12 tasks (FR-037, FR-040-FR-044)
+  - Cross-Cutting Requirements: 20 tasks (FR-037, FR-040-FR-048)
 
 - **Parallel Opportunities**: Many tasks marked [P] can run in parallel
 - **Independent Test Criteria**: Each user story has clear independent test criteria

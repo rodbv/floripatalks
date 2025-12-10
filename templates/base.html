@@ -198,8 +198,8 @@
 
         /* Avatar styling - circular with placeholder */
         .creator-avatar {
-            width: 48px;
-            height: 48px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--color-border-light);
@@ -207,8 +207,8 @@
         }
 
         .creator-avatar-placeholder {
-            width: 48px;
-            height: 48px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             display: flex;
@@ -221,7 +221,7 @@
         .avatar-initial {
             color: #ffffff;
             font-weight: 600;
-            font-size: 1.25rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
         }
 
@@ -411,20 +411,248 @@
             font-weight: 500;
         }
 
-        /* Navigation styling */
-        nav {
+        /* Top Navigation Bar - Always Visible */
+        .top-navigation {
             background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid var(--color-border-light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            box-sizing: border-box;
+            width: 100%;
         }
 
-        nav a {
-            color: var(--color-text-dark);
-            font-weight: 500;
+        .nav-brand {
+            flex-shrink: 0;
         }
 
-        nav a:hover {
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
             color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-logo:hover {
+            color: var(--color-primary-dark);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .nav-link {
+            color: var(--color-text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-block;
+            min-height: 44px;
+            line-height: 44px;
+            padding: 0 1rem;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+            background-color: var(--color-bg-light);
+        }
+
+        .nav-link-admin {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .nav-link-admin:hover {
+            background-color: var(--color-primary);
+            color: #ffffff;
+        }
+
+        /* User Menu Dropdown */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-menu-trigger {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-radius: 50%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .user-menu-trigger:hover {
+            transform: scale(1.05);
+        }
+
+        .user-menu-trigger:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-border-light);
+            display: block;
+        }
+
+        .user-avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--color-border-light);
+        }
+
+        .user-avatar-placeholder .avatar-initial {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .user-menu-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            max-width: calc(100vw - 2rem);
+            z-index: 1001;
+            border: 1px solid var(--color-border-light);
+            box-sizing: border-box;
+        }
+
+        .user-menu-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .user-menu-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .user-menu-name {
+            font-weight: 600;
+            color: var(--color-text-dark);
+            font-size: 0.95rem;
+        }
+
+        .user-menu-email {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+        }
+
+        .user-menu-divider {
+            height: 1px;
+            background: var(--color-border-light);
+            margin: 0.5rem 0;
+        }
+
+        .user-menu-items {
+            padding: 0.5rem 0;
+        }
+
+        .user-menu-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--color-text-dark);
+            text-decoration: none;
+            transition: background-color 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .user-menu-item:hover {
+            background-color: var(--color-bg-light);
+            color: var(--color-primary);
+        }
+
+        /* Mobile Navigation */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .nav-menu {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
+
+            .nav-actions {
+                gap: 0.5rem;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+                padding: 0 0.75rem;
+            }
+
+            .user-menu {
+                position: relative;
+            }
+
+            .user-menu-dropdown {
+                right: 0;
+                left: auto;
+                min-width: 180px;
+                max-width: calc(100vw - 2rem);
+            }
+
+            .user-avatar,
+            .user-avatar-placeholder {
+                width: 36px;
+                height: 36px;
+            }
+
+            .user-avatar-placeholder .avatar-initial {
+                font-size: 0.9rem;
+            }
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -444,10 +672,82 @@
             }
         });
     </script>
-    {# AlpineJS optional - uncomment only when explicitly requested #}
-    {# <script src="{% static 'js/alpine.min.js' %}" defer></script> #}
+    <script src="{% static 'js/alpine.min.js' %}" defer></script>
 
     <header>
+        <nav class="top-navigation" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <a href="{% url 'home' %}" class="nav-logo" aria-label="FloripaTalks - Página inicial">
+                        FloripaTalks
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{% url 'home' %}" class="nav-link">Eventos</a>
+                    </li>
+                </ul>
+                <div class="nav-actions">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff or user.is_superuser %}
+                            <a href="{% url 'admin:index' %}" class="nav-link nav-link-admin">Admin</a>
+                        {% endif %}
+                        <div class="user-menu" x-data="{ open: false }" @click.away="open = false" @keydown.escape="open = false">
+                            <button
+                                class="user-menu-trigger"
+                                type="button"
+                                aria-label="Menu do usuário"
+                                :aria-expanded="open"
+                                aria-haspopup="true"
+                                @click="open = !open"
+                            >
+                                {% if user.socialaccount_set.all %}
+                                    {% with social_account=user.socialaccount_set.all|first %}
+                                        {% if social_account.get_avatar_url %}
+                                            <img src="{{ social_account.get_avatar_url }}" alt="{{ user.get_full_name|default:user.username }}" class="user-avatar">
+                                        {% else %}
+                                            <div class="user-avatar user-avatar-placeholder">
+                                                <span class="avatar-initial">{{ user.get_full_name|default:user.username|first|upper }}</span>
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    <div class="user-avatar user-avatar-placeholder">
+                                        <span class="avatar-initial">{{ user.get_full_name|default:user.username|first|upper }}</span>
+                                    </div>
+                                {% endif %}
+                            </button>
+                            <div
+                                class="user-menu-dropdown"
+                                x-show="open"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="opacity-0 transform scale-95 translate-y-[-10px]"
+                                x-transition:enter-end="opacity-100 transform scale-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="opacity-100 transform scale-100 translate-y-0"
+                                x-transition:leave-end="opacity-0 transform scale-95 translate-y-[-10px]"
+                                style="display: none;"
+                            >
+                                <div class="user-menu-header">
+                                    <div class="user-menu-info">
+                                        <div class="user-menu-name">{{ user.get_full_name|default:user.username }}</div>
+                                        <div class="user-menu-email">{{ user.email }}</div>
+                                    </div>
+                                </div>
+                                <div class="user-menu-items">
+                                    {# Future: Add "Meus Votos" link here #}
+                                    <a href="{% url 'account_logout' %}" class="user-menu-item">
+                                        <span>Sair</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'account_login' %}" class="nav-link">Entrar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
         {% block header %}{% endblock %}
     </header>
 

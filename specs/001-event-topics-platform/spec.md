@@ -248,6 +248,10 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-042**: System MUST handle network failures during HTMX requests (timeout, connection lost, server unavailable) by displaying inline error messages using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) with a retry button. The retry button uses HTMX to retry the failed request.
 - **FR-043**: System MUST handle session expiration during actions (vote, comment, edit) by redirecting to login, then after authentication returning to original context and automatically executing the intended action.
 - **FR-044**: System MUST format large numbers in display (vote counts, comment counts) using simple Portuguese (pt-BR) formatting conventions (e.g., "1.234 votos", "567 comentários") without abbreviations like "1.2k".
+- **FR-045**: System MUST display a persistent top navigation bar on all pages with FloripaTalks branding, link to Eventos (events list), and login/logout links based on authentication status
+- **FR-046**: System MUST display an Admin link in the top navigation bar only for users with admin rights (is_staff or is_superuser)
+- **FR-047**: System MUST implement SEO-friendly navigation using semantic HTML (`<nav>`, proper `<a>` links) so navigation items can be linked directly in Google search results
+- **FR-048**: System MUST provide a beautiful, modern login/signup flow with Google social login including logo and consistent with delightful UI design (Principle XVIII)
 - **FR-015**: System MUST be mobile-first, with all functionality accessible and usable on mobile devices
 - **FR-016**: System MUST meet accessibility standards (WCAG 2.1 Level AA compliance)
 - **FR-017**: System MUST allow non-authenticated users to view topics but require authentication for voting, commenting, adding topics, and suggesting presenters
