@@ -331,23 +331,44 @@ All task implementation MUST follow a strict workflow with mandatory human revie
 
 **Rationale**: Human review is essential for code quality, understanding, and maintaining control over the development process. Automatic task progression can lead to issues being overlooked, poor code quality, and loss of developer agency. This workflow ensures every change is consciously reviewed and approved before moving forward.
 
-### Commit Message Format
+### Commit Message Format (Conventional Commits)
 
-Commit messages MUST be concise and follow a consistent format:
+Commit messages MUST follow the Conventional Commits specification and be validated by commitlint:
 
-- **Format**: `<type>: <subject>` (max 50 chars for subject)
+- **Format**: `<type>: <subject>` (max 50 chars for subject, lowercase)
 - **Total length**: Maximum 300 characters (including subject and body)
-- **Types**: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `style`
-- **Style**: Imperative mood ("Add feature" not "Added feature")
+- **Types**: `feature` (or `ft`), `hotfix` (or `hf`), `fix` (or `fx`), `bugfix` (or `bf`), `chore` (or `ch`)
+- **Style**: Imperative mood, lowercase ("add feature" not "Added feature")
 - **Body**: Optional, wrap at 72 chars, keep total under 300 chars
+- **Footer**: Optional, for breaking changes or issue references
+- **Language**: English only
+- **Enforcement**: commitlint validates all commit messages via pre-commit hooks
 
 **Examples**:
-- `feat: Add HTMX infinite scroll`
-- `fix: Resolve static files warning`
-- `docs: Update constitution with uv run rule`
-- `refactor: Split settings into base/dev/prod`
+- `feature: add HTMX infinite scroll`
+- `ft: add HTMX infinite scroll`
+- `hotfix: resolve critical database connection issue`
+- `hf: resolve critical database connection issue`
+- `fix: resolve static files warning`
+- `fx: resolve static files warning`
+- `bugfix: resolve static files warning`
+- `bf: resolve static files warning`
+- `chore: update Django to 6.0`
+- `ch: update Django to 6.0`
 
-**Rationale**: Concise commit messages improve readability in git history and make it easier to understand changes at a glance. The 300-character limit provides flexibility while keeping messages focused and scannable.
+**Rationale**: Conventional Commits provide a standardized format that improves readability, enables automated tooling, and makes git history more scannable. The 300-character limit provides flexibility while keeping messages focused. commitlint ensures consistency across all commits.
+
+### Code Comments and Documentation
+
+Code comments and docstrings are NOT recommended as they may contradict code or compensate for non-clean code:
+
+- **Code should be obvious and simple**: Well-written code should be self-explanatory and not require comments to understand
+- **Only comment non-obvious, surprising code**: Comments should only be used for code that intentionally breaks best practices or contains non-obvious logic that cannot be made clearer through refactoring
+- **No intermediary comments**: Do not leave temporary or intermediary comments explaining implementation decisions (e.g., "# using uuidv6 due to problem with uuidv7")
+- **Same rule for docstrings**: Docstrings follow the same principle - only add them when the code's purpose cannot be made clear through better naming or structure
+- **Prefer refactoring over commenting**: If code needs a comment to be understood, refactor it to be more obvious instead
+
+**Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
 
 ### Code Review Requirements
 

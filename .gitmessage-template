@@ -1,23 +1,26 @@
-# Commit Message Guidelines
+# Commit Message Guidelines (Conventional Commits)
 #
 # Format: <type>: <subject>
 #
 # Types:
-#   feat: New feature
-#   fix: Bug fix
-#   docs: Documentation
-#   refactor: Code refactoring
-#   test: Tests
-#   chore: Maintenance (deps, config, etc)
-#   style: Formatting
+#   feature (or ft): New feature
+#   hotfix (or hf): Critical bug fix in production
+#   fix (or fx): Bug fix
+#   bugfix (or bf): Bug fix (alternative to fix)
+#   chore (or ch): Maintenance (deps, config, etc)
 #
-# Subject: 50 chars max, imperative mood
+# Subject: 50 chars max, imperative mood, lowercase
 # Body: 72 chars per line, max 300 chars total
+# Footer: Optional, for breaking changes or issue references
 #
 # Examples:
-# feat: Add HTMX infinite scroll
-# fix: Resolve static files warning
-# docs: Update constitution with uv run rule
-# refactor: Split settings into base/dev/prod
-# test: Add TopicService unit tests
-# chore: Update Django to 6.0
+# feature: add HTMX infinite scroll
+# ft: add HTMX infinite scroll
+# hotfix: resolve critical database connection issue
+# hf: resolve critical database connection issue
+# fix: resolve static files warning
+# fx: resolve static files warning
+# bugfix: resolve static files warning
+# bf: resolve static files warning
+# chore: update Django to 6.0
+# ch: update Django to 6.0
