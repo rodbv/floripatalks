@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}FloripaTalks - Home{% endblock %}
+
+{% block header %}
+<nav class="pure-menu pure-menu-horizontal" style="background-color: var(--color-bg-light); padding: 1rem;">
+    <a href="/" class="pure-menu-heading pure-menu-link" style="color: var(--color-primary-text); font-weight: 600;">FloripaTalks</a>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Eventos</a></li>
+        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Sobre</a></li>
+        <li class="pure-menu-item"><a href="/admin/" class="pure-menu-link">Admin</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1>Bem-vindo ao FloripaTalks</h1>
+    <p style="font-size: 1.125rem; color: var(--color-text); margin: 1.5rem 0;">
+        Plataforma para gerenciar tópicos de eventos Python Floripa.
+    </p>
+    
+    <div style="margin: 2rem 0;">
+        <h2>Paleta de Cores Python Floripa</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+            <div style="background-color: var(--color-primary); color: white; padding: 1.5rem; border-radius: 8px;">
+                <strong>Azul Primário</strong><br>
+                #046bd2
+            </div>
+            <div style="background-color: var(--color-primary-dark); color: white; padding: 1.5rem; border-radius: 8px;">
+                <strong>Azul Escuro</strong><br>
+                #045cb4
+            </div>
+            <div style="background-color: var(--color-text-dark); color: white; padding: 1.5rem; border-radius: 8px;">
+                <strong>Texto Escuro</strong><br>
+                #1e293b
+            </div>
+            <div style="background-color: var(--color-bg-light); color: var(--color-text-dark); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--color-border);">
+                <strong>Fundo Claro</strong><br>
+                #F0F5FA
+            </div>
+            <div style="background-color: var(--color-accent-yellow); color: var(--color-text-dark); padding: 1.5rem; border-radius: 8px;">
+                <strong>Amarelo Accent</strong><br>
+                #FDBC2C
+            </div>
+            <div style="background-color: var(--color-accent-red); color: white; padding: 1.5rem; border-radius: 8px;">
+                <strong>Vermelho Accent</strong><br>
+                #FE5F58
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin: 2rem 0;">
+        <h2>Exemplos de Componentes</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;">
+            <button>Botão Primário</button>
+            <a href="/admin/" style="display: inline-block; padding: 15px 30px; background-color: var(--color-primary); color: white; border-radius: 4px;">Link como Botão</a>
+        </div>
+        
+        <div style="margin: 1.5rem 0;">
+            <h3>Tipografia</h3>
+            <p style="color: var(--color-text);">
+                Este é um parágrafo com a cor de texto padrão (#334155). 
+                <a href="#">Este é um link</a> com a cor primária (#046bd2).
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<footer style="background-color: var(--color-bg-light); padding: 2rem 1rem; text-align: center; border-top: 1px solid var(--color-border);">
+    <p style="color: var(--color-text-light); margin: 0;">
+        &copy; 2025 FloripaTalks. Todos os direitos reservados.
+    </p>
+</footer>
+{% endblock %}
+
