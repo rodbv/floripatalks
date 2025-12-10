@@ -55,7 +55,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 ### ✅ III. pytest Testing Framework and Test Pyramid
 - **Status**: COMPLIANT
 - **Verification**: pytest with pytest-django, test pyramid (majority unit tests for use cases/services, fewer integration tests)
-- **DTO Tests**: All DTO tests will include `assertNumQueries`
+- **DTO Tests**: All DTO tests will include `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance)
 
 ### ✅ IV. HTMX Hypermedia Pattern
 - **Status**: COMPLIANT
@@ -85,7 +85,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 
 ### ✅ X. N+1 Query Prevention with DTOs
 - **Status**: COMPLIANT
-- **Verification**: All templates receive dataclass DTOs, not QuerySets. All DTO tests include `assertNumQueries`
+- **Verification**: All templates receive dataclass DTOs, not QuerySets. All DTO tests include `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance)
 
 ### ✅ XI. Use Case Layer Architecture
 - **Status**: COMPLIANT

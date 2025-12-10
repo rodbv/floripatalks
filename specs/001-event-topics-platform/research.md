@@ -72,13 +72,13 @@ All technical decisions align with the constitution and existing specifications.
 - Aligns with constitution principle X (N+1 Query Prevention with DTOs)
 - Forces explicit query optimization at service/use case layer
 - Makes query performance predictable and testable
-- `assertNumQueries` in tests verifies N+1 prevention
+- `assertNumQueries` from `pytest_django.asserts` in tests verifies N+1 prevention (pytest-django provides this without requiring TestCase inheritance)
 
 **Implementation**:
 - All views convert QuerySets to dataclass DTOs
 - Prefetch/select_related in services before DTO conversion
 - DTOs contain only data needed by templates
-- Tests use `assertNumQueries` to verify query count
+- Tests use `assertNumQueries` from `pytest_django.asserts` to verify query count
 
 **Alternatives considered**:
 - Passing QuerySets to templates: Rejected - risks N+1 queries

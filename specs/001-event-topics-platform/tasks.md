@@ -118,7 +118,7 @@
 
 - [ ] T040 [P] [US1] Unit test for Event model in `tests/unit/events/test_models.py`
 - [ ] T041 [P] [US1] Unit test for Topic model in `tests/unit/events/test_models.py`
-- [ ] T042 [P] [US1] Unit test for TopicDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_topic_dto.py`
+- [ ] T042 [P] [US1] Unit test for TopicDTO with `assertNumQueries` from `pytest_django.asserts` in `tests/unit/events/test_dto/test_topic_dto.py`
 - [ ] T043 [P] [US1] Unit test for get_topics_for_event function in `tests/unit/events/test_services/test_topic_service.py`
 - [ ] T044 [P] [US1] Unit test for get_event_topics function in `tests/unit/events/test_use_cases/test_get_event_topics.py`
 - [ ] T045 [P] [US1] Integration test for event detail view in `tests/integration/events/test_event_detail_view.py`
@@ -261,7 +261,7 @@
 ### Tests for User Story 4 (TDD - Write First)
 
 - [ ] T116 [P] [US4] Unit test for Comment model in `tests/unit/events/test_models.py`
-- [ ] T117 [P] [US4] Unit test for CommentDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_comment_dto.py`
+- [ ] T117 [P] [US4] Unit test for CommentDTO with `assertNumQueries` from `pytest_django.asserts` in `tests/unit/events/test_dto/test_comment_dto.py`
 - [ ] T118 [P] [US4] Unit test for add_comment service function in `tests/unit/events/test_services/test_comment_service.py`
 - [ ] T119 [P] [US4] Unit test for add_comment function in `tests/unit/events/test_use_cases/test_add_comment.py`
 - [ ] T120 [P] [US4] Unit test for edit_comment function in `tests/unit/events/test_use_cases/test_edit_comment.py`
@@ -329,7 +329,7 @@
 ### Tests for User Story 5 (TDD - Write First)
 
 - [ ] T151 [P] [US5] Unit test for PresenterSuggestion model in `tests/unit/events/test_models.py`
-- [ ] T152 [P] [US5] Unit test for PresenterDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_presenter_dto.py`
+- [ ] T152 [P] [US5] Unit test for PresenterDTO with `assertNumQueries` from `pytest_django.asserts` in `tests/unit/events/test_dto/test_presenter_dto.py`
 - [ ] T153 [P] [US5] Unit test for suggest_presenter service function with limits in `tests/unit/events/test_services/test_presenter_service.py`
 - [ ] T154 [P] [US5] Unit test for suggest_presenter function in `tests/unit/events/test_use_cases/test_suggest_presenter.py`
 - [ ] T155 [P] [US5] Unit test for edit_presenter_suggestion function in `tests/unit/events/test_use_cases/test_edit_presenter_suggestion.py`
@@ -540,7 +540,7 @@ With multiple developers:
 - Stop at any checkpoint to validate story independently
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
 - All templates receive DTOs (not QuerySets) to prevent N+1 queries
-- All DTO tests must include `assertNumQueries`
+- All DTO tests must include `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance)
 - AlpineJS optional (only when explicitly requested), HTMX prioritized for all interactions
 - Custom user model MUST be created before first migration
 - **Create GitHub issue ONLY for the task currently being worked on** (not in advance for entire phases)
