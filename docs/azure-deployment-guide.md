@@ -200,6 +200,49 @@ This guide provides hands-on experience with these **Azure Developer Associate (
 
 ## Step-by-Step Deployment Guide
 
+### Table of Contents (Quick Navigation)
+
+**Core Deployment Steps:**
+- [Step 1: Create Azure Resources](#step-1-create-azure-resources-az-204-create-and-manage-azure-resources)
+- [Step 2: Configure Application Settings](#step-2-configure-application-settings-az-204-app-configuration)
+- [Step 3: Set Up GitHub Actions CI/CD](#step-3-set-up-github-actions-cicd-az-204-implement-cicd)
+- [Step 4: Configure GitHub Secrets](#step-4-configure-github-secrets)
+- [Step 5: Create Production Settings](#step-5-create-production-settings)
+- [Step 6: Create Startup Script (Optional)](#step-6-create-startup-script-optional)
+- [Step 7: Initial Deployment](#step-7-initial-deployment)
+
+**Configuration & Setup:**
+- [Database: SQLite Configuration](#database-sqlite-configuration)
+- [Static and Media Files](#static-and-media-files-az-204-implement-data-storage)
+- [Monitoring and Logging](#monitoring-and-logging-az-204-implement-monitoring)
+
+**Cloudflare Setup (Recommended):**
+- [Step 1: Create Cloudflare Account](#step-1-create-cloudflare-account)
+- [Step 2: Add Your Domain](#step-2-add-your-domain)
+- [Step 3: Configure DNS](#step-3-configure-dns)
+- [Step 4: Configure Cloudflare Settings](#step-4-configure-cloudflare-settings)
+- [Step 5: Point Cloudflare to Azure App Service](#step-5-point-cloudflare-to-azure-app-service)
+- [Step 6: Update Azure App Service ALLOWED_HOSTS](#step-6-update-azure-app-service-allowed_hosts)
+- [Step 7: (Optional) Restrict Azure to Cloudflare IPs](#step-7-optional-restrict-azure-to-cloudflare-ips)
+- [Step 8: Verify Setup](#step-8-verify-setup)
+
+**Database Backup Strategy (Optional):**
+- [Step 1: Create Storage Account and Container](#step-1-create-storage-account-and-container)
+- [Step 2: Install Required Package](#step-2-install-required-package)
+- [Step 3: Create Django Management Command](#step-3-create-django-management-command)
+- [Step 4: Configure Environment Variable](#step-4-configure-environment-variable)
+- [Step 5: Schedule Automated Backups](#step-5-schedule-automated-backups-every-3-hours)
+- [Step 6: Add Pre-Deployment Backup](#step-6-add-pre-deployment-backup)
+- [Step 7: Configure GitHub Secrets](#step-7-configure-github-secrets) (in Backup section)
+- [Step 8: Manual Weekly/Monthly Backups](#step-8-manual-weeklymonthly-backups)
+- [Step 9: Restore from Backup](#step-9-restore-from-backup)
+
+**Additional Learning:**
+- [Additional AZ-204 Learning Opportunities](#additional-az-204-learning-opportunities-lowno-cost)
+- [Troubleshooting](#troubleshooting)
+
+---
+
 ### Prerequisites
 
 1. Azure account (free tier available)
