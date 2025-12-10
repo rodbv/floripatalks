@@ -272,65 +272,46 @@ AlpineJS MUST be used for simple client-side state control and interactions when
 
 ## Development Workflow
 
-### GitHub Issues and Branch Naming
-
-Issues are created on-demand for the current task being worked on:
-
-- **Issue Creation**: Create a GitHub issue ONLY for the task currently being implemented (not in advance for entire phases)
-- **One Issue Per Task**: Only create the issue when starting work on that specific task, not in bulk for future tasks
-- **Branch Naming**: Branches MUST follow the pattern: `{issue-id}-{description-in-slug-format}`
-  - Use two leading zeros for issue ID (e.g., `029-custom-user-model`, `036-base-model-classes`)
-  - Description should be in slug format (lowercase, hyphens instead of spaces)
-  - Example: `029-custom-user-model`, `036-base-model-classes`
-- **Issue Association**: Each branch MUST reference its corresponding issue number in the branch name
-- **Issue Labels**: Issues created automatically from `tasks.md` via `speckit.taskstoissues` MUST be labeled with `speckit` to distinguish them from manually created issues
-- **PR Association**: Pull requests MUST reference the GitHub issue number (e.g., "Closes #29") to automatically close the issue on merge
-
-**Rationale**: Creating issues only for the current task prevents issues from becoming outdated when tasks are reordered, renamed, or removed. This keeps the issue tracker clean and accurate, with only active work represented. Branch naming with issue IDs creates a clear link between branches and issues, making it easier to understand what work is being done and track related PRs.
-
-### Git Operations and Version Control
-
-AI agents and automated tools MUST NOT perform git commits or pushes automatically:
-
-- **NEVER commit changes automatically** - Always allow the developer to review diffs first
-- **NEVER push to remote automatically** - Developer must explicitly request push operations
-- Changes should be staged and ready for review, but commits must be initiated by the developer
-- This ensures developers maintain control over version control history and can review changes before committing
-
-**Rationale**: Developers need to review code changes, understand diffs, and maintain control over git history. Automatic commits can create messy history, make it harder to track changes, and prevent proper code review. This principle ensures developers have full visibility and control over version control operations.
-
-### Data and Database Operations
-
-AI agents MUST NEVER perform destructive database operations without explicit developer approval:
-
-- **NEVER delete databases, database files, or data** without explicit developer request
-- **NEVER drop tables, truncate data, or reset migrations** without explicit approval
-- **NEVER remove user data, test data, or production-like data** without explicit request
-- If migration conflicts occur, propose solutions that preserve data (e.g., fake migrations, data migration scripts) rather than deleting databases
-- Always ask before performing any operation that could result in data loss
-- If database reset is necessary, clearly explain why and get explicit approval first
-
-**Rationale**: Data loss is irreversible and can cause significant disruption. Developers may have important test data, user data, or configurations in their local databases. Automatic deletion of databases or data violates developer trust and can cause work to be lost. This principle ensures data safety and gives developers full control over their development environment.
-
-### Task Implementation Workflow with Human Review
+### Task Implementation Workflow
 
 All task implementation MUST follow a strict workflow with mandatory human review:
 
-- **Implementation Phase**: AI agent implements the task with tests (following TDD)
-- **Review Phase**: Developer manually reviews the implementation, tests, and diffs
-- **Commit Phase**: Developer commits and pushes changes when satisfied
-- **Completion Phase**: Developer notifies the AI agent that the task is complete
-- **Task Progression**: AI agent MUST NOT proceed to the next task until explicitly notified by the developer
-- **No Automatic Progression**: AI agents MUST NEVER automatically mark tasks as complete or move to the next task
-
 **Workflow Steps**:
-1. AI implements task with tests
-2. AI waits for developer review
-3. Developer reviews, commits, and pushes (if satisfied)
-4. Developer explicitly notifies AI: "task done" or "próxima task" or similar
-5. Only then does AI mark task complete and proceed to next task
+1. Create GitHub issue ONLY for the task currently being worked on (not in advance)
+2. Create branch: `{issue-id}-{description-in-slug-format}` (use two leading zeros, e.g., `029-custom-user-model`)
+3. AI implements task with tests (following TDD)
+4. AI waits for developer review
+5. Developer reviews, commits, and pushes (if satisfied)
+6. Create PR with "Closes #X" to automatically close issue on merge
+7. Developer explicitly notifies AI when task is complete
+8. Only then does AI proceed to next task
 
-**Rationale**: Human review is essential for code quality, understanding, and maintaining control over the development process. Automatic task progression can lead to issues being overlooked, poor code quality, and loss of developer agency. This workflow ensures every change is consciously reviewed and approved before moving forward.
+**Key Rules**:
+- **One Issue Per Task**: Create issue only when starting work on that specific task, not in bulk
+- **Branch Naming**: Must follow pattern `{issue-id}-{description-in-slug-format}` with two leading zeros
+- **Issue Labels**: Issues created via `speckit.taskstoissues` MUST be labeled with `speckit`
+- **No Automatic Progression**: AI agents MUST NEVER automatically mark tasks complete or move to next task
+- **Human Review Required**: Every change must be reviewed before commit/push
+
+**Rationale**: Creating issues only for current task prevents outdated issues. Human review ensures code quality and developer control. Branch naming with issue IDs creates clear traceability. This workflow prevents issues from becoming outdated and ensures every change is consciously reviewed.
+
+### Git and Data Operations Restrictions
+
+AI agents and automated tools MUST NOT perform certain operations automatically:
+
+**Git Operations**:
+- **NEVER commit changes automatically** - Always allow developer to review diffs first
+- **NEVER push to remote automatically** - Developer must explicitly request push operations
+- Changes should be staged and ready for review, but commits must be initiated by the developer
+
+**Database Operations**:
+- **NEVER delete databases, database files, or data** without explicit developer request
+- **NEVER drop tables, truncate data, or reset migrations** without explicit approval
+- **NEVER remove user data, test data, or production-like data** without explicit request
+- If migration conflicts occur, propose solutions that preserve data (e.g., fake migrations, data migration scripts)
+- Always ask before performing any operation that could result in data loss
+
+**Rationale**: Developers need full control over version control history and data. Automatic operations can cause data loss, messy history, and prevent proper code review. This ensures developers maintain control and visibility over all critical operations.
 
 ### Commit Message Format (Conventional Commits)
 
@@ -371,21 +352,21 @@ Code comments and docstrings are NOT recommended as they may contradict code or 
 
 **Rationale**: Comments can become outdated, contradict the code, and indicate that the code itself is not clear enough. Clean, well-named code with good structure should be self-documenting. Comments should be rare exceptions for truly surprising or intentionally non-standard code.
 
-### Code Review Requirements
+### Code Review and Quality Gates
 
-- All code changes MUST be reviewed via pull request
+All code changes MUST be reviewed via pull request and meet quality standards before merging:
+
+**Review Requirements**:
 - Pull requests MUST reference the GitHub issue number in the title or description
 - Pull requests MUST include tests (per TDD principle)
-- Pull requests MUST pass all CI checks
 - At least one approval required before merge
 - Constitution compliance MUST be verified during review
 
-### Quality Gates
-
-Before merging, code MUST:
+**Quality Gates** (all must pass before merging):
 - Pass all tests (unit, integration, contract)
 - Pass linting and formatting checks
 - Pass pre-commit hooks
+- Pass all CI checks
 - Have appropriate test coverage
 - Follow Django and project conventions
 - Include documentation for new features
