@@ -64,6 +64,9 @@ ignore = [
     "ANN201", # Missing return type annotation for public function (test functions)
     "ANN204", # Missing return type annotation for special method (test fixtures)
 ]
+"core/decorators.py" = [
+    "ANN401", # Dynamically typed expressions (decorators use object for *args/**kwargs)
+]
 
 [tool.ruff.lint.isort]
 known-first-party = ["floripatalks", "events", "accounts", "core"]

@@ -12,23 +12,23 @@ All technical decisions align with the constitution and existing specifications.
 
 ### Django SSO Authentication
 
-**Decision**: Use django-allauth for Google and LinkedIn SSO authentication
+**Decision**: Use django-allauth for Google SSO authentication
 
 **Rationale**:
 - django-allauth is the standard Django library for social authentication
-- Supports Google OAuth2 and LinkedIn OpenID Connect out of the box
+- Supports Google OAuth2 out of the box
 - Handles token management, user creation, and session management
 - Well-maintained and widely used in Django community
-- LinkedIn uses OpenID Connect (modern, recommended approach) instead of deprecated OAuth2 provider
 
 **Implementation**:
 - Google: OAuth2 provider (`allauth.socialaccount.providers.google`)
-- LinkedIn: OpenID Connect provider (`allauth.socialaccount.providers.openid_connect`) with `provider_id: "linkedin"`
+
+**Future Enhancement**:
+- LinkedIn SSO support is planned for a future release. It will use django-allauth's OpenID Connect provider (`allauth.socialaccount.providers.openid_connect`) with `provider_id: "linkedin"`.
 
 **Alternatives considered**:
 - Custom OAuth2 implementation: Rejected - too much complexity for standard use case
 - django-social-auth: Rejected - less maintained than django-allauth
-- LinkedIn OAuth2 provider: Rejected - deprecated, OpenID Connect is the modern standard
 
 ### HTMX Hypermedia Pattern
 
@@ -122,7 +122,7 @@ All technical decisions align with the constitution and existing specifications.
 - Served from static files when used (not CDN) for better control and offline capability
 
 **Implementation Patterns** (HTMX-first approach):
-- **Sign-in popups**: HTMX to load modal fragment from server. AlpineJS only if explicitly requested.
+- **Authentication redirects**: Use `HttpResponseClientRedirect` from `django-htmx` for HTMX requests, standard Django redirect for regular requests. Include `next` parameter to return users after authentication.
 - **Form validation**: HTMX for server-side validation with error fragments. Character count via HTML/CSS or vanilla JS. AlpineJS only if explicitly requested.
 - **Event selector**: HTMX with native HTML select (hx-get/hx-trigger) to load content. AlpineJS only if explicitly requested.
 - **Confirmation dialogs**: HTMX to load confirmation dialog fragment from server. AlpineJS only if explicitly requested.

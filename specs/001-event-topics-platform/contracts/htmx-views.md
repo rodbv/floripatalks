@@ -238,7 +238,7 @@
 3. View converts to context, renders partial template
 4. Returns updated vote button HTML
 
-**Authentication**: Required (returns sign-in popup HTML if not authenticated)
+**Authentication**: Required (redirects to login page if not authenticated via `HttpResponseClientRedirect` for HTMX requests)
 
 ---
 
@@ -423,7 +423,7 @@
 **Response**:
 - Status: 200 OK
 - Content-Type: `text/html`
-- Body: Login page with Google/LinkedIn SSO buttons OR popup HTML fragment
+- Body: Login page with Google SSO button
 - Template: `accounts/login.html` or `accounts/login_popup.html` (if HTMX request)
 
 **HTMX Behavior** (for popup):
@@ -452,20 +452,9 @@
 
 ---
 
-#### GET `/accounts/openid_connect/linkedin/login/`
+#### ~~GET `/accounts/openid_connect/linkedin/login/`~~ (Future Enhancement)
 
-**Purpose**: Initiate LinkedIn SSO authentication via OpenID Connect
-
-**Request**:
-- Method: GET
-- Path: `/accounts/openid_connect/linkedin/login/`
-- Query params: `next=<url>` (redirect after login)
-
-**Response**:
-- Status: 302 Redirect
-- Location: LinkedIn OpenID Connect authorization URL
-
-**Managed by**: django-allauth (OpenID Connect provider)
+**Note**: LinkedIn SSO support is planned for a future release. This endpoint will be available when LinkedIn SSO is implemented.
 
 ---
 

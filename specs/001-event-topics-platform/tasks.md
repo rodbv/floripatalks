@@ -102,7 +102,7 @@
 
 - [x] T026 Create custom User model in `accounts/models.py` inheriting from `AbstractUser` with UUID v6 primary key
 - [x] T027 [P] Create User migration: `accounts/migrations/0001_initial.py` (MUST be first migration)
-- [x] T028 [P] Configure django-allauth for Google and LinkedIn SSO in `floripatalks/settings/base.py` (partial: allauth installed, providers not configured)
+- [x] T028 [P] Configure django-allauth for Google SSO in `floripatalks/settings/base.py` (LinkedIn SSO planned for future release)
 - [x] T029 [P] Setup database configuration: SQLite for all environments (development and production) in `floripatalks/settings/base.py`
 - [x] T030 [P] Configure django-htmx in `floripatalks/settings/base.py`: add `django_htmx` to `INSTALLED_APPS`
 - [x] T031 [P] Configure django-cotton in `floripatalks/settings/base.py`: add `django_cotton` to `INSTALLED_APPS`
@@ -121,7 +121,7 @@
 
 ## Phase 3: User Story 1 - View and Browse Topics (Priority: P1) 🎯 MVP - Output-First
 
-**Goal**: Users (logged in or not) can view a list of topics for an event, see vote counts and comment counts, browse with infinite scroll. Non-authenticated users see sign-in popups when clicking interactive elements.
+**Goal**: Users (logged in or not) can view a list of topics for an event, see vote counts and comment counts, browse with infinite scroll. Non-authenticated users are redirected to login when clicking interactive elements.
 
 **Independent Test**: A user (logged in or not) can navigate to `/events/python-floripa/` and see a list of topics with vote counts and comment counts displayed. Topics load in batches of 20 via infinite scroll. Non-authenticated users see interactive buttons but receive sign-in prompts when clicking them.
 
@@ -151,8 +151,8 @@
 - [x] T057 [US1] Create event detail template `events/templates/events/event_detail.html` with topics list
 - [x] T058 [US1] Create topic list partial template `events/templates/events/partials/topic_list_fragment.html` for HTMX infinite scroll
 - [x] T059 [US1] Create Django-Cotton topic card component `events/cotton/topic/card.html`
-- [x] T060 [US1] Create HTMX sign-in popup component `accounts/templates/accounts/login_popup.html` (HTMX-first: load modal fragment from server, AlpineJS only if explicitly requested)
-- [x] T061 [US1] Integrate sign-in popup in event detail template (HTMX to load modal fragment when interactive buttons clicked, AlpineJS only if explicitly requested)
+- [x] T060 [US1] ~~Create HTMX sign-in popup component~~ (REMOVED: Replaced with redirect approach using `HttpResponseClientRedirect`)
+- [x] T061 [US1] ~~Integrate sign-in popup in event detail template~~ (REMOVED: Replaced with `@require_authentication` decorator)
 - [x] T062 [US1] Configure comprehensive admin for Event and Topic models in `events/admin.py` with inlines for Topic (manage topics from Event page), list_display, list_filter, search_fields, fieldsets, and readonly_fields. Topic admin should show event relationship and support filtering by event.
 - [x] T063 [US1] Create initial Event (Python Floripa) via Django admin or data migration
 
@@ -188,7 +188,7 @@
 - [ ] T076 [US3] Add URL pattern in `events/urls.py` for vote endpoint
 - [ ] T077 [US3] Create vote button partial template `events/templates/events/partials/vote_button.html` with HTMX attributes
 - [ ] T078 [US3] Create Django-Cotton vote button component `events/cotton/topic/vote_button.html`
-- [ ] T079 [US3] Integrate vote button in topic card component (shows sign-in popup for non-authenticated users)
+- [x] T079 [US3] Integrate vote button in topic card component (redirects to login for non-authenticated users via `@require_authentication` decorator)
 - [ ] T080 [US3] Update get_topics_for_event function to include user vote status in TopicDTO
 - [ ] T081 [US3] Update get_event_topics function to pass user context for vote status
 
@@ -198,23 +198,23 @@
 
 ## Phase 5: User Story 6 - Readonly Experience for Non-Authenticated Users (Priority: P2)
 
-**Goal**: Non-authenticated users can view all content in readonly mode. Interactive buttons trigger HTMX sign-in popup (HTMX-first: load modal fragment from server).
+**Goal**: Non-authenticated users can view all content in readonly mode. Interactive buttons redirect to login page (HTMX redirect for HTMX requests, standard redirect for regular requests).
 
-**Independent Test**: A non-authenticated user can view topics, comments, and presenter suggestions. Clicking vote/comment/add buttons shows sign-in popup.
+**Independent Test**: A non-authenticated user can view topics, comments, and presenter suggestions. Clicking vote/comment/add buttons redirects to login page.
 
 ### Tests for User Story 6 (TDD - Write First)
 
-- [ ] T082 [P] [US6] Integration test for non-authenticated user viewing topics in `tests/integration/events/test_readonly_experience.py`
-- [ ] T083 [P] [US6] Integration test for sign-in popup triggers in `tests/integration/accounts/test_signin_popup.py`
+- [x] T082 [P] [US6] Integration test for non-authenticated user viewing topics in `tests/integration/events/test_readonly_experience.py`
+- [x] T083 [P] [US6] Integration test for authentication redirects in `tests/integration/accounts/test_signin_popup.py` (renamed from test_signin_popup)
 
 ### Implementation for User Story 6
 
-- [ ] T084 [US6] Enhance sign-in popup component `accounts/templates/accounts/login_popup.html` with Google and LinkedIn SSO buttons
-- [ ] T085 [US6] Create SSO authentication views in `accounts/views.py` for Google and LinkedIn OAuth flows
-- [ ] T086 [US6] Add URL patterns in `accounts/urls.py` for SSO authentication endpoints
-- [ ] T087 [US6] Integrate sign-in popup triggers in all interactive elements: vote buttons, comment forms, add topic buttons, suggest presenter buttons
-- [ ] T088 [US6] Update templates to show interactive buttons for non-authenticated users (HTMX-first: load sign-in modal fragment, AlpineJS only if explicitly requested)
-- [ ] T089 [US6] Handle SSO authentication failures with user-friendly error messages and retry options
+- [x] T084 [US6] ~~Enhance sign-in popup component~~ (REMOVED: Replaced with redirect approach)
+- [x] T085 [US6] ~~Create SSO authentication views~~ (Already implemented via django-allauth)
+- [x] T086 [US6] ~~Add URL patterns for SSO~~ (Already implemented via django-allauth)
+- [x] T087 [US6] Create `@require_authentication` decorator in `core/decorators.py` that handles both HTMX and regular redirects
+- [x] T088 [US6] Apply `@require_authentication` decorator to vote endpoint and update other interactive elements as they are implemented
+- [x] T089 [US6] ~~Handle SSO authentication failures~~ (Already handled by django-allauth with error messages)
 
 **Checkpoint**: At this point, non-authenticated users have full readonly experience with sign-in prompts.
 
@@ -257,7 +257,7 @@
 - [ ] T110 [US2] Create topic edit template `events/templates/events/topic_edit.html` with HTMX form submission
 - [ ] T111 [US2] Create HTMX confirmation modal component for delete in `events/templates/events/partials/delete_confirm_modal.html` (HTMX-first: load dialog fragment from server, AlpineJS only if explicitly requested)
 - [ ] T112 [US2] Integrate delete confirmation modal in topic detail/card (HTMX to load dialog fragment, AlpineJS only if explicitly requested)
-- [ ] T113 [US2] Add "Add Topic" button/link in event detail template (shows sign-in popup for non-authenticated users)
+- [ ] T113 [US2] Add "Add Topic" button/link in event detail template (redirects to login for non-authenticated users)
 - [ ] T114 [US2] Add edit/delete buttons in topic card (only visible to topic creator)
 - [ ] T115 [US2] Implement rate limiting for topic creation: 10 topics/hour per user in `core/middleware.py`
 
@@ -299,7 +299,7 @@
 - [ ] T135 [US4] Create Django-Cotton comment item component `events/cotton/comment/item.html`
 - [ ] T136 [US4] Create comment form template `events/templates/events/comment_form.html` with HTML5 native validation and/or vanilla JS for character count (AlpineJS only if explicitly requested)
 - [ ] T137 [US4] Create comment edit template `events/templates/events/comment_edit.html` with HTMX form submission
-- [ ] T138 [US4] Integrate comment form in topic detail template (shows sign-in popup for non-authenticated users)
+- [ ] T138 [US4] Integrate comment form in topic detail template (redirects to login for non-authenticated users)
 - [ ] T139 [US4] Update get_topic_detail function to include comments (ordered chronologically, oldest first)
 - [ ] T140 [US4] Update TopicDetailDTO to include list of CommentDTOs
 - [ ] T141 [US4] Implement rate limiting for comments: 20 comments/hour per user in `core/middleware.py`
@@ -368,7 +368,7 @@
 - [ ] T171 [US5] Create Django-Cotton presenter suggestion component `events/cotton/presenter/suggestion.html`
 - [ ] T172 [US5] Create presenter suggestion form template with HTML5 native validation (single `presenter_contact` field with UI guidance indicating it can be email, name, LinkedIn URL, WhatsApp contact, etc., AlpineJS only if explicitly requested)
 - [ ] T173 [US5] Create presenter suggestion edit template `events/templates/events/presenter_suggestion_edit.html`
-- [ ] T174 [US5] Integrate presenter suggestions in topic detail template (shows sign-in popup for non-authenticated users)
+- [ ] T174 [US5] Integrate presenter suggestions in topic detail template (redirects to login for non-authenticated users)
 - [ ] T175 [US5] Update get_topic_detail function to include presenter suggestions (ordered chronologically, oldest first)
 - [ ] T176 [US5] Update TopicDetailDTO to include list of PresenterDTOs
 

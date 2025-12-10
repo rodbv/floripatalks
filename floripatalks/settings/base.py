@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     # Social providers
     "allauth.socialaccount.providers.google",
-    "allauth.socialaccount.providers.openid_connect",  # Used for LinkedIn
     # Local apps
     "events",
     "accounts",
@@ -149,19 +148,6 @@ SOCIALACCOUNT_PROVIDERS = {
             "secret": "",  # Set via GOOGLE_CLIENT_SECRET environment variable
             "key": "",
         },
-    },
-    "openid_connect": {
-        "APPS": [
-            {
-                "provider_id": "linkedin",
-                "name": "LinkedIn",
-                "client_id": "",  # Set via LINKEDIN_CLIENT_ID environment variable
-                "secret": "",  # Set via LINKEDIN_CLIENT_SECRET environment variable
-                "settings": {
-                    "server_url": "https://www.linkedin.com/oauth",
-                },
-            }
-        ]
     },
 }
 

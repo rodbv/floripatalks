@@ -46,16 +46,6 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # Set these in your environment or .env file:
 # export GOOGLE_CLIENT_ID="your-google-client-id"
 # export GOOGLE_CLIENT_SECRET="your-google-client-secret"
-# export LINKEDIN_CLIENT_ID="your-linkedin-client-id"
-# export LINKEDIN_CLIENT_SECRET="your-linkedin-client-secret"
 if os.environ.get("GOOGLE_CLIENT_ID"):
     SOCIALACCOUNT_PROVIDERS["google"]["APP"]["client_id"] = os.environ.get("GOOGLE_CLIENT_ID")
     SOCIALACCOUNT_PROVIDERS["google"]["APP"]["secret"] = os.environ.get("GOOGLE_CLIENT_SECRET")
-
-if os.environ.get("LINKEDIN_CLIENT_ID"):
-    SOCIALACCOUNT_PROVIDERS["openid_connect"]["APPS"][0]["client_id"] = os.environ.get(
-        "LINKEDIN_CLIENT_ID"
-    )
-    SOCIALACCOUNT_PROVIDERS["openid_connect"]["APPS"][0]["secret"] = os.environ.get(
-        "LINKEDIN_CLIENT_SECRET"
-    )
