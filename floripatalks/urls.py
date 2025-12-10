@@ -3,15 +3,14 @@ URL configuration for floripatalks project.
 """
 
 from django.contrib import admin
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
+from django.shortcuts import render
 from django.urls import include, path
 
 
-def home(_request: HttpRequest) -> HttpResponse:
+def home(request: HttpRequest):
     """Temporary home view for testing."""
-    return HttpResponse(
-        "<h1>FloripaTalks</h1><p>Servidor Django funcionando!</p><p><a href='/admin/'>Admin</a></p>"
-    )
+    return render(request, "home.html")
 
 
 urlpatterns = [
