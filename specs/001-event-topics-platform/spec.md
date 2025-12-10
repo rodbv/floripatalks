@@ -47,6 +47,11 @@
 - Q: How should the event selector work in the interface? → A: **HTMX-first approach**: Use HTMX to load content when event is selected (native HTML select with hx-get/hx-trigger). AlpineJS only if explicitly requested.
 - Q: How should confirmation dialogs (e.g., delete confirmation) be implemented? → A: **HTMX-first approach**: Use HTMX to load a confirmation dialog fragment from the server. AlpineJS only if explicitly requested.
 - Q: How should loading indicators be implemented for HTMX requests? → A: HTMX native (hx-indicator) as default. AlpineJS only if explicitly requested for custom loading states.
+- Q: What format should error messages use (validation, rate limiting, etc.)? → A: Inline messages below the relevant field/area, in Portuguese (pt-BR), using semantic HTML (e.g., `<div role="alert">`) for accessibility. Aligns with semantic HTML principles and progressive enhancement.
+- Q: What happens when two users edit the same content (topic/comment/suggestion) simultaneously? → A: Last-write-wins (no locking). Simple approach for MVP, aligns with HTMX's fast update pattern. Optional warning if content changed since load.
+- Q: How should the system handle network failures during HTMX requests (timeout, connection lost, server unavailable)? → A: Display inline error message in Portuguese (pt-BR) with retry button, using HTMX to retry the request. Aligns with semantic HTML principles and allows recovery without page reload.
+- Q: What happens when a user's session expires during an action (vote, comment, edit)? → A: Redirect to login, after authentication return and automatically execute the original action. Preserves user context and allows completion of intended action.
+- Q: How should the system format large numbers in display (e.g., vote counts > 1000, many comments)? → A: Simple formatting in Portuguese (pt-BR) (e.g., "1.234 votos", "567 comentários") without abbreviations like "1.2k". Maintains clarity and aligns with pt-BR conventions.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -180,23 +185,27 @@ A logged-in user can switch between different events using an event selector. Ea
 
 ### Edge Cases
 
-- What happens when a user tries to add a topic with an empty title? The system should prevent submission and show an error message.
-- What happens when a user exceeds character limits? The system uses AlpineJS to display real-time character count and prevent submission when limit is reached, shows an error message indicating the limit, and HTMX handles form submission with server-side validation.
-- What happens when a user tries to add more than 3 presenter suggestions to a topic? The system should prevent the addition and show an error message indicating the per-user limit.
-- What happens when a topic already has 10 presenter suggestions? The system should prevent new suggestions and show an error message indicating the topic has reached the maximum number of suggestions.
+- What happens when a user tries to add a topic with an empty title? The system should prevent submission and show an inline error message below the title field using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR).
+- What happens when a user exceeds character limits? The system uses HTML5 native validation and/or vanilla JS for real-time character count, prevents submission when limit is reached, shows an inline error message below the field indicating the limit using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR), and HTMX handles form submission with server-side validation.
+- What happens when a user tries to add more than 3 presenter suggestions to a topic? The system should prevent the addition and show an inline error message using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) indicating the per-user limit.
+- What happens when a topic already has 10 presenter suggestions? The system should prevent new suggestions and show an inline error message using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) indicating the topic has reached the maximum number of suggestions.
 - How does the system handle duplicate topics? Users can create topics with similar titles, but the system should allow this (admins can manage duplicates via admin interface).
 - What happens when a user tries to vote multiple times on the same topic? The system prevents duplicate votes and shows the user has already voted.
 - How does the system handle very long topic titles or comments? Text should be displayed with appropriate truncation or wrapping for readability on mobile devices.
+- How should the system format large numbers in display (e.g., vote counts > 1000, many comments)? The system uses simple formatting in Portuguese (pt-BR) conventions (e.g., "1.234 votos", "567 comentários") without abbreviations like "1.2k". This maintains clarity and aligns with pt-BR number formatting standards.
 - What happens when a user suggests a presenter with invalid email format or broken URL? The system accepts the input but does not validate format (admins can review and clean up via admin interface).
 - How does the system handle users who are not logged in? Non-authenticated users can view topics in readonly mode but cannot vote, comment, add topics, or suggest presenters. When they click interactive buttons/links, a popup appears inviting them to sign in or sign up.
 - What happens when an event has no topics? The event page displays an empty state message encouraging users to add the first topic.
 - How does infinite scroll handle loading states? The system loads 20 topics per batch, uses HTMX native loading indicators (hx-indicator) while fetching additional topics, and handles end-of-list gracefully when all topics are loaded. AlpineJS may be used for custom loading states if needed.
 - How does the system handle event switching when a user has unsaved changes (e.g., typing a comment)? The system should warn users about unsaved changes or auto-save draft content.
-- What happens when SSO authentication fails (provider unavailable, user cancels, network error)? The system displays a user-friendly error message explaining the issue and provides a retry option without losing context.
+- What happens when two users edit the same content (topic/comment/suggestion) simultaneously? The system uses last-write-wins approach (no locking). The last user to save their changes overwrites previous changes. This simple approach aligns with HTMX's fast update pattern and is acceptable for MVP. Optional: system may warn user if content changed since they loaded the edit page.
+- What happens when SSO authentication fails (provider unavailable, user cancels, network error)? The system displays an inline error message using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) explaining the issue and provides a retry option without losing context.
 - How does the system handle editing of user content? Users can edit their own topics, comments, and presenter suggestions on dedicated pages (not modals). The browser back button works seamlessly, and HTMX is used to minimize page refreshes during transitions.
 - How does the system handle language and localization? The primary interface is in Portuguese (pt-BR) with timezone set to São Paulo, but the system supports internationalization for future language expansion.
 - What happens when a user deletes their content? Content is soft-deleted (marked as deleted with is_deleted flag), hidden from regular users immediately, but remains in the database and is recoverable by admins via Django admin interface.
-- What happens when a user exceeds rate limits? The system prevents the action (topic creation, comment submission) and displays a user-friendly error message indicating the rate limit and when they can try again (e.g., "You've reached the limit of 10 topics per hour. Please try again in X minutes").
+- What happens when a user exceeds rate limits? The system prevents the action (topic creation, comment submission) and displays an inline error message using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) indicating the rate limit and when they can try again (e.g., "Você atingiu o limite de 10 tópicos por hora. Tente novamente em X minutos").
+- How does the system handle network failures during HTMX requests (timeout, connection lost, server unavailable)? The system displays an inline error message using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) with a retry button. The retry button uses HTMX to retry the failed request, allowing recovery without page reload.
+- What happens when a user's session expires during an action (vote, comment, edit)? The system redirects the user to the login page. After successful authentication, the system returns the user to the original context and automatically executes the intended action (vote, comment submission, edit save). This preserves user context and allows completion of the intended action.
 
 ## Requirements *(mandatory)*
 
@@ -204,7 +213,7 @@ A logged-in user can switch between different events using an event selector. Ea
 
 - **FR-001**: System MUST allow users to authenticate via Google SSO
 - **FR-002**: System MUST allow users to authenticate via LinkedIn SSO
-- **FR-021**: System MUST handle SSO authentication failures by displaying user-friendly error messages with retry options
+- **FR-021**: System MUST handle SSO authentication failures by displaying inline error messages using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) with retry options
 - **FR-003**: System MUST display a list of topics for a selected event, ordered by vote count (descending), then by creation date (oldest first) for ties, showing topic title, vote count, and comment count
 - **FR-022**: System MUST implement infinite scroll for topics list, loading 20 topics per batch as user scrolls down
 - **FR-004**: System MUST allow logged-in users to create new topics with a title (max 200 characters) and optional description (max 2000 characters)
@@ -229,6 +238,11 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-014**: System MUST provide Django admin interface for admins to manage topics, comments, presenter suggestions, users, and events
 - **FR-036**: System MUST implement soft delete for topics, comments, and presenter suggestions (marked as deleted, hidden from regular users, recoverable by admins)
 - **FR-037**: System MUST implement rate limiting to prevent abuse: maximum 10 topics per hour per user, maximum 20 comments per hour per user
+- **FR-040**: System MUST display error messages inline below the relevant field/area using semantic HTML (`<div role="alert">` or similar) in Portuguese (pt-BR) for accessibility and progressive enhancement
+- **FR-041**: System MUST handle concurrent edits using last-write-wins approach (no locking). The last user to save changes overwrites previous changes. Optional: system may warn user if content changed since edit page was loaded.
+- **FR-042**: System MUST handle network failures during HTMX requests (timeout, connection lost, server unavailable) by displaying inline error messages using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) with a retry button. The retry button uses HTMX to retry the failed request.
+- **FR-043**: System MUST handle session expiration during actions (vote, comment, edit) by redirecting to login, then after authentication returning to original context and automatically executing the intended action.
+- **FR-044**: System MUST format large numbers in display (vote counts, comment counts) using simple Portuguese (pt-BR) formatting conventions (e.g., "1.234 votos", "567 comentários") without abbreviations like "1.2k".
 - **FR-015**: System MUST be mobile-first, with all functionality accessible and usable on mobile devices
 - **FR-016**: System MUST meet accessibility standards (WCAG 2.1 Level AA compliance)
 - **FR-017**: System MUST allow non-authenticated users to view topics but require authentication for voting, commenting, adding topics, and suggesting presenters
