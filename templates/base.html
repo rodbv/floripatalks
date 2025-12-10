@@ -455,14 +455,25 @@
             font-size: 1.5rem;
             font-weight: 800;
             font-family: "Plus Jakarta Sans", sans-serif;
-            color: #ffffff;
             text-decoration: none;
-            transition: color 0.2s;
+            transition: all 0.3s ease;
             letter-spacing: -0.02em;
+            display: inline-block;
         }
 
-        .nav-logo:hover {
+        .logo-floripa {
+            color: #ffffff;
+        }
+
+        .logo-talks {
             color: var(--color-accent-yellow);
+        }
+
+        .nav-logo:hover .logo-floripa,
+        .nav-logo:hover .logo-talks {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                         0 0 20px rgba(255, 255, 255, 0.6),
+                         0 0 30px rgba(255, 255, 255, 0.4);
         }
 
         .nav-menu {
@@ -521,20 +532,25 @@
         .user-menu-trigger {
             background: none;
             border: none;
-            padding: 0;
+            padding: 0.25rem;
             cursor: pointer;
             display: flex;
             align-items: center;
-            border-radius: 50%;
-            transition: transform 0.2s, box-shadow 0.2s;
+            gap: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.2s, transform 0.2s;
         }
 
         .user-menu-trigger:hover {
-            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .user-menu-trigger:focus {
-            outline: 2px solid var(--color-primary);
+            outline: none;
+        }
+
+        .user-menu-trigger:focus-visible {
+            outline: 2px solid var(--color-accent-yellow);
             outline-offset: 2px;
         }
 
@@ -563,6 +579,20 @@
             font-weight: 600;
             font-size: 1rem;
             text-transform: uppercase;
+        }
+
+        .user-menu-indicator {
+            color: #ffffff;
+            transition: opacity 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .user-menu-indicator.open {
+            opacity: 0.7;
+        }
+
+        .user-menu-trigger:hover .user-menu-indicator {
+            color: var(--color-accent-yellow);
         }
 
         .user-menu-dropdown {
@@ -618,10 +648,27 @@
             text-decoration: none;
             transition: background-color 0.2s;
             font-size: 0.95rem;
+            outline: none;
         }
 
-        .user-menu-item:hover {
+        .user-menu-item:hover,
+        .user-menu-item:focus {
             background-color: var(--color-bg-light);
+            color: var(--color-primary);
+        }
+
+        .user-menu-item:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -2px;
+        }
+
+        .user-menu-item-admin {
+            color: var(--color-accent-yellow);
+            font-weight: 600;
+        }
+
+        .user-menu-item-admin:hover {
+            background-color: var(--color-accent-yellow);
             color: var(--color-primary);
         }
 
@@ -696,7 +743,7 @@
             <div class="nav-container">
                 <div class="nav-brand">
                     <a href="{% url 'home' %}" class="nav-logo" aria-label="FloripaTalks - Página inicial">
-                        FloripaTalks
+                        <span class="logo-floripa">Floripa</span><span class="logo-talks">Talks</span>
                     </a>
                 </div>
                 <ul class="nav-menu">
@@ -706,17 +753,81 @@
                 </ul>
                 <div class="nav-actions">
                     {% if user.is_authenticated %}
-                        {% if user.is_staff or user.is_superuser %}
-                            <a href="{% url 'admin:index' %}" class="nav-link nav-link-admin">Admin</a>
-                        {% endif %}
-                        <div class="user-menu" x-data="{ open: false }" @click.away="open = false" @keydown.escape="open = false">
+                        <div class="user-menu" x-data="{
+                            open: false,
+                            currentIndex: -1,
+                            menuItems: [],
+                            init() {
+                                this.$watch('open', value => {
+                                    if (value) {
+                                        this.$nextTick(() => {
+                                            this.menuItems = Array.from(this.$refs.menuItems.querySelectorAll('.user-menu-item'));
+                                            if (this.menuItems.length > 0) {
+                                                this.currentIndex = 0;
+                                                this.menuItems[0].focus();
+                                            }
+                                        });
+                                    } else {
+                                        this.currentIndex = -1;
+                                        this.$refs.trigger.focus();
+                                    }
+                                });
+                            },
+                            handleKeydown(event) {
+                                if (!this.open) {
+                                    if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
+                                        event.preventDefault();
+                                        this.open = true;
+                                    }
+                                    return;
+                                }
+                                switch(event.key) {
+                                    case 'ArrowDown':
+                                        event.preventDefault();
+                                        this.currentIndex = (this.currentIndex + 1) % this.menuItems.length;
+                                        this.menuItems[this.currentIndex]?.focus();
+                                        break;
+                                    case 'ArrowUp':
+                                        event.preventDefault();
+                                        this.currentIndex = this.currentIndex <= 0 ? this.menuItems.length - 1 : this.currentIndex - 1;
+                                        this.menuItems[this.currentIndex]?.focus();
+                                        break;
+                                    case 'Home':
+                                        event.preventDefault();
+                                        this.currentIndex = 0;
+                                        this.menuItems[0]?.focus();
+                                        break;
+                                    case 'End':
+                                        event.preventDefault();
+                                        this.currentIndex = this.menuItems.length - 1;
+                                        this.menuItems[this.currentIndex]?.focus();
+                                        break;
+                                    case 'Escape':
+                                        event.preventDefault();
+                                        this.open = false;
+                                        break;
+                                    case 'Tab':
+                                        if (event.shiftKey && this.currentIndex === 0) {
+                                            event.preventDefault();
+                                            this.open = false;
+                                        } else if (!event.shiftKey && this.currentIndex === this.menuItems.length - 1) {
+                                            event.preventDefault();
+                                            this.open = false;
+                                        }
+                                        break;
+                                }
+                            }
+                        }" @click.away="open = false">
                             <button
+                                x-ref="trigger"
                                 class="user-menu-trigger"
                                 type="button"
                                 aria-label="Menu do usuário"
                                 :aria-expanded="open"
                                 aria-haspopup="true"
+                                aria-controls="user-menu-dropdown"
                                 @click="open = !open"
+                                @keydown="handleKeydown($event)"
                             >
                                 {% if user.socialaccount_set.all %}
                                     {% with social_account=user.socialaccount_set.all|first %}
@@ -733,8 +844,14 @@
                                         <span class="avatar-initial">{{ user.get_full_name|default:user.username|first|upper }}</span>
                                     </div>
                                 {% endif %}
+                                <svg class="user-menu-indicator" :class="{ 'open': open }" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                             </button>
                             <div
+                                id="user-menu-dropdown"
                                 class="user-menu-dropdown"
                                 x-show="open"
                                 x-transition:enter="transition ease-out duration-100"
@@ -743,7 +860,9 @@
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="opacity-100 transform scale-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 transform scale-95 translate-y-[-10px]"
+                                role="menu"
                                 style="display: none;"
+                                @keydown="handleKeydown($event)"
                             >
                                 <div class="user-menu-header">
                                     <div class="user-menu-info">
@@ -751,9 +870,14 @@
                                         <div class="user-menu-email">{{ user.email }}</div>
                                     </div>
                                 </div>
-                                <div class="user-menu-items">
+                                <div class="user-menu-items" x-ref="menuItems">
                                     {# Future: Add "Meus Votos" link here #}
-                                    <a href="{% url 'account_logout' %}" class="user-menu-item">
+                                    {% if user.is_staff or user.is_superuser %}
+                                        <a href="{% url 'admin:index' %}" class="user-menu-item user-menu-item-admin" role="menuitem" tabindex="-1">
+                                            <span>Admin</span>
+                                        </a>
+                                    {% endif %}
+                                    <a href="{% url 'account_logout' %}" class="user-menu-item" role="menuitem" tabindex="-1">
                                         <span>Sair</span>
                                     </a>
                                 </div>
