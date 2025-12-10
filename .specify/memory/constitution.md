@@ -90,12 +90,13 @@ The project MUST use Django as the primary web framework, adhering to Django bes
 
 All tests MUST be written using pytest following the test pyramid principle:
 
+- **NEVER inherit from Django's TestCase**: All tests MUST use pytest functions and classes, never Django's `django.test.TestCase` or `django.test.TransactionTestCase`
 - **Unit tests** (majority): Focus on use cases and services with data-oriented tests covering edge cases
 - **Integration tests** (fewer): Test happy paths end-to-end, verify component interactions
 - **Contract tests**: For interfaces and boundaries when applicable
 - Test fixtures for reusable test data and setup
 - pytest-django for Django-specific testing utilities
-- All DTO tests MUST include `assertNumQueries` to verify N+1 query prevention
+- All DTO tests MUST verify query count using `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance)
 - Test strategy: More unit tests, fewer integration tests (test pyramid principle)
 
 **Testing Tools and Best Practices**:
@@ -204,11 +205,11 @@ All templates (full pages and partial fragments) MUST receive dataclasses as Dat
 
 - All views MUST convert QuerySets to dataclass DTOs before passing to templates
 - Templates receive only dataclasses, single values, or simple objects
-- All DTO tests MUST include `assertNumQueries` to verify query count
+- All DTO tests MUST verify query count using `assertNumQueries` from `pytest_django.asserts` to ensure N+1 query prevention
 - Prefetch related objects and select related fields to prevent N+1 queries at the service/use case layer
 - Query optimization MUST happen before DTO conversion
 
-**Rationale**: Passing QuerySets to templates risks N+1 queries when templates access related objects. DTOs force explicit data fetching and optimization at the service layer, making query performance predictable and testable. `assertNumQueries` ensures N+1 prevention is verified in tests.
+**Rationale**: Passing QuerySets to templates risks N+1 queries when templates access related objects. DTOs force explicit data fetching and optimization at the service layer, making query performance predictable and testable. Query count verification ensures N+1 prevention is verified in tests. Use `assertNumQueries` from `pytest_django.asserts` (pytest-django provides this without requiring TestCase inheritance).
 
 ### XI. Use Case Layer Architecture
 
@@ -430,4 +431,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.8.3 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
+**Version**: 1.8.4 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
