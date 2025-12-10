@@ -13,7 +13,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 
 **Language/Version**: Python 3.12+ (with type annotations)  
 **Primary Dependencies**: Django, django-allauth (SSO), HTMX, AlpineJS, django-cotton, pytest, pytest-django  
-**Storage**: PostgreSQL (production), SQLite (development)  
+**Storage**: SQLite for all environments (development and production)  
 **Testing**: pytest with pytest-django, following test pyramid (majority unit tests, fewer integration tests)  
 **Code Quality**: Type annotations required, ruff for linting/formatting (line length 100)  
 **Target Platform**: Web application (mobile-first, responsive design)  
@@ -30,7 +30,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 - No REST API (HTMX hypermedia pattern only)
 - All templates receive DTOs (not QuerySets) to prevent N+1 queries
 - Business logic in use case layer (not models)
-- AlpineJS for client-side state (popups, toggles, form validation), HTMX for server interactions
+- AlpineJS optional (only when explicitly requested), HTMX prioritized for all interactions
 
 **Scale/Scope**:
 - Initial: Single event (Python Floripa)
@@ -228,7 +228,7 @@ floripatalks/
     │   └── pure-css/      # Pure CSS library
     └── js/
         ├── htmx.min.js
-        └── alpine.min.js  # AlpineJS for client-side state management
+        └── alpine.min.js  # AlpineJS (optional, only when explicitly requested)
 ```
 
 **Structure Decision**: Django web application structure with app-based architecture. Events app contains all topic-related functionality. Accounts app handles authentication. Core app provides shared utilities. Tests follow test pyramid structure (majority unit tests, fewer integration tests). AlpineJS and HTMX work together: AlpineJS for client-side UI state, HTMX for server interactions.
