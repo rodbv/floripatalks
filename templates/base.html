@@ -6,36 +6,47 @@
     <title>{% block title %}FloripaTalks{% endblock %}</title>
 
     {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/pure-css/pure-min.css' %}">
     <style>
-        /* Color palette from python.floripa.br */
+        /* Color palette inspired by Python Floripa branding */
         :root {
-            /* Primary colors */
-            --color-primary: #046bd2;
-            --color-primary-dark: #045cb4;
-            --color-primary-text: #012c66;
+            /* Primary colors - Blue (#073CA5) */
+            --color-primary: #073CA5;
+            --color-primary-dark: #052d7a;
+            --color-primary-light: #0a4fd4;
+            --color-primary-text: #031a52;
 
-            /* Text colors */
+            /* Accent colors - Golden Yellow (#D5A10C) */
+            --color-accent: #D5A10C;
+            --color-accent-dark: #b8870a;
+            --color-accent-light: #f5b814;
+            --color-accent-yellow: #D5A10C;
+
+            /* Text colors - Soft dark blues and warm grays */
             --color-text-dark: #1e293b;
             --color-text: #334155;
-            --color-text-light: #6b7280;
+            --color-text-light: #64748b;
 
-            /* Background colors */
+            /* Background colors - White and soft blue-tinted grays */
             --color-bg: #FFFFFF;
-            --color-bg-light: #F0F5FA;
-            --color-bg-dark: #111111;
+            --color-bg-light: #f8fafc;
+            --color-bg-warm: #fefbf3;
+            --color-bg-dark: #031a52;
 
-            /* Border colors */
-            --color-border: #D1D5DB;
-            --color-border-light: #E5E7EB;
+            /* Border colors - Soft blue-gray */
+            --color-border: #cbd5e1;
+            --color-border-light: #e2e8f0;
+            --color-border-accent: #D5A10C;
 
-            /* Accent colors */
-            --color-accent-yellow: #FDBC2C;
-            --color-accent-red: #FE5F58;
+            /* Accent red (for errors/alerts) */
+            --color-accent-red: #ef4444;
 
             /* Typography */
             font-size: clamp(14px, 2.5vw, 16px);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         }
 
         /* Code/monospace font */
@@ -70,7 +81,9 @@
         /* Typography */
         h1, h2, h3, h4, h5, h6 {
             color: var(--color-text-dark);
-            font-weight: 600;
+            font-weight: 700;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            letter-spacing: -0.02em;
         }
 
         h1 {
@@ -144,7 +157,7 @@
         }
 
         .vote-icon-button.voted svg {
-            filter: drop-shadow(0 0 2px rgba(253, 188, 44, 0.5));
+            filter: drop-shadow(0 0 2px rgba(213, 161, 12, 0.5));
         }
 
         /* Topic card footer layout */
@@ -413,9 +426,9 @@
 
         /* Top Navigation Bar - Always Visible */
         .top-navigation {
-            background: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            border-bottom: 1px solid var(--color-border-light);
+            background: var(--color-primary);
+            box-shadow: 0 2px 8px rgba(7, 60, 165, 0.2);
+            border-bottom: 1px solid var(--color-primary-dark);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -440,14 +453,16 @@
 
         .nav-logo {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--color-primary);
+            font-weight: 800;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            color: #ffffff;
             text-decoration: none;
             transition: color 0.2s;
+            letter-spacing: -0.02em;
         }
 
         .nav-logo:hover {
-            color: var(--color-primary-dark);
+            color: var(--color-accent-yellow);
         }
 
         .nav-menu {
@@ -471,7 +486,7 @@
         }
 
         .nav-link {
-            color: var(--color-text-dark);
+            color: #ffffff;
             text-decoration: none;
             font-weight: 500;
             padding: 0.5rem 1rem;
@@ -484,18 +499,18 @@
         }
 
         .nav-link:hover {
-            color: var(--color-primary);
-            background-color: var(--color-bg-light);
+            color: var(--color-accent-yellow);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .nav-link-admin {
-            color: var(--color-primary);
+            color: var(--color-accent-yellow);
             font-weight: 600;
         }
 
         .nav-link-admin:hover {
-            background-color: var(--color-primary);
-            color: #ffffff;
+            background-color: var(--color-accent-yellow);
+            color: var(--color-primary);
         }
 
         /* User Menu Dropdown */
@@ -662,6 +677,8 @@
 
     {% csrf_token %}
     <script src="{% static 'js/htmx.min.js' %}"></script>
+    {% load django_browser_reload %}
+    {% django_browser_reload_script %}
     <script>
         // Configure HTMX to include CSRF token in all requests
         document.body.addEventListener('htmx:configRequest', function(event) {
