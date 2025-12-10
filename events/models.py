@@ -16,12 +16,14 @@ class Event(BaseModel):
     Inherits from BaseModel for UUID v6 primary key and timestamps.
     """
 
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, max_length=100)
-    description = models.TextField(blank=True, null=True)
+    name = models.CharField("Nome", max_length=200)
+    slug = models.SlugField("Slug", unique=True, max_length=100)
+    description = models.TextField("Descrição", blank=True, null=True)
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name = "Evento"
+        verbose_name_plural = "Eventos"
 
     def __str__(self) -> str:
         return self.name
@@ -34,17 +36,24 @@ class Topic(SoftDeleteModel):
     Inherits from SoftDeleteModel for UUID v6 primary key, timestamps, and soft delete.
     """
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="topics")
-    slug = models.SlugField(unique=True, max_length=200)
-    title = models.CharField(max_length=200)
-    description = models.TextField(max_length=2000, blank=True, null=True)
-    creator = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="created_topics"
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name="topics", verbose_name="Evento"
     )
-    vote_count = models.IntegerField(default=0)
+    slug = models.SlugField("Slug", unique=True, max_length=200)
+    title = models.CharField("Título", max_length=200)
+    description = models.TextField("Descrição", max_length=2000, blank=True, null=True)
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="created_topics",
+        verbose_name="Criador",
+    )
+    vote_count = models.IntegerField("Contagem de votos", default=0)
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name = "Tópico"
+        verbose_name_plural = "Tópicos"
         indexes = [
             models.Index(fields=["event", "is_deleted", "vote_count", "created_at"]),
         ]
