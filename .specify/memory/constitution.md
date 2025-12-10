@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report:
-Version Change: 1.8.2 → 1.8.3 (added naming convention for use case functions: verb + noun pattern)
+Version Change: 1.8.4 → 1.8.5 (added User Story Design principle with standalone, testable, value-delivering requirements and output-first approach)
 Modified Principles:
-  - Use Case Layer Architecture (added explicit naming convention: use case functions must follow "verb + noun" pattern)
+  - Added new principle XVI: User Story Design: Standalone, Testable, Value-Delivering (includes output-first approach)
 Added Sections: None
 Removed Sections: None
 Templates Requiring Updates:
@@ -272,7 +272,19 @@ Events and topics MUST use Django SlugField for URL-friendly identifiers:
 
 **Rationale**: This project aims to showcase how far HTMX and hypermedia can go before needing client-side JavaScript. AlpineJS is optional and should be used only when explicitly requested to demonstrate the power of server-driven interactions, HTML fragments, and the hypermedia approach. Only use AlpineJS when explicitly requested by the developer after exploring HTMX solutions.
 
-### XVI. Semantic HTML and Modern HTML Controls
+### XVI. User Story Design: Standalone, Testable, Value-Delivering
+
+All user stories MUST be designed as standalone, independently testable deliveries that deliver value by themselves:
+
+- **Standalone Delivery**: Each user story MUST be independently completable and deliverable without depending on other user stories for its core functionality. No user story should be just boilerplate, chore, or a prerequisite for another story
+- **Independent Testability**: Each user story MUST have a clear "Independent Test" that can be verified by a Product Owner (PO) without requiring other features to be complete
+- **Visual Verification**: Each user story MUST be verifiable either through the frontend interface or Django Admin, depending on what it does. There MUST be a way to visually check that it works or doesn't work
+- **Value Delivery**: Each user story MUST deliver value by itself, even if it's an intermediate feature (e.g., a table missing future columns, missing sorting). The important thing is that the user story can be visually checked and has a way to ensure it works or not
+- **Output-First Approach**: Prioritize user stories that enable users to view and interact with existing content (output) before stories that require content creation (input). This approach allows users to engage with the platform immediately and validates the core value proposition before building creation workflows
+
+**Rationale**: Standalone, testable user stories enable incremental delivery, allow independent validation by stakeholders, and ensure each story delivers tangible value. The output-first approach prioritizes viewing and engagement features (which provide immediate value) over creation features (which require content to exist first). This ensures the platform is useful from the first deployed story and allows Product Owners to verify functionality independently.
+
+### XVII. Semantic HTML and Modern HTML Controls
 
 All HTML MUST use semantic elements and modern HTML5 controls to leverage native browser capabilities:
 
@@ -431,4 +443,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.8.4 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10
+**Version**: 1.8.5 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-10

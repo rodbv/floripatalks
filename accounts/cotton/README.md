@@ -1,4 +1,4 @@
-# Django-Cotton Components for Accounts App
+now # Django-Cotton Components for Accounts App
 
 This directory contains reusable UI components for the accounts app, following Django-Cotton conventions.
 
