@@ -1,6 +1,7 @@
 """
 Unit tests for accounts models.
 """
+
 import uuid
 
 import pytest

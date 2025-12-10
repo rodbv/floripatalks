@@ -6,13 +6,7 @@
   "notifications.showInStatusBar": false,
   "git.confirmSync": false,
   "git.confirmForceSync": false,
-  "git.useEditorAsCommitInput": false,
-  "git.enableSmartCommit": false,
-  "git.suggestSmartCommit": false,
-  "notifications.enabled": false,
-  "git.autofetch": false,
-  "git.autoRepositoryDetection": false,
-  "workbench.enableExperiments": false,
-  "git.decorations.enabled": false
+  "pre-commit.showOutput": "never",
+  "git.useEditorAsCommitInput": true,
+  "git.commitMessageTemplate": ".gitmessage-template"
 }
-
