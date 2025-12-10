@@ -89,7 +89,7 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 
 ### ✅ XI. Use Case Layer Architecture
 - **Status**: COMPLIANT
-- **Verification**: Business logic in use cases/services, models contain only data structure. Use cases return DTOs/simple objects
+- **Verification**: Business logic in use cases/services as functions (not classes), models contain only data structure. Use case functions follow "verb + noun" naming pattern (e.g., `get_event_topics()`, `create_topic()`). Use cases return DTOs/simple objects
 
 ### ✅ XII. No REST API (Current Version)
 - **Status**: COMPLIANT

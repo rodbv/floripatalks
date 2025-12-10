@@ -119,8 +119,8 @@
 - [ ] T040 [P] [US1] Unit test for Event model in `tests/unit/events/test_models.py`
 - [ ] T041 [P] [US1] Unit test for Topic model in `tests/unit/events/test_models.py`
 - [ ] T042 [P] [US1] Unit test for TopicDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_topic_dto.py`
-- [ ] T043 [P] [US1] Unit test for TopicService.get_topics_for_event in `tests/unit/events/test_services/test_topic_service.py`
-- [ ] T044 [P] [US1] Unit test for GetEventTopicsUseCase in `tests/unit/events/test_use_cases/test_get_event_topics.py`
+- [ ] T043 [P] [US1] Unit test for get_topics_for_event function in `tests/unit/events/test_services/test_topic_service.py`
+- [ ] T044 [P] [US1] Unit test for get_event_topics function in `tests/unit/events/test_use_cases/test_get_event_topics.py`
 - [ ] T045 [P] [US1] Integration test for event detail view in `tests/integration/events/test_event_detail_view.py`
 
 ### Implementation for User Story 1
@@ -129,8 +129,8 @@
 - [ ] T047 [P] [US1] Create Topic model in `events/models.py` inheriting from `SoftDeleteModel` with slug (auto-generated), title, description, vote_count, event FK, creator FK
 - [ ] T049 [US1] Create migrations for Event and Topic models: `events/migrations/0001_initial.py`
 - [ ] T050 [P] [US1] Create TopicDTO dataclass in `events/dto/topic_dto.py`
-- [ ] T051 [P] [US1] Create TopicService in `events/services/topic_service.py` with get_topics_for_event method (prefetch, select_related, convert to DTOs)
-- [ ] T052 [US1] Create GetEventTopicsUseCase in `events/use_cases/get_event_topics.py` (calls TopicService, returns DTOs)
+- [ ] T051 [P] [US1] Create get_topics_for_event function in `events/services/topic_service.py` (prefetch, select_related, convert to DTOs)
+- [ ] T052 [US1] Create get_event_topics function in `events/use_cases/get_event_topics.py` (calls get_topics_for_event service function, returns DTOs)
 - [ ] T053 [US1] Create event detail view in `events/views.py` for GET `/events/<slug>/` (calls use case, passes DTOs to template)
 - [ ] T054 [US1] Create HTMX view for infinite scroll in `events/views.py` for GET `/events/<slug>/topics/load-more/` (returns partial fragment)
 - [ ] T055 [US1] Create URL patterns in `events/urls.py` for event detail and load-more endpoints
@@ -158,26 +158,26 @@
 ### Tests for User Story 3 (TDD - Write First)
 
 - [ ] T064 [P] [US3] Unit test for Vote model in `tests/unit/events/test_models.py`
-- [ ] T065 [P] [US3] Unit test for VoteService.vote_topic in `tests/unit/events/test_services/test_vote_service.py`
-- [ ] T066 [P] [US3] Unit test for VoteService.unvote_topic in `tests/unit/events/test_services/test_vote_service.py`
-- [ ] T067 [P] [US3] Unit test for VoteTopicUseCase in `tests/unit/events/test_use_cases/test_vote_topic.py`
-- [ ] T068 [P] [US3] Unit test for UnvoteTopicUseCase in `tests/unit/events/test_use_cases/test_unvote_topic.py`
+- [ ] T065 [P] [US3] Unit test for vote_topic service function in `tests/unit/events/test_services/test_vote_service.py`
+- [ ] T066 [P] [US3] Unit test for unvote_topic service function in `tests/unit/events/test_services/test_vote_service.py`
+- [ ] T067 [P] [US3] Unit test for vote_topic function in `tests/unit/events/test_use_cases/test_vote_topic.py`
+- [ ] T068 [P] [US3] Unit test for unvote_topic function in `tests/unit/events/test_use_cases/test_unvote_topic.py`
 - [ ] T069 [P] [US3] Integration test for vote/unvote flow in `tests/integration/events/test_vote_flow.py`
 
 ### Implementation for User Story 3
 
 - [ ] T070 [US3] Create Vote model in `events/models.py` inheriting from `BaseModel` with topic FK, user FK, unique constraint (topic, user)
 - [ ] T071 [US3] Create migration for Vote model: `events/migrations/0002_vote.py`
-- [ ] T072 [US3] Create VoteService in `events/services/vote_service.py` with vote_topic, unvote_topic, get_user_vote_status methods
-- [ ] T073 [US3] Create VoteTopicUseCase in `events/use_cases/vote_topic.py` (validates, creates vote, updates vote_count, returns status DTO)
-- [ ] T074 [US3] Create UnvoteTopicUseCase in `events/use_cases/unvote_topic.py` (validates, removes vote, updates vote_count, returns status DTO)
+- [ ] T072 [US3] Create vote service functions in `events/services/vote_service.py`: vote_topic, unvote_topic, get_user_vote_status
+- [ ] T073 [US3] Create vote_topic function in `events/use_cases/vote_topic.py` (validates, creates vote, updates vote_count, returns status DTO)
+- [ ] T074 [US3] Create unvote_topic function in `events/use_cases/unvote_topic.py` (validates, removes vote, updates vote_count, returns status DTO)
 - [ ] T075 [US3] Create vote/unvote HTMX view in `events/views.py` for POST `/topics/<slug>/vote/` (toggles vote/unvote)
 - [ ] T076 [US3] Add URL pattern in `events/urls.py` for vote endpoint
 - [ ] T077 [US3] Create vote button partial template `events/templates/events/partials/vote_button.html` with HTMX attributes
 - [ ] T078 [US3] Create Django-Cotton vote button component `events/cotton/topic/vote_button.html`
 - [ ] T079 [US3] Integrate vote button in topic card component (shows sign-in popup for non-authenticated users)
-- [ ] T080 [US3] Update TopicService to include user vote status in TopicDTO
-- [ ] T081 [US3] Update GetEventTopicsUseCase to pass user context for vote status
+- [ ] T080 [US3] Update get_topics_for_event function to include user vote status in TopicDTO
+- [ ] T081 [US3] Update get_event_topics function to pass user context for vote status
 
 **Checkpoint**: At this point, User Stories 1 AND 3 should work independently. Users can view topics and vote on them (output-first approach).
 
@@ -217,24 +217,25 @@
 
 ### Tests for User Story 2 (TDD - Write First)
 
-- [ ] T090 [P] [US2] Unit test for CreateTopicUseCase in `tests/unit/events/test_use_cases/test_create_topic.py`
-- [ ] T091 [P] [US2] Unit test for EditTopicUseCase in `tests/unit/events/test_use_cases/test_edit_topic.py`
-- [ ] T092 [P] [US2] Unit test for DeleteTopicUseCase in `tests/unit/events/test_use_cases/test_delete_topic.py`
-- [ ] T093 [P] [US2] Unit test for TopicService.create_topic in `tests/unit/events/test_services/test_topic_service.py`
+- [ ] T090 [P] [US2] Unit test for create_topic function in `tests/unit/events/test_use_cases/test_create_topic.py`
+- [ ] T091 [P] [US2] Unit test for edit_topic function in `tests/unit/events/test_use_cases/test_edit_topic.py`
+- [ ] T092 [P] [US2] Unit test for delete_topic function in `tests/unit/events/test_use_cases/test_delete_topic.py`
+- [ ] T093 [P] [US2] Unit test for create_topic service function in `tests/unit/events/test_services/test_topic_service.py`
 - [ ] T094 [P] [US2] Unit test for slug generation uniqueness in `tests/unit/events/test_services/test_topic_service.py`
 - [ ] T095 [P] [US2] Integration test for topic creation flow in `tests/integration/events/test_topic_creation.py`
 - [ ] T096 [P] [US2] Integration test for topic edit flow in `tests/integration/events/test_topic_edit.py`
 - [ ] T097 [P] [US2] Integration test for topic delete flow in `tests/integration/events/test_topic_delete.py`
+- [ ] T097a [P] [US2] Integration test for browser back button navigation in edit pages (FR-032) in `tests/integration/events/test_browser_navigation.py`
 
 ### Implementation for User Story 2
 
 - [ ] T098 [US2] Create TopicForm in `events/forms.py` for topic creation/editing with validation
-- [ ] T099 [US2] Create CreateTopicUseCase in `events/use_cases/create_topic.py` (validates, generates slug, creates topic, returns DTO)
-- [ ] T100 [US2] Create EditTopicUseCase in `events/use_cases/edit_topic.py` (validates ownership, updates topic, keeps slug immutable, returns DTO)
-- [ ] T101 [US2] Create DeleteTopicUseCase in `events/use_cases/delete_topic.py` (validates ownership, soft deletes topic)
-- [ ] T102 [US2] Add create_topic method to TopicService in `events/services/topic_service.py` (slug generation with uniqueness)
-- [ ] T103 [US2] Add update_topic method to TopicService in `events/services/topic_service.py`
-- [ ] T104 [US2] Add soft_delete_topic method to TopicService in `events/services/topic_service.py`
+- [ ] T099 [US2] Create create_topic function in `events/use_cases/create_topic.py` (validates, generates slug, creates topic, returns DTO)
+- [ ] T100 [US2] Create edit_topic function in `events/use_cases/edit_topic.py` (validates ownership, updates topic, keeps slug immutable, returns DTO)
+- [ ] T101 [US2] Create delete_topic function in `events/use_cases/delete_topic.py` (validates ownership, soft deletes topic)
+- [ ] T102 [US2] Add create_topic function to `events/services/topic_service.py` (slug generation with uniqueness)
+- [ ] T103 [US2] Add update_topic function to `events/services/topic_service.py`
+- [ ] T104 [US2] Add soft_delete_topic function to `events/services/topic_service.py`
 - [ ] T105 [US2] Create topic creation view in `events/views.py` for GET/POST `/topics/create/`
 - [ ] T106 [US2] Create topic edit view in `events/views.py` for GET/POST `/topics/<slug>/edit/`
 - [ ] T107 [US2] Create topic delete view in `events/views.py` for POST `/topics/<slug>/delete/` (HTMX, returns success response)
@@ -261,21 +262,22 @@
 
 - [ ] T116 [P] [US4] Unit test for Comment model in `tests/unit/events/test_models.py`
 - [ ] T117 [P] [US4] Unit test for CommentDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_comment_dto.py`
-- [ ] T118 [P] [US4] Unit test for CommentService.add_comment in `tests/unit/events/test_services/test_comment_service.py`
-- [ ] T119 [P] [US4] Unit test for AddCommentUseCase in `tests/unit/events/test_use_cases/test_add_comment.py`
-- [ ] T120 [P] [US4] Unit test for EditCommentUseCase in `tests/unit/events/test_use_cases/test_edit_comment.py`
-- [ ] T121 [P] [US4] Unit test for DeleteCommentUseCase in `tests/unit/events/test_use_cases/test_delete_comment.py`
+- [ ] T118 [P] [US4] Unit test for add_comment service function in `tests/unit/events/test_services/test_comment_service.py`
+- [ ] T119 [P] [US4] Unit test for add_comment function in `tests/unit/events/test_use_cases/test_add_comment.py`
+- [ ] T120 [P] [US4] Unit test for edit_comment function in `tests/unit/events/test_use_cases/test_edit_comment.py`
+- [ ] T121 [P] [US4] Unit test for delete_comment function in `tests/unit/events/test_use_cases/test_delete_comment.py`
 - [ ] T122 [P] [US4] Integration test for comment flow in `tests/integration/events/test_comment_flow.py`
+- [ ] T122a [P] [US4] Integration test for browser back button navigation in comment edit pages (FR-032) in `tests/integration/events/test_browser_navigation.py`
 
 ### Implementation for User Story 4
 
 - [ ] T123 [US4] Create Comment model in `events/models.py` inheriting from `SoftDeleteModel` with topic FK, author FK, content
 - [ ] T124 [US4] Create migration for Comment model: `events/migrations/0003_comment.py`
 - [ ] T125 [US4] Create CommentDTO dataclass in `events/dto/comment_dto.py`
-- [ ] T126 [US4] Create CommentService in `events/services/comment_service.py` with add_comment, update_comment, soft_delete_comment methods
-- [ ] T127 [US4] Create AddCommentUseCase in `events/use_cases/add_comment.py` (validates, creates comment, returns DTO)
-- [ ] T128 [US4] Create EditCommentUseCase in `events/use_cases/edit_comment.py` (validates ownership, updates comment, returns DTO)
-- [ ] T129 [US4] Create DeleteCommentUseCase in `events/use_cases/delete_comment.py` (validates ownership, soft deletes comment)
+- [ ] T126 [US4] Create comment service functions in `events/services/comment_service.py`: add_comment, update_comment, soft_delete_comment
+- [ ] T127 [US4] Create add_comment function in `events/use_cases/add_comment.py` (validates, creates comment, returns DTO)
+- [ ] T128 [US4] Create edit_comment function in `events/use_cases/edit_comment.py` (validates ownership, updates comment, returns DTO)
+- [ ] T129 [US4] Create delete_comment function in `events/use_cases/delete_comment.py` (validates ownership, soft deletes comment)
 - [ ] T130 [US4] Create add comment HTMX view in `events/views.py` for POST `/topics/<slug>/comments/create/` (returns comment partial)
 - [ ] T131 [US4] Create comment edit view in `events/views.py` for GET/POST `/topics/<slug>/comments/<id>/edit/`
 - [ ] T132 [US4] Create comment delete view in `events/views.py` for POST `/topics/<slug>/comments/<id>/delete/` (HTMX)
@@ -285,7 +287,7 @@
 - [ ] T136 [US4] Create comment form template `events/templates/events/comment_form.html` with HTML5 native validation and/or vanilla JS for character count (AlpineJS only if explicitly requested)
 - [ ] T137 [US4] Create comment edit template `events/templates/events/comment_edit.html` with HTMX form submission
 - [ ] T138 [US4] Integrate comment form in topic detail template (shows sign-in popup for non-authenticated users)
-- [ ] T139 [US4] Update GetTopicDetailUseCase to include comments (ordered chronologically, oldest first)
+- [ ] T139 [US4] Update get_topic_detail function to include comments (ordered chronologically, oldest first)
 - [ ] T140 [US4] Update TopicDetailDTO to include list of CommentDTOs
 - [ ] T141 [US4] Implement rate limiting for comments: 20 comments/hour per user in `core/middleware.py`
 
@@ -306,7 +308,7 @@
 
 ### Implementation for User Story 7
 
-- [ ] T144 [US7] Create GetEventsUseCase in `events/use_cases/get_events.py` (returns list of EventDTOs)
+- [ ] T144 [US7] Create get_events function in `events/use_cases/get_events.py` (returns list of EventDTOs)
 - [ ] T145 [US7] Create EventDTO dataclass in `events/dto/event_dto.py`
 - [ ] T146 [US7] Create event selector view in `events/views.py` for GET `/events/` (returns event list)
 - [ ] T147 [US7] Add URL pattern in `events/urls.py` for events list
@@ -328,21 +330,22 @@
 
 - [ ] T151 [P] [US5] Unit test for PresenterSuggestion model in `tests/unit/events/test_models.py`
 - [ ] T152 [P] [US5] Unit test for PresenterDTO with `assertNumQueries` in `tests/unit/events/test_dto/test_presenter_dto.py`
-- [ ] T153 [P] [US5] Unit test for PresenterService.suggest_presenter with limits in `tests/unit/events/test_services/test_presenter_service.py`
-- [ ] T154 [P] [US5] Unit test for SuggestPresenterUseCase in `tests/unit/events/test_use_cases/test_suggest_presenter.py`
-- [ ] T155 [P] [US5] Unit test for EditPresenterSuggestionUseCase in `tests/unit/events/test_use_cases/test_edit_presenter_suggestion.py`
-- [ ] T156 [P] [US5] Unit test for DeletePresenterSuggestionUseCase in `tests/unit/events/test_use_cases/test_delete_presenter_suggestion.py`
+- [ ] T153 [P] [US5] Unit test for suggest_presenter service function with limits in `tests/unit/events/test_services/test_presenter_service.py`
+- [ ] T154 [P] [US5] Unit test for suggest_presenter function in `tests/unit/events/test_use_cases/test_suggest_presenter.py`
+- [ ] T155 [P] [US5] Unit test for edit_presenter_suggestion function in `tests/unit/events/test_use_cases/test_edit_presenter_suggestion.py`
+- [ ] T156 [P] [US5] Unit test for delete_presenter_suggestion function in `tests/unit/events/test_use_cases/test_delete_presenter_suggestion.py`
 - [ ] T157 [P] [US5] Integration test for presenter suggestion flow in `tests/integration/events/test_presenter_suggestion_flow.py`
+- [ ] T157a [P] [US5] Integration test for browser back button navigation in presenter suggestion edit pages (FR-032) in `tests/integration/events/test_browser_navigation.py`
 
 ### Implementation for User Story 5
 
 - [ ] T158 [US5] Create PresenterSuggestion model in `events/models.py` inheriting from `SoftDeleteModel` with topic FK, suggester FK, email, url, full_name
 - [ ] T159 [US5] Create migration for PresenterSuggestion model: `events/migrations/0004_presenter_suggestion.py`
 - [ ] T160 [US5] Create PresenterDTO dataclass in `events/dto/presenter_dto.py`
-- [ ] T161 [US5] Create PresenterService in `events/services/presenter_service.py` with suggest_presenter, update_suggestion, soft_delete_suggestion, check_limits methods
-- [ ] T162 [US5] Create SuggestPresenterUseCase in `events/use_cases/suggest_presenter.py` (validates limits: 3 per user, 10 per topic, creates suggestion, returns DTO)
-- [ ] T163 [US5] Create EditPresenterSuggestionUseCase in `events/use_cases/edit_presenter_suggestion.py` (validates ownership, updates suggestion, returns DTO)
-- [ ] T164 [US5] Create DeletePresenterSuggestionUseCase in `events/use_cases/delete_presenter_suggestion.py` (validates ownership, soft deletes suggestion)
+- [ ] T161 [US5] Create presenter service functions in `events/services/presenter_service.py`: suggest_presenter, update_suggestion, soft_delete_suggestion, check_limits
+- [ ] T162 [US5] Create suggest_presenter function in `events/use_cases/suggest_presenter.py` (validates limits: 3 per user, 10 per topic, creates suggestion, returns DTO)
+- [ ] T163 [US5] Create edit_presenter_suggestion function in `events/use_cases/edit_presenter_suggestion.py` (validates ownership, updates suggestion, returns DTO)
+- [ ] T164 [US5] Create delete_presenter_suggestion function in `events/use_cases/delete_presenter_suggestion.py` (validates ownership, soft deletes suggestion)
 - [ ] T165 [US5] Create suggest presenter HTMX view in `events/views.py` for POST `/topics/<slug>/presenters/suggest/` (returns suggestion partial)
 - [ ] T166 [US5] Create presenter suggestion edit view in `events/views.py` for GET/POST `/topics/<slug>/presenters/<id>/edit/`
 - [ ] T167 [US5] Create presenter suggestion delete view in `events/views.py` for POST `/topics/<slug>/presenters/<id>/delete/` (HTMX)
@@ -352,7 +355,7 @@
 - [ ] T171 [US5] Create presenter suggestion form template with HTML5 native validation (AlpineJS only if explicitly requested)
 - [ ] T172 [US5] Create presenter suggestion edit template `events/templates/events/presenter_suggestion_edit.html`
 - [ ] T173 [US5] Integrate presenter suggestions in topic detail template (shows sign-in popup for non-authenticated users)
-- [ ] T174 [US5] Update GetTopicDetailUseCase to include presenter suggestions (ordered chronologically, oldest first)
+- [ ] T174 [US5] Update get_topic_detail function to include presenter suggestions (ordered chronologically, oldest first)
 - [ ] T175 [US5] Update TopicDetailDTO to include list of PresenterDTOs
 
 **Checkpoint**: At this point, all user stories should be independently functional. Users can suggest presenters with proper limits.
@@ -388,9 +391,9 @@
 - [ ] T195 [P] Create rate limiting middleware in `core/middleware.py` for FR-037: implement 10 topics/hour and 20 comments/hour per user
 - [ ] T196 [P] Create error message utility in `core/utils.py` for FR-040: function to generate inline error messages using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR)
 - [ ] T197 [P] Update all form templates to use error message utility (FR-040): replace generic error displays with inline semantic HTML messages
-- [ ] T198 [P] Add concurrent edit handling to EditTopicUseCase in `events/use_cases/edit_topic.py` for FR-041: implement last-write-wins approach with optional warning if content changed
-- [ ] T199 [P] Add concurrent edit handling to EditCommentUseCase in `events/use_cases/edit_comment.py` for FR-041: implement last-write-wins approach
-- [ ] T200 [P] Add concurrent edit handling to EditPresenterSuggestionUseCase in `events/use_cases/edit_presenter_suggestion.py` for FR-041: implement last-write-wins approach
+- [ ] T198 [P] Add concurrent edit handling to edit_topic function in `events/use_cases/edit_topic.py` for FR-041: implement last-write-wins approach with optional warning if content changed
+- [ ] T199 [P] Add concurrent edit handling to edit_comment function in `events/use_cases/edit_comment.py` for FR-041: implement last-write-wins approach
+- [ ] T200 [P] Add concurrent edit handling to edit_presenter_suggestion function in `events/use_cases/edit_presenter_suggestion.py` for FR-041: implement last-write-wins approach
 - [ ] T201 [P] Create HTMX error handling middleware in `core/middleware.py` for FR-042: catch network failures and return inline error messages with retry button using semantic HTML
 - [ ] T202 [P] Update all HTMX views to handle network failures (FR-042): ensure error responses use inline semantic HTML messages with retry functionality
 - [ ] T203 [P] Create session expiration handler in `accounts/middleware.py` for FR-043: redirect to login and preserve action context for automatic execution after authentication
@@ -449,8 +452,8 @@
 Task: T025 - Unit test for Event model
 Task: T026 - Unit test for Topic model
 Task: T027 - Unit test for TopicDTO
-Task: T028 - Unit test for TopicService
-Task: T029 - Unit test for GetEventTopicsUseCase
+Task: T028 - Unit test for get_topics_for_event function
+Task: T029 - Unit test for get_event_topics function
 Task: T030 - Integration test for event detail view
 
 # Launch all models for User Story 1 together:
@@ -460,7 +463,7 @@ Task: T033 - Create SoftDeleteManager
 
 # Launch DTOs and services in parallel:
 Task: T035 - Create TopicDTO
-Task: T036 - Create TopicService
+Task: T036 - Create get_topics_for_event function
 ```
 
 ---
