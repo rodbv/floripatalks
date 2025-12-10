@@ -40,6 +40,10 @@ jobs:
         uv run python manage.py collectstatic --noinput
       env:
         DJANGO_SETTINGS_MODULE: floripatalks.settings.production
+        # Dummy values for CI/CD - collectstatic doesn't use these, but production settings require them
+        SECRET_KEY: "dummy-secret-key-for-ci-cd-only-not-used-in-production"
+        GOOGLE_CLIENT_ID: "dummy-client-id-for-ci-cd"
+        GOOGLE_CLIENT_SECRET: "dummy-client-secret-for-ci-cd"
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
