@@ -274,18 +274,19 @@ AlpineJS MUST be used for simple client-side state control and interactions when
 
 ### GitHub Issues and Branch Naming
 
-All implementation tasks MUST be tracked via GitHub issues:
+Issues are created on-demand for the current task being worked on:
 
-- Every task MUST have a corresponding GitHub issue before work begins
-- GitHub issues MUST be linked to pull requests
-- Branch names MUST follow the pattern: `{issue-id}-{description-in-slug-format}`
-  - Example: `123-view-topics-list`, `456-add-vote-functionality`
-  - Issue ID is the GitHub issue number
-  - Description is a short, descriptive slug (kebab-case, no special characters)
-- Branch names MUST be descriptive and traceable to the GitHub issue
-- **Issues created automatically from `tasks.md` via `speckit.taskstoissues` MUST be labeled with `speckit`** to distinguish them from manually created issues
+- **Issue Creation**: Create a GitHub issue ONLY for the task currently being implemented (not in advance for entire phases)
+- **One Issue Per Task**: Only create the issue when starting work on that specific task, not in bulk for future tasks
+- **Branch Naming**: Branches MUST follow the pattern: `{issue-id}-{description-in-slug-format}`
+  - Use two leading zeros for issue ID (e.g., `029-custom-user-model`, `036-base-model-classes`)
+  - Description should be in slug format (lowercase, hyphens instead of spaces)
+  - Example: `029-custom-user-model`, `036-base-model-classes`
+- **Issue Association**: Each branch MUST reference its corresponding issue number in the branch name
+- **Issue Labels**: Issues created automatically from `tasks.md` via `speckit.taskstoissues` MUST be labeled with `speckit` to distinguish them from manually created issues
+- **PR Association**: Pull requests MUST reference the GitHub issue number (e.g., "Closes #29") to automatically close the issue on merge
 
-**Rationale**: GitHub issues provide traceability, discussion context, and project management visibility. Standardized branch naming makes it easy to identify which issue a branch addresses and maintains consistency across the team. The `speckit` label helps identify issues that were automatically generated from the specification process.
+**Rationale**: Creating issues only for the current task prevents issues from becoming outdated when tasks are reordered, renamed, or removed. This keeps the issue tracker clean and accurate, with only active work represented. Branch naming with issue IDs creates a clear link between branches and issues, making it easier to understand what work is being done and track related PRs.
 
 ### Git Operations and Version Control
 

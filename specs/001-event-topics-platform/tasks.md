@@ -5,7 +5,7 @@
 
 **Tests**: TDD is required per constitution - all tests must be written before implementation code.
 
-**GitHub Issues**: All tasks MUST have corresponding GitHub issues before work begins. Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}` (e.g., `123-view-topics-list`).
+**GitHub Issues**: Create a GitHub issue ONLY for the task currently being worked on (not in advance for entire phases). Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}` (e.g., `029-custom-user-model`). This prevents issues from becoming outdated when tasks are reordered or changed.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -84,6 +84,8 @@
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
+
+**Note**: Create GitHub issues only for the task currently being worked on, not in advance for entire phases. This prevents issues from becoming outdated when tasks are reordered or changed.
 
 - [x] T026 Create custom User model in `accounts/models.py` inheriting from `AbstractUser` with UUID v6 primary key
 - [x] T027 [P] Create User migration: `accounts/migrations/0001_initial.py` (MUST be first migration)
@@ -522,5 +524,6 @@ With multiple developers:
 - All DTO tests must include `assertNumQueries`
 - AlpineJS for client-side state, HTMX for server interactions
 - Custom user model MUST be created before first migration
-- **All tasks MUST have GitHub issues before work begins**
-- **Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}`** (e.g., `123-view-topics-list`)
+- **Create GitHub issue ONLY for the task currently being worked on** (not in advance for entire phases)
+- **Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}`** (e.g., `029-custom-user-model`)
+- This prevents issues from becoming outdated when tasks are reordered or changed
