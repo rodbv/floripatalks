@@ -26,6 +26,14 @@ dev = ["pre-commit>=4.5.0", "ruff>=0.8.4"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+exclude = [
+    "*.md",  # Exclude markdown files
+    "*.mdx",  # Exclude MDX files
+    ".venv",
+    ".git",
+    "__pycache__",
+    "*.pyc",
+]
 
 [tool.ruff.lint]
 select = [

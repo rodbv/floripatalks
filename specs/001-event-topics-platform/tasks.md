@@ -93,12 +93,12 @@
 - [x] T029 [P] Setup database configuration: SQLite for all environments (development and production) in `floripatalks/settings/base.py`
 - [x] T030 [P] Configure django-htmx in `floripatalks/settings/base.py`: add `django_htmx` to `INSTALLED_APPS`
 - [x] T031 [P] Configure django-cotton in `floripatalks/settings/base.py`: add `django_cotton` to `INSTALLED_APPS`
-- [ ] T032 [P] Create base templates directory: `templates/base.html` with HTMX includes (AlpineJS optional/commented)
+- [x] T032 [P] Create base templates directory: `templates/base.html` with HTMX includes (AlpineJS optional/commented)
 - [x] T033 [P] Create base model classes in `core/models.py`: `BaseModel` (UUID v6, created_at, updated_at) and `SoftDeleteModel` (extends BaseModel with is_deleted and SoftDeleteManager)
 - [x] T034 [P] Setup i18n configuration: Portuguese (pt-BR) as primary language, timezone America/Sao_Paulo in `floripatalks/settings/base.py`
-- [ ] T035 [P] Create `core/utils.py` for shared utilities
-- [ ] T036 [P] Configure Django admin in `accounts/admin.py` for User model (file exists but empty)
-- [ ] T037 [P] Create base Django-Cotton component structure: `events/cotton/`, `accounts/cotton/` directories
+- [x] T035 [P] Create `core/utils.py` for shared utilities
+- [x] T036 [P] Configure Django admin in `accounts/admin.py` for User model (file exists but empty)
+- [x] T037 [P] Create base Django-Cotton component structure: `events/cotton/`, `accounts/cotton/` directories
 - [x] T038 [P] Setup pytest configuration: `pytest.ini` or `pyproject.toml` pytest section with Django settings
 - [ ] T039 [P] Create test fixtures in `tests/conftest.py`: user fixtures, event fixtures (partial: user fixtures exist, event fixtures cannot exist yet)
 
