@@ -1,6 +1,6 @@
 <!--
 Sync Impact Report:
-Version Change: 1.4.0 → 1.5.0 (added GitHub issues and branch naming requirements)
+Version Change: 1.6.1 → 1.7.0 (added semantic HTML and modern HTML controls principle, changed AlpineJS from "Minimized" to "Optional")
 Modified Principles:
   - Development Workflow (expanded with GitHub issues and branch naming)
 Added Sections:
