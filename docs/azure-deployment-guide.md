@@ -493,11 +493,26 @@ If you need a startup script, create `startup.sh` in the project root with comma
 - Collect static files (if not done in CI/CD): `python manage.py collectstatic --noinput`
 - Start the web server (Gunicorn or the default Azure handler)
 
-**Configure Startup Command in Azure Portal** (if using startup script):
+**Configure Startup Command** (choose one method):
+
+**Option A: Using `startup.txt` file** (Recommended - automatic detection):
+- Azure App Service automatically detects a `startup.txt` file in your project root
+- The file is already created: [`startup.txt`](../startup.txt) contains `bash startup.sh`
+- No portal configuration needed - just deploy your code
+
+**Option B: Using Azure Portal** (if `startup.txt` doesn't work):
 - Navigate: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Configuration** → **General settings**
-- Scroll to **Startup Command**
-- Enter: `bash startup.sh` (or your custom command)
+- Look for **Startup Command** field (may be under "Stack settings" or "Runtime settings")
+- Enter: `bash startup.sh`
 - Click **Save** → **Continue**
+
+**Option C: Using Azure CLI** (alternative):
+```bash
+az webapp config set \
+  --resource-group floripatalks-rg \
+  --name floripatalks-app \
+  --startup-file "bash startup.sh"
+```
 
 ### Step 7: Initial Deployment
 
