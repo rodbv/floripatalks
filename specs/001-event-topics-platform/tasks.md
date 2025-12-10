@@ -12,6 +12,12 @@
 - **Value Delivery**: Each story delivers tangible value
 - **Output-First Approach**: Viewing/interaction features prioritized before content creation
 
+**MVP Scope Limitations** (per clarifications):
+- Admin access: Django superuser only (no custom role system)
+- User profile editing: Not in MVP (users use SSO-provided info only)
+- Content reporting/flagging: Not in MVP (admins monitor manually via Django admin)
+- Analytics/tracking: Not in MVP (focus on core functionality)
+
 **GitHub Issues**: Create a GitHub issue ONLY for the task currently being worked on (not in advance for entire phases). Branch names MUST follow pattern: `{issue-id}-{description-in-slug-format}` (e.g., `029-custom-user-model`). This prevents issues from becoming outdated when tasks are reordered or changed.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
@@ -322,6 +328,7 @@
 - [ ] T148 [US7] Create HTMX event selector component in base template or navigation (HTMX-first: native HTML select with hx-get/hx-trigger, AlpineJS only if explicitly requested)
 - [ ] T149 [US7] Create HTMX handler for event selection (loads event content without full page refresh)
 - [ ] T150 [US7] Update navigation to include event selector (HTMX-first: native HTML select with hx-get/hx-trigger for content loading, AlpineJS only if explicitly requested)
+- [ ] T151 [US7] Implement unsaved changes warning for event switching: detect unsaved form input (comment forms, topic forms) and show confirmation dialog before switching events (HTMX-first: load confirmation dialog fragment, AlpineJS only if explicitly requested)
 
 **Checkpoint**: At this point, users can switch between events seamlessly.
 
@@ -335,35 +342,35 @@
 
 ### Tests for User Story 5 (TDD - Write First)
 
-- [ ] T151 [P] [US5] Unit test for PresenterSuggestion model in `tests/unit/events/test_models.py`
-- [ ] T152 [P] [US5] Unit test for PresenterDTO with `assertNumQueries` from `pytest_django.asserts` in `tests/unit/events/test_dto/test_presenter_dto.py`
-- [ ] T153 [P] [US5] Unit test for suggest_presenter service function with limits in `tests/unit/events/test_services/test_presenter_service.py`
-- [ ] T154 [P] [US5] Unit test for suggest_presenter function in `tests/unit/events/test_use_cases/test_suggest_presenter.py`
-- [ ] T155 [P] [US5] Unit test for edit_presenter_suggestion function in `tests/unit/events/test_use_cases/test_edit_presenter_suggestion.py`
-- [ ] T156 [P] [US5] Unit test for delete_presenter_suggestion function in `tests/unit/events/test_use_cases/test_delete_presenter_suggestion.py`
-- [ ] T157 [P] [US5] Integration test for presenter suggestion flow in `tests/integration/events/test_presenter_suggestion_flow.py`
-- [ ] T157a [P] [US5] Integration test for browser back button navigation in presenter suggestion edit pages (FR-032) in `tests/integration/events/test_browser_navigation.py`
+- [ ] T152 [P] [US5] Unit test for PresenterSuggestion model in `tests/unit/events/test_models.py`
+- [ ] T153 [P] [US5] Unit test for PresenterDTO with `assertNumQueries` from `pytest_django.asserts` in `tests/unit/events/test_dto/test_presenter_dto.py`
+- [ ] T154 [P] [US5] Unit test for suggest_presenter service function with limits in `tests/unit/events/test_services/test_presenter_service.py`
+- [ ] T155 [P] [US5] Unit test for suggest_presenter function in `tests/unit/events/test_use_cases/test_suggest_presenter.py`
+- [ ] T156 [P] [US5] Unit test for edit_presenter_suggestion function in `tests/unit/events/test_use_cases/test_edit_presenter_suggestion.py`
+- [ ] T157 [P] [US5] Unit test for delete_presenter_suggestion function in `tests/unit/events/test_use_cases/test_delete_presenter_suggestion.py`
+- [ ] T158 [P] [US5] Integration test for presenter suggestion flow in `tests/integration/events/test_presenter_suggestion_flow.py`
+- [ ] T158a [P] [US5] Integration test for browser back button navigation in presenter suggestion edit pages (FR-032) in `tests/integration/events/test_browser_navigation.py`
 
 ### Implementation for User Story 5
 
-- [ ] T158 [US5] Create PresenterSuggestion model in `events/models.py` inheriting from `SoftDeleteModel` with topic FK, suggested_by FK, presenter_contact CharField (can be email, name, LinkedIn URL, WhatsApp contact, etc.)
-- [ ] T159 [US5] Create migration for PresenterSuggestion model: `events/migrations/0004_presenter_suggestion.py`
-- [ ] T160 [US5] Create PresenterDTO dataclass in `events/dto/presenter_dto.py`
-- [ ] T161 [US5] Create presenter service functions in `events/services/presenter_service.py`: suggest_presenter, update_suggestion, soft_delete_suggestion, check_limits
-- [ ] T162 [US5] Create suggest_presenter function in `events/use_cases/suggest_presenter.py` (signature: `suggest_presenter(suggested_by, topic_slug, presenter_contact)`, validates limits: 3 per user, 10 per topic, creates suggestion, returns DTO)
-- [ ] T163 [US5] Create edit_presenter_suggestion function in `events/use_cases/edit_presenter_suggestion.py` (validates ownership, updates suggestion, returns DTO)
-- [ ] T164 [US5] Create delete_presenter_suggestion function in `events/use_cases/delete_presenter_suggestion.py` (validates ownership, soft deletes suggestion)
-- [ ] T165 [US5] Create suggest presenter HTMX view in `events/views.py` for POST `/topics/<slug>/presenters/suggest/` (returns suggestion partial)
-- [ ] T166 [US5] Create presenter suggestion edit view in `events/views.py` for GET/POST `/topics/<slug>/presenters/<id>/edit/`
-- [ ] T167 [US5] Create presenter suggestion delete view in `events/views.py` for POST `/topics/<slug>/presenters/<id>/delete/` (HTMX)
-- [ ] T168 [US5] Add URL patterns in `events/urls.py` for presenter suggestion endpoints
-- [ ] T169 [US5] Create presenter suggestion partial template `events/templates/events/partials/presenter_suggestion_item.html`
-- [ ] T170 [US5] Create Django-Cotton presenter suggestion component `events/cotton/presenter/suggestion.html`
-- [ ] T171 [US5] Create presenter suggestion form template with HTML5 native validation (single `presenter_contact` field with UI guidance indicating it can be email, name, LinkedIn URL, WhatsApp contact, etc., AlpineJS only if explicitly requested)
-- [ ] T172 [US5] Create presenter suggestion edit template `events/templates/events/presenter_suggestion_edit.html`
-- [ ] T173 [US5] Integrate presenter suggestions in topic detail template (shows sign-in popup for non-authenticated users)
-- [ ] T174 [US5] Update get_topic_detail function to include presenter suggestions (ordered chronologically, oldest first)
-- [ ] T175 [US5] Update TopicDetailDTO to include list of PresenterDTOs
+- [ ] T159 [US5] Create PresenterSuggestion model in `events/models.py` inheriting from `SoftDeleteModel` with topic FK, suggested_by FK, presenter_contact CharField (can be email, name, LinkedIn URL, WhatsApp contact, etc.)
+- [ ] T160 [US5] Create migration for PresenterSuggestion model: `events/migrations/0004_presenter_suggestion.py`
+- [ ] T161 [US5] Create PresenterDTO dataclass in `events/dto/presenter_dto.py`
+- [ ] T162 [US5] Create presenter service functions in `events/services/presenter_service.py`: suggest_presenter, update_suggestion, soft_delete_suggestion, check_limits
+- [ ] T163 [US5] Create suggest_presenter function in `events/use_cases/suggest_presenter.py` (signature: `suggest_presenter(suggested_by, topic_slug, presenter_contact)`, validates limits: 3 per user, 10 per topic, creates suggestion, returns DTO)
+- [ ] T164 [US5] Create edit_presenter_suggestion function in `events/use_cases/edit_presenter_suggestion.py` (validates ownership, updates suggestion, returns DTO)
+- [ ] T165 [US5] Create delete_presenter_suggestion function in `events/use_cases/delete_presenter_suggestion.py` (validates ownership, soft deletes suggestion)
+- [ ] T166 [US5] Create suggest presenter HTMX view in `events/views.py` for POST `/topics/<slug>/presenters/suggest/` (returns suggestion partial)
+- [ ] T167 [US5] Create presenter suggestion edit view in `events/views.py` for GET/POST `/topics/<slug>/presenters/<id>/edit/`
+- [ ] T168 [US5] Create presenter suggestion delete view in `events/views.py` for POST `/topics/<slug>/presenters/<id>/delete/` (HTMX)
+- [ ] T169 [US5] Add URL patterns in `events/urls.py` for presenter suggestion endpoints
+- [ ] T170 [US5] Create presenter suggestion partial template `events/templates/events/partials/presenter_suggestion_item.html`
+- [ ] T171 [US5] Create Django-Cotton presenter suggestion component `events/cotton/presenter/suggestion.html`
+- [ ] T172 [US5] Create presenter suggestion form template with HTML5 native validation (single `presenter_contact` field with UI guidance indicating it can be email, name, LinkedIn URL, WhatsApp contact, etc., AlpineJS only if explicitly requested)
+- [ ] T173 [US5] Create presenter suggestion edit template `events/templates/events/presenter_suggestion_edit.html`
+- [ ] T174 [US5] Integrate presenter suggestions in topic detail template (shows sign-in popup for non-authenticated users)
+- [ ] T175 [US5] Update get_topic_detail function to include presenter suggestions (ordered chronologically, oldest first)
+- [ ] T176 [US5] Update TopicDetailDTO to include list of PresenterDTOs
 
 **Checkpoint**: At this point, all user stories should be independently functional. Users can suggest presenters with proper limits.
 
@@ -373,40 +380,40 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T176 [P] Configure comprehensive Django admin for all models: Event, Topic, Vote, Comment, PresenterSuggestion in `events/admin.py`. Use inlines for 1:N relationships (TopicInline in EventAdmin, CommentInline and PresenterSuggestionInline in TopicAdmin). Configure list_display, list_filter, search_fields, fieldsets, readonly_fields, and prepopulated_fields for all models. Ensure complete system management through admin interface.
-- [ ] T177 [P] Add comprehensive admin actions: bulk soft delete recovery, export functionality. Configure all_objects manager for soft-deleted models in admin to access deleted records.
-- [ ] T178 [P] Implement proper error handling and user-friendly error messages across all views
-- [ ] T179 [P] Add loading indicators using HTMX hx-indicator for all HTMX requests
-- [ ] T180 [P] Optimize database queries: add composite indexes per data-model.md specifications
-- [ ] T181 [P] Add comprehensive logging for all use cases and services
-- [ ] T182 [P] Implement proper CSRF protection for all forms
-- [ ] T183 [P] Add mobile-first responsive design improvements using Pure CSS
-- [ ] T184 [P] Ensure WCAG 2.1 Level AA accessibility compliance across all templates
-- [ ] T185 [P] Add proper meta tags and SEO optimization
-- [ ] T186 [P] Create empty state templates for events with no topics
-- [ ] T187 [P] Add proper timezone handling for all datetime displays (America/Sao_Paulo)
-- [ ] T188 [P] Implement proper i18n strings for all user-facing text (Portuguese pt-BR)
-- [ ] T189 [P] Add comprehensive integration tests for complete user journeys
-- [ ] T190 [P] Run quickstart.md validation scenarios
-- [ ] T191 [P] Performance testing: verify 1000+ topics per event without degradation
-- [ ] T192 [P] Security audit: verify UUID v6 prevents ID enumeration, verify rate limiting works
-- [ ] T193 [P] Documentation: Update README with setup instructions
-- [ ] T194 [P] Documentation: Add API documentation for HTMX endpoints (contracts)
+- [ ] T177 [P] Configure comprehensive Django admin for all models: Event, Topic, Vote, Comment, PresenterSuggestion in `events/admin.py`. Use inlines for 1:N relationships (TopicInline in EventAdmin, CommentInline and PresenterSuggestionInline in TopicAdmin). Configure list_display, list_filter, search_fields, fieldsets, readonly_fields, and prepopulated_fields for all models. Ensure complete system management through admin interface.
+- [ ] T178 [P] Add comprehensive admin actions: bulk soft delete recovery, export functionality. Configure all_objects manager for soft-deleted models in admin to access deleted records.
+- [ ] T179 [P] Implement proper error handling and user-friendly error messages across all views
+- [ ] T180 [P] Add loading indicators using HTMX hx-indicator for all HTMX requests
+- [ ] T181 [P] Optimize database queries: add composite indexes per data-model.md specifications
+- [ ] T182 [P] Add comprehensive logging for all use cases and services
+- [ ] T183 [P] Implement proper CSRF protection for all forms
+- [ ] T184 [P] Add mobile-first responsive design improvements using Pure CSS
+- [ ] T185 [P] Ensure WCAG 2.1 Level AA accessibility compliance across all templates
+- [ ] T186 [P] Add proper meta tags and SEO optimization
+- [ ] T187 [P] Create empty state templates for events with no topics
+- [ ] T188 [P] Add proper timezone handling for all datetime displays (America/Sao_Paulo)
+- [ ] T189 [P] Implement proper i18n strings for all user-facing text (Portuguese pt-BR)
+- [ ] T190 [P] Add comprehensive integration tests for complete user journeys
+- [ ] T191 [P] Run quickstart.md validation scenarios
+- [ ] T192 [P] Performance testing: verify 1000+ topics per event without degradation
+- [ ] T193 [P] Security audit: verify UUID v6 prevents ID enumeration, verify rate limiting works
+- [ ] T194 [P] Documentation: Update README with setup instructions
+- [ ] T195 [P] Documentation: Add API documentation for HTMX endpoints (contracts)
 
 ### Cross-Cutting Requirements (FR-037, FR-040-FR-044)
 
-- [ ] T195 [P] Create rate limiting middleware in `core/middleware.py` for FR-037: implement 10 topics/hour and 20 comments/hour per user
-- [ ] T196 [P] Create error message utility in `core/utils.py` for FR-040: function to generate inline error messages using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR)
-- [ ] T197 [P] Update all form templates to use error message utility (FR-040): replace generic error displays with inline semantic HTML messages
-- [ ] T198 [P] Add concurrent edit handling to edit_topic function in `events/use_cases/edit_topic.py` for FR-041: implement last-write-wins approach with optional warning if content changed
-- [ ] T199 [P] Add concurrent edit handling to edit_comment function in `events/use_cases/edit_comment.py` for FR-041: implement last-write-wins approach
-- [ ] T200 [P] Add concurrent edit handling to edit_presenter_suggestion function in `events/use_cases/edit_presenter_suggestion.py` for FR-041: implement last-write-wins approach
-- [ ] T201 [P] Create HTMX error handling middleware in `core/middleware.py` for FR-042: catch network failures and return inline error messages with retry button using semantic HTML
-- [ ] T202 [P] Update all HTMX views to handle network failures (FR-042): ensure error responses use inline semantic HTML messages with retry functionality
-- [ ] T203 [P] Create session expiration handler in `accounts/middleware.py` for FR-043: redirect to login and preserve action context for automatic execution after authentication
-- [ ] T204 [P] Update authentication views to support action preservation (FR-043): store intended action and execute after successful login
-- [ ] T205 [P] Create number formatting utility in `core/utils.py` for FR-044: function to format numbers in Portuguese (pt-BR) conventions (e.g., "1.234 votos") without abbreviations
-- [ ] T206 [P] Update TopicDTO and CommentDTO to use number formatting utility (FR-044): format vote counts (calculated from Vote records) and comment counts in pt-BR format
+- [ ] T196 [P] Create rate limiting middleware in `core/middleware.py` for FR-037: implement 10 topics/hour and 20 comments/hour per user
+- [ ] T197 [P] Create error message utility in `core/utils.py` for FR-040: function to generate inline error messages using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR)
+- [ ] T198 [P] Update all form templates to use error message utility (FR-040): replace generic error displays with inline semantic HTML messages
+- [ ] T199 [P] Add concurrent edit handling to edit_topic function in `events/use_cases/edit_topic.py` for FR-041: implement last-write-wins approach with optional warning if content changed
+- [ ] T200 [P] Add concurrent edit handling to edit_comment function in `events/use_cases/edit_comment.py` for FR-041: implement last-write-wins approach
+- [ ] T201 [P] Add concurrent edit handling to edit_presenter_suggestion function in `events/use_cases/edit_presenter_suggestion.py` for FR-041: implement last-write-wins approach
+- [ ] T202 [P] Create HTMX error handling middleware in `core/middleware.py` for FR-042: catch network failures and return inline error messages with retry button using semantic HTML
+- [ ] T203 [P] Update all HTMX views to handle network failures (FR-042): ensure error responses use inline semantic HTML messages with retry functionality
+- [ ] T204 [P] Create session expiration handler in `accounts/middleware.py` for FR-043: redirect to login and preserve action context for automatic execution after authentication
+- [ ] T205 [P] Update authentication views to support action preservation (FR-043): store intended action and execute after successful login
+- [ ] T206 [P] Create number formatting utility in `core/utils.py` for FR-044: function to format numbers in Portuguese (pt-BR) conventions (e.g., "1.234 votos") without abbreviations
+- [ ] T207 [P] Update TopicDTO and CommentDTO to use number formatting utility (FR-044): format vote counts (calculated from Vote records) and comment counts in pt-BR format
 
 ---
 
@@ -514,14 +521,14 @@ With multiple developers:
 
 ## Summary
 
-- **Total Tasks**: 206
+- **Total Tasks**: 207
 - **Tasks per User Story** (Output-First Priority Order):
   - US1 (View Topics - P1): 24 tasks
   - US3 (Vote - P1): 12 tasks
   - US6 (Readonly - P2): 6 tasks
   - US2 (Manage Topics - P2): 26 tasks
   - US4 (Comments - P2): 26 tasks
-  - US7 (Event Switch - P2): 9 tasks
+  - US7 (Event Switch - P2): 10 tasks
   - US5 (Presenters - P3): 25 tasks
   - Setup: 25 tasks
   - Foundational: 14 tasks

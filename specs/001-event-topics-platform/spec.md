@@ -52,6 +52,11 @@
 - Q: How should the system handle network failures during HTMX requests (timeout, connection lost, server unavailable)? → A: Display inline error message in Portuguese (pt-BR) with retry button, using HTMX to retry the request. Aligns with semantic HTML principles and allows recovery without page reload.
 - Q: What happens when a user's session expires during an action (vote, comment, edit)? → A: Redirect to login, after authentication return and automatically execute the original action. Preserves user context and allows completion of intended action.
 - Q: How should the system format large numbers in display (e.g., vote counts > 1000, many comments)? → A: Simple formatting in Portuguese (pt-BR) (e.g., "1.234 votos", "567 comentários") without abbreviations like "1.2k". Maintains clarity and aligns with pt-BR conventions.
+- Q: How should the system handle event switching when a user has unsaved changes (e.g., typing a comment)? → A: Warn user about unsaved changes with a confirmation dialog before switching events. User can choose to continue switching (discarding changes) or cancel to keep editing.
+- Q: How should admin access be managed? Who can access Django admin and manage content? → A: Django superuser only (created via `createsuperuser` command). Simplest for MVP, aligns with Django defaults, can be extended later if needed.
+- Q: Should users be able to edit their profile information (display name, email, etc.)? → A: No profile editing in MVP - users use SSO-provided info only. MVP focuses on topics/voting functionality.
+- Q: Should users be able to report or flag inappropriate content? → A: No reporting feature in MVP - admins monitor and remove manually via Django admin. Keeps MVP simple, can be added later if needed.
+- Q: Should the system track user analytics or usage metrics? → A: No analytics in MVP - focus on core functionality. Analytics can be added later without affecting architecture.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -197,7 +202,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - How does the system handle users who are not logged in? Non-authenticated users can view topics in readonly mode but cannot vote, comment, add topics, or suggest presenters. When they click interactive buttons/links, a popup appears inviting them to sign in or sign up.
 - What happens when an event has no topics? The event page displays an empty state message encouraging users to add the first topic.
 - How does infinite scroll handle loading states? The system loads 20 topics per batch, uses HTMX native loading indicators (hx-indicator) while fetching additional topics, and handles end-of-list gracefully when all topics are loaded. AlpineJS may be used for custom loading states if needed.
-- How does the system handle event switching when a user has unsaved changes (e.g., typing a comment)? The system should warn users about unsaved changes or auto-save draft content.
+- How does the system handle event switching when a user has unsaved changes (e.g., typing a comment)? The system warns users about unsaved changes with a confirmation dialog before switching events. Users can choose to continue switching (discarding changes) or cancel to keep editing.
 - What happens when two users edit the same content (topic/comment/suggestion) simultaneously? The system uses last-write-wins approach (no locking). The last user to save their changes overwrites previous changes. This simple approach aligns with HTMX's fast update pattern and is acceptable for MVP. Optional: system may warn user if content changed since they loaded the edit page.
 - What happens when SSO authentication fails (provider unavailable, user cancels, network error)? The system displays an inline error message using semantic HTML (`<div role="alert">`) in Portuguese (pt-BR) explaining the issue and provides a retry option without losing context.
 - How does the system handle editing of user content? Users can edit their own topics, comments, and presenter suggestions on dedicated pages (not modals). The browser back button works seamlessly, and HTMX is used to minimize page refreshes during transitions.
@@ -235,7 +240,7 @@ A logged-in user can switch between different events using an event selector. Ea
 - **FR-011**: System MUST support multiple events, each with a unique URL slug
 - **FR-012**: System MUST allow users to switch between events using an event selector. Use HTMX-first approach: native HTML select with hx-get/hx-trigger to load content when event is selected. AlpineJS only if explicitly requested.
 - **FR-013**: System MUST display topics specific to the selected event
-- **FR-014**: System MUST provide comprehensive Django admin interface for admins to manage all models (topics, comments, presenter suggestions, users, events, votes). Admin interfaces MUST provide excellent support for one-to-many relationships using inlines, enabling complete system management through the admin interface without requiring direct database access or custom scripts. All models MUST be registered with appropriate configuration: list_display, list_filter, search_fields, fieldsets, and inlines for related objects.
+- **FR-014**: System MUST provide comprehensive Django admin interface for superusers to manage all models (topics, comments, presenter suggestions, users, events, votes). Admin access is limited to Django superusers (created via `createsuperuser` command). Admin interfaces MUST provide excellent support for one-to-many relationships using inlines, enabling complete system management through the admin interface without requiring direct database access or custom scripts. All models MUST be registered with appropriate configuration: list_display, list_filter, search_fields, fieldsets, and inlines for related objects.
 - **FR-036**: System MUST implement soft delete for topics, comments, and presenter suggestions (marked as deleted, hidden from regular users, recoverable by admins)
 - **FR-037**: System MUST implement rate limiting to prevent abuse: maximum 10 topics per hour per user, maximum 20 comments per hour per user
 - **FR-040**: System MUST display error messages inline below the relevant field/area using semantic HTML (`<div role="alert">` or similar) in Portuguese (pt-BR) for accessibility and progressive enhancement
@@ -288,6 +293,10 @@ A logged-in user can switch between different events using an event selector. Ea
 
 - Users have Google or LinkedIn accounts for SSO authentication
 - Event organizers will use Django admin for content management and moderation
+- Admin access is limited to Django superusers (created via `createsuperuser` command)
+- Users cannot edit their profile information in MVP - they use SSO-provided information only
+- No content reporting/flagging feature in MVP - admins monitor and remove inappropriate content manually via Django admin
+- No analytics or usage tracking in MVP - focus on core functionality
 - Topics do not require approval before appearing in the list (admins can remove inappropriate content)
 - Presenter suggestions are informational only and do not require validation or contact
 - The system starts with one event (Python Floripa) but architecture supports multiple events from launch
