@@ -6,7 +6,7 @@ import pytest
 from django.db import IntegrityError
 from model_bakery import baker
 
-from events.models import Event, Topic
+from events.models import Event, Topic, Vote
 
 
 @pytest.mark.django_db
@@ -214,3 +214,66 @@ class TestTopicModel:
 
         topics = list(Topic.objects.all())
         assert topics[0].created_at >= topics[1].created_at
+
+
+@pytest.mark.django_db
+class TestVoteModel:
+    """Tests for Vote model."""
+
+    def test_vote_has_uuid_v6_primary_key(self) -> None:
+        event = baker.make("events.Event")
+        user = baker.make("accounts.User")
+        topic = baker.make("events.Topic", event=event, creator=user)
+        vote = baker.make("events.Vote", topic=topic, user=user)
+        assert vote.id is not None
+        assert str(vote.id).count("-") == 4
+        assert vote.id.version == 6
+
+    def test_vote_primary_key_is_not_editable(self) -> None:
+        event = baker.make("events.Event")
+        user = baker.make("accounts.User")
+        topic = baker.make("events.Topic", event=event, creator=user)
+        baker.make("events.Vote", topic=topic, user=user)
+        field = Vote._meta.get_field("id")
+        assert field.editable is False
+
+    def test_vote_has_created_at(self) -> None:
+        event = baker.make("events.Event")
+        user = baker.make("accounts.User")
+        topic = baker.make("events.Topic", event=event, creator=user)
+        vote = baker.make("events.Vote", topic=topic, user=user)
+        assert vote.created_at is not None
+
+    def test_vote_has_topic_foreign_key(self) -> None:
+        event = baker.make("events.Event")
+        user = baker.make("accounts.User")
+        topic = baker.make("events.Topic", event=event, creator=user)
+        vote = baker.make("events.Vote", topic=topic, user=user)
+        assert vote.topic == topic
+
+    def test_vote_topic_is_required(self) -> None:
+        user = baker.make("accounts.User")
+        with pytest.raises(IntegrityError):
+            baker.make("events.Vote", topic=None, user=user)
+
+    def test_vote_has_user_foreign_key(self) -> None:
+        event = baker.make("events.Event")
+        user = baker.make("accounts.User")
+        topic = baker.make("events.Topic", event=event, creator=user)
+        vote = baker.make("events.Vote", topic=topic, user=user)
+        assert vote.user == user
+
+    def test_vote_user_is_required(self) -> None:
+        event = baker.make("events.Event")
+        user = baker.make("accounts.User")
+        topic = baker.make("events.Topic", event=event, creator=user)
+        with pytest.raises(IntegrityError):
+            baker.make("events.Vote", topic=topic, user=None)
+
+    def test_vote_unique_constraint_topic_user(self) -> None:
+        event = baker.make("events.Event")
+        user = baker.make("accounts.User")
+        topic = baker.make("events.Topic", event=event, creator=user)
+        baker.make("events.Vote", topic=topic, user=user)
+        with pytest.raises(IntegrityError):
+            baker.make("events.Vote", topic=topic, user=user)

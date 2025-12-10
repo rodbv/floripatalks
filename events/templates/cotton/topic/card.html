@@ -7,7 +7,10 @@ Props:
 - title: Topic title
 - description: Topic description (optional)
 - vote_count: Number of votes
+- has_voted: Whether current user has voted (boolean)
 - creator_username: Username of topic creator
+- creator_display_name: Display name of topic creator
+- creator_avatar_url: Avatar URL of topic creator (optional)
 - event_slug: Event slug
 - created_at: Creation timestamp
 {% endcomment %}
@@ -16,13 +19,24 @@ Props:
 
 <article class="topic-card">
     <header class="topic-card-header">
+        <div class="topic-header-content">
+            <div class="topic-creator-info">
+                {% if creator_avatar_url %}
+                    <img src="{{ creator_avatar_url }}" alt="{{ creator_display_name|default:creator_username }}" class="creator-avatar" loading="lazy">
+                {% else %}
+                    <div class="creator-avatar creator-avatar-placeholder">
+                        <span class="avatar-initial">{{ creator_display_name|default:creator_username|first|upper }}</span>
+                    </div>
+                {% endif %}
+                <div class="creator-details">
+                    <span class="creator-name">{{ creator_display_name|default:creator_username }}</span>
+                    <time class="topic-date" datetime="{{ created_at }}">{{ created_at|date:"d/m/Y" }}</time>
+                </div>
+            </div>
+        </div>
         <h3 class="topic-title">
             <a href="#">{{ title }}</a>
         </h3>
-        <div class="topic-meta">
-            <span class="topic-creator">por {{ creator_username }}</span>
-            <time class="topic-date" datetime="{{ created_at }}">{{ created_at }}</time>
-        </div>
     </header>
 
     {% if description %}
@@ -33,13 +47,14 @@ Props:
 
     <footer class="topic-card-footer">
         <div class="topic-stats">
-            <span class="vote-count">{{ vote_count|format_vote_count }}</span>
+            <span class="vote-count" id="vote-count-{{ slug }}">{{ vote_count|format_vote_count }}</span>
+            {% load cotton %}
+            <c-topic.vote-button
+                topic-slug="{{ slug }}"
+                has-voted="{{ has_voted|yesno:'true,false' }}"
+                vote-count="{{ vote_count }}"
+            ></c-topic.vote-button>
             <span class="comment-count">0 comentários</span>
-        </div>
-        <div class="topic-actions">
-            <button class="vote-button" data-requires-auth="true">
-                Votar
-            </button>
         </div>
     </footer>
 </article>

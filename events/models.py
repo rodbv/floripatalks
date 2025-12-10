@@ -69,3 +69,35 @@ class Topic(SoftDeleteModel):
                 self.slug = f"{base_slug}-{counter}"
                 counter += 1
         super().save(*args, **kwargs)
+
+
+class Vote(BaseModel):
+    """
+    Represents a user's vote on a topic.
+
+    Inherits from BaseModel for UUID v6 primary key and timestamps.
+    Votes are hard-deleted when users un-vote (no soft delete).
+    """
+
+    topic = models.ForeignKey(
+        Topic, on_delete=models.CASCADE, related_name="votes", verbose_name="Tópico"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="votes",
+        verbose_name="Usuário",
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Voto"
+        verbose_name_plural = "Votos"
+        unique_together = [["topic", "user"]]
+        indexes = [
+            models.Index(fields=["topic", "user"]),
+            models.Index(fields=["topic"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.user.username} voted on {self.topic.title}"

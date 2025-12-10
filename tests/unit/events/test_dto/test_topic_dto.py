@@ -33,7 +33,10 @@ class TestTopicDTO:
             title=topic.title,
             description=topic.description,
             vote_count=0,
+            has_voted=False,
             creator_username=user.username,
+            creator_display_name=user.username,
+            creator_avatar_url=None,
             event_slug=event.slug,
             event_name=event.name,
             created_at=topic.created_at,
@@ -61,7 +64,10 @@ class TestTopicDTO:
             title=topic.title,
             description=None,
             vote_count=0,
+            has_voted=False,
             creator_username=user.username,
+            creator_display_name=user.username,
+            creator_avatar_url=None,
             event_slug=event.slug,
             event_name=event.name,
             created_at=topic.created_at,
@@ -80,7 +86,9 @@ class TestGetTopicsForEventNPlusOnePrevention:
         user = baker.make("accounts.User")
         baker.make("events.Topic", event=event, creator=user)
 
-        with assertNumQueries(2):  # 1 for event, 1 for topics with select_related
+        with assertNumQueries(
+            3
+        ):  # 1 for event, 1 for topics with select_related, 1 for social accounts prefetch
             dtos = get_topics_for_event("test-event")
 
         assert len(dtos) == 1
@@ -99,7 +107,9 @@ class TestGetTopicsForEventNPlusOnePrevention:
         baker.make("events.Topic", event=event, creator=user2, _quantity=2)
         baker.make("events.Topic", event=event, creator=user3, _quantity=1)
 
-        with assertNumQueries(2):  # 1 for event, 1 for topics with select_related
+        with assertNumQueries(
+            3
+        ):  # 1 for event, 1 for topics with select_related, 1 for social accounts prefetch
             dtos = get_topics_for_event("test-event")
 
         assert len(dtos) == 6
@@ -113,7 +123,9 @@ class TestGetTopicsForEventNPlusOnePrevention:
         user = baker.make("accounts.User")
         baker.make("events.Topic", event=event, creator=user, _quantity=2)
 
-        with assertNumQueries(2):  # 1 for event, 1 for topics with select_related
+        with assertNumQueries(
+            3
+        ):  # 1 for event, 1 for topics with select_related, 1 for social accounts prefetch
             dtos = get_topics_for_event("test-event")
 
         assert len(dtos) >= 2
@@ -126,7 +138,9 @@ class TestGetTopicsForEventNPlusOnePrevention:
         """Verify get_topics_for_event handles empty event without N+1 queries."""
         baker.make("events.Event", slug="empty-event")
 
-        with assertNumQueries(2):  # 1 for event, 1 for topics query (empty result)
+        with assertNumQueries(
+            2
+        ):  # 1 for event, 1 for topics query (returns empty, but query still runs)
             dtos = get_topics_for_event("empty-event")
 
         assert len(dtos) == 0
@@ -138,12 +152,16 @@ class TestGetTopicsForEventNPlusOnePrevention:
         user = baker.make("accounts.User")
         baker.make("events.Topic", event=event, creator=user, _quantity=25)
 
-        with assertNumQueries(2):  # 1 for event, 1 for topics with limit
+        with assertNumQueries(
+            3
+        ):  # 1 for event, 1 for topics with limit, 1 for social accounts prefetch
             dtos = get_topics_for_event("test-event", offset=0, limit=20)
 
         assert len(dtos) == 20
 
-        with assertNumQueries(2):  # 1 for event, 1 for topics with offset/limit
+        with assertNumQueries(
+            3
+        ):  # 1 for event, 1 for topics with offset/limit, 1 for social accounts prefetch
             dtos = get_topics_for_event("test-event", offset=20, limit=20)
 
         assert len(dtos) == 5
@@ -154,7 +172,7 @@ class TestGetTopicsForEventNPlusOnePrevention:
         user = baker.make("accounts.User", username="creator")
         baker.make("events.Topic", event=event, creator=user, title="Test Topic")
 
-        with assertNumQueries(2):  # Only the initial queries (1 for event, 1 for topics)
+        with assertNumQueries(3):  # 1 for event, 1 for topics, 1 for social accounts prefetch
             dtos = get_topics_for_event("test-event")
             dto = dtos[0]
 

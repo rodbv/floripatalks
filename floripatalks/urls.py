@@ -7,10 +7,18 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import include, path
 
+from events.models import Event
+
 
 def home(request: HttpRequest) -> HttpResponse:
-    """Temporary home view for testing."""
-    return render(request, "home.html")
+    """
+    Home page displaying list of events.
+
+    Shows all available events as clickable links for easy navigation.
+    """
+    events = Event.objects.all().order_by("-created_at")
+    context = {"events": events}
+    return render(request, "home.html", context)
 
 
 urlpatterns = [

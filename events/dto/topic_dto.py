@@ -21,7 +21,10 @@ class TopicDTO:
     title: str
     description: str | None
     vote_count: int
+    has_voted: bool
     creator_username: str
+    creator_display_name: str
+    creator_avatar_url: str | None
     event_slug: str
     event_name: str
     created_at: datetime
