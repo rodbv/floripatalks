@@ -65,12 +65,21 @@ SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": ["profile", "email"],
         "AUTH_PARAMS": {"access_type": "online"},
+        "APP": {
+            "client_id": "",  # Set via GOOGLE_CLIENT_ID environment variable
+            "secret": "",  # Set via GOOGLE_CLIENT_SECRET environment variable
+        },
         # OAUTH_PKCE_ENABLED is recommended for enhanced security
         # Add this if you want to enable PKCE (recommended):
         # "OAUTH_PKCE_ENABLED": True,
     },
 }
 ```
+
+**Important**: This project uses the **settings-based configuration** (not database-based). This means:
+- ✅ **Environment variables are sufficient** - no need to add SocialApplication records in Django admin
+- ✅ Credentials are loaded from `.env` file automatically
+- ✅ No database setup required for OAuth credentials
 
 **Note**: PKCE (Proof Key for Code Exchange) is recommended for enhanced security. To enable it, uncomment the `OAUTH_PKCE_ENABLED` line in `floripatalks/settings/base.py`.
 
@@ -182,6 +191,11 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 ```
+
+**Important**: This project uses the **settings-based configuration** (not database-based). This means:
+- ✅ **Environment variables are sufficient** - no need to add SocialApplication records in Django admin
+- ✅ Credentials are loaded from `.env` file automatically
+- ✅ No database setup required for OAuth credentials
 
 ### 2.3 Set Environment Variables
 
