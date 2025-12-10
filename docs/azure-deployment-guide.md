@@ -482,9 +482,13 @@ This is the simplest approach since the workflow file already exists in the repo
 
 **Why**: Allows GitHub Actions to authenticate and deploy to Azure without storing credentials in your code repository
 
-**Note**: If you used Option A (Azure Portal auto-setup), Azure may have already configured the secrets automatically. Check your GitHub repository's Secrets section to verify.
+**⚠️ Skip this step if you used Option A** (Use available workflow via Azure Portal) - Azure automatically configures the GitHub secrets for you. You can proceed directly to Step 5.
 
-**Get Publish Profile from Azure Portal** (if not auto-configured):
+**Only follow this step if**:
+- You used Option C (manual setup) and need to configure secrets manually
+- The auto-configuration from Option A didn't work (verify in GitHub → Settings → Secrets and variables → Actions)
+
+**Get Publish Profile from Azure Portal**:
 - Navigate: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Get publish profile** (top menu)
 - Download the `.PublishSettings` file
 - Open the file and copy the entire XML content
