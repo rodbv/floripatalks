@@ -101,7 +101,7 @@ This guide provides hands-on experience with these **Azure Developer Associate (
 
 1. **Azure App Service** (Web App)
    - Hosts Django application
-   - Python 3.12 runtime
+   - Python 3.13 runtime
    - Handles HTTP requests
    - **Region**: Brazil South (for Brazilian users - lower latency)
 
@@ -268,7 +268,7 @@ This guide provides hands-on experience with these **Azure Developer Associate (
    - **What**: The actual web application hosting service that runs your Django app
    - **Why**: Provides managed hosting with automatic scaling, SSL, and deployment features without managing servers
    - Portal: [Create Web App](https://portal.azure.com/#create/Microsoft.WebSite)
-   - Or: Search "Web App" → Create → Resource Group: `floripatalks-rg`, Name: `floripatalks-app`, Runtime: `Python 3.12`, Region: `Brazil South`, App Service Plan: `floripatalks-plan`
+   - Or: Search "Web App" → Create → Resource Group: `floripatalks-rg`, Name: `floripatalks-app`, Runtime: `Python 3.13`, Region: `Brazil South`, App Service Plan: `floripatalks-plan`
 
 **Via Azure CLI** (Alternative):
 ```bash
@@ -293,7 +293,7 @@ az webapp create \
   --name floripatalks-app \
   --resource-group floripatalks-rg \
   --plan floripatalks-plan \
-  --runtime "PYTHON:3.12" \
+  --runtime "PYTHON:3.13" \
   --location brazilsouth
 ```
 
@@ -367,7 +367,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: floripatalks-app
-  PYTHON_VERSION: '3.12'
+  PYTHON_VERSION: '3.13'
 
 jobs:
   build-and-deploy:
@@ -1252,7 +1252,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: Install uv
         uses: astral-sh/setup-uv@v4

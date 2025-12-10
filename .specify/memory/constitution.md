@@ -54,7 +54,7 @@ All Python code MUST use type annotations:
 - Functions and methods MUST have type hints for parameters and return values
 - Class attributes SHOULD have type hints
 - Use `typing` module for complex types (Optional, List, Dict, etc.)
-- Use modern Python 3.12+ syntax when available (e.g., `list[str]` instead of `List[str]`)
+- Use modern Python 3.14+ syntax when available (e.g., `list[str]` instead of `List[str]`, generics)
 - Type annotations help with IDE support, static analysis, and code documentation
 - Pre-commit hooks will check type annotations via ruff
 

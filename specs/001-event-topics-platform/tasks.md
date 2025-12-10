@@ -43,7 +43,7 @@
 
 ### Initial Project Setup
 
-- [x] T001 Initialize Python project with `uv`: create `pyproject.toml` with Python 3.12+ requirement
+- [x] T001 Initialize Python project with `uv`: create `pyproject.toml` with Python 3.13+ requirement
 - [x] T002 [P] Add Django to project using `uv add django` (adds to `pyproject.toml` and installs)
 - [x] T003 [P] Add django-allauth using `uv add django-allauth` for SSO authentication
 - [x] T004 [P] Add django-cotton using `uv add django-cotton` for component-based UI
@@ -84,7 +84,7 @@
 
 - [x] T025 [P] Create `.github/workflows/ci.yml` with workflow to:
   - Run on push and pull requests
-  - Setup Python 3.12+ with uv
+  - Setup Python 3.13+ with uv
   - Install dependencies with `uv sync`
   - Run tests with `pytest` via `just test`
   - Run linting/formatting checks

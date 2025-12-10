@@ -3,7 +3,7 @@ name = "floripatalks"
 version = "0.1.0"
 description = "Event topics platform for local Python community events"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "django>=6.0",
     "django-allauth>=65.13.1",
@@ -21,10 +21,10 @@ dev = ["pre-commit>=4.5.0", "ruff>=0.8.4"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py313"
 exclude = [
-    "*.md",  # Exclude markdown files
-    "*.mdx",  # Exclude MDX files
+    "*.md",        # Exclude markdown files
+    "*.mdx",       # Exclude MDX files
     ".venv",
     ".git",
     "__pycache__",

@@ -248,7 +248,7 @@ static/
 **Implementation**:
 - All functions and methods must have type hints
 - DTOs (dataclasses) must have type annotations for all fields
-- Use modern Python 3.12+ syntax (`list[str]` instead of `List[str]`)
+- Use modern Python 3.13+ syntax (`list[str]` instead of `List[str]`)
 - Pre-commit hooks enforce type annotations via ruff
 
 ## No Additional Research Needed
