@@ -23,7 +23,7 @@ Follow-up TODOs: None
 - **Backend Framework**: Django
 - **Testing Framework**: pytest
 - **Frontend Enhancement**: HTMX
-- **Client-Side State**: AlpineJS (when needed)
+- **Client-Side State**: AlpineJS (minimized, only when explicitly requested)
 - **Component System**: Django-Cotton
 - **Package Manager**: uv
 - **Task Runner**: justfile
@@ -257,18 +257,44 @@ Events and topics MUST use Django SlugField for URL-friendly identifiers:
 
 **Rationale**: Slugs provide human-readable, SEO-friendly URLs while maintaining security through UUID primary keys. Users can share meaningful URLs (e.g., `/events/python-floripa/`) while the system uses UUIDs internally for security. This follows Django best practices for URL design.
 
-### XV. AlpineJS for Client-Side State Management
+### XV. AlpineJS for Client-Side State Management (Optional)
 
-AlpineJS MUST be used for simple client-side state control and interactions when server communication is not required:
+**Primary Principle**: This project is a showcase of HTMX and hypermedia capabilities. AlpineJS is **optional** and should be used **only when explicitly requested** by the developer.
 
-- Use AlpineJS for local UI state management (toggles, dropdowns, form validation feedback, etc.)
-- Serve AlpineJS from static files (not CDN) for better control and offline capability
-- Prefer HTMX for server-driven interactions; use AlpineJS only when client-side state is sufficient
-- Keep AlpineJS usage minimal and focused on simple state management
-- AlpineJS directives (`x-data`, `x-show`, `x-if`, `x-for`, etc.) should be used inline in templates
-- Do not create complex AlpineJS components - prefer Django-Cotton components for reusable UI patterns
+- **HTMX First**: Always explore HTMX solutions first (hypermedia, HTML fragments, server-driven interactions)
+- **AlpineJS as Last Resort**: Use AlpineJS only when explicitly requested, after demonstrating that HTMX cannot solve the problem elegantly
+- **Showcase Hypermedia**: Prioritize demonstrating the power of HTMX, small HTML fragments, and server-driven UI updates
+- **Static Files**: When AlpineJS is used, serve it from static files (not CDN) for better control and offline capability
+- **Inline Directives**: AlpineJS directives (`x-data`, `x-show`, `x-if`, `x-for`, etc.) should be used inline in templates when needed
+- **No Complex Components**: Do not create complex AlpineJS components - prefer Django-Cotton components or HTMX patterns
 
-**Rationale**: AlpineJS provides lightweight client-side reactivity without the overhead of larger JavaScript frameworks. It complements HTMX by handling simple UI state (modals, dropdowns, form toggles) that don't require server communication. Serving from static files ensures better control, versioning, and offline capability. Keeping AlpineJS usage minimal maintains the simplicity of the HTMX hypermedia approach.
+**Rationale**: This project aims to showcase how far HTMX and hypermedia can go before needing client-side JavaScript. AlpineJS is optional and should be used only when explicitly requested to demonstrate the power of server-driven interactions, HTML fragments, and the hypermedia approach. Only use AlpineJS when explicitly requested by the developer after exploring HTMX solutions.
+
+### XVI. Semantic HTML and Modern HTML Controls
+
+All HTML MUST use semantic elements and modern HTML5 controls to leverage native browser capabilities:
+
+- **Semantic HTML**: Use appropriate semantic elements (`<header>`, `<nav>`, `<main>`, `<article>`, `<section>`, `<aside>`, `<footer>`, `<form>`, `<button>`, etc.) instead of generic `<div>` elements when semantically appropriate
+- **Modern HTML Controls**: Use native HTML5 input types and controls to avoid unnecessary JavaScript validators:
+  - `<input type="email">` for email addresses
+  - `<input type="url">` for URLs
+  - `<input type="tel">` for phone numbers
+  - `<input type="number">` for numeric input
+  - `<input type="date">` for date selection
+  - `<input type="time">` for time selection
+  - `<input type="datetime-local">` for date and time
+  - `<input type="color">` for color selection
+  - `<input type="range">` for numeric ranges
+  - `<input type="search">` for search inputs
+  - `<input type="password">` for password fields
+  - `<textarea>` with appropriate attributes for multi-line text
+  - `<select>` for dropdown selections
+  - `<datalist>` for autocomplete suggestions
+- **Native Validation**: Leverage HTML5 native validation attributes (`required`, `min`, `max`, `minlength`, `maxlength`, `pattern`, etc.) instead of custom JavaScript validators when possible
+- **Accessibility**: Semantic HTML improves accessibility by providing proper structure for screen readers and assistive technologies
+- **Progressive Enhancement**: Native controls work without JavaScript, ensuring core functionality is always available
+
+**Rationale**: Semantic HTML improves accessibility, SEO, and code maintainability. Modern HTML5 controls provide native browser validation, better mobile experience (e.g., native date pickers on mobile), and reduce the need for custom JavaScript validators. This approach aligns with progressive enhancement principles and reduces client-side complexity while improving user experience across devices.
 
 ## Development Workflow
 
@@ -421,4 +447,4 @@ This constitution follows semantic versioning (MAJOR.MINOR.PATCH):
 
 This constitution supersedes all other development practices and guidelines. When conflicts arise, the constitution takes precedence. All team members and contributors are expected to follow these principles.
 
-**Version**: 1.6.1 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09
+**Version**: 1.7.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09

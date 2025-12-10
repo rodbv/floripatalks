@@ -103,15 +103,15 @@ FloripaTalks is a mobile-first web application for managing talk topics for loca
 - **Status**: COMPLIANT
 - **Verification**: Events and topics use SlugField for URLs, slugs auto-generated from titles with uniqueness guarantee
 
-### ✅ XV. AlpineJS for Client-Side State Management
+### ✅ XV. AlpineJS for Client-Side State Management (Optional)
 - **Status**: COMPLIANT
-- **Verification**: AlpineJS used for simple client-side state (popups, toggles, form validation, modals), served from static files
-- **Usage Patterns**:
-  - Sign-in popups: AlpineJS for toggle (x-show/x-if), HTMX for authentication
-  - Form validation: AlpineJS for client-side feedback, HTMX for submission
-  - Event selector: AlpineJS for dropdown toggle, HTMX to load content
-  - Confirmation dialogs: AlpineJS for modal toggle, HTMX to execute action
-  - Loading indicators: HTMX native (hx-indicator) as default, AlpineJS optional for custom states
+- **Verification**: AlpineJS is optional and used only when explicitly requested. HTMX prioritized for all interactions.
+- **Usage Patterns** (HTMX-first):
+  - Sign-in popups: HTMX to load modal fragment. AlpineJS only if explicitly requested.
+  - Form validation: HTMX for server-side validation. AlpineJS only if explicitly requested.
+  - Event selector: HTMX with native HTML select. AlpineJS only if explicitly requested.
+  - Confirmation dialogs: HTMX to load dialog fragment. AlpineJS only if explicitly requested.
+  - Loading indicators: HTMX native (hx-indicator) as default. AlpineJS only if explicitly requested.
 
 **Overall Status**: ✅ ALL GATES PASSED - Ready for implementation
 

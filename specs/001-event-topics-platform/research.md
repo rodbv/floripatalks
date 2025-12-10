@@ -104,30 +104,31 @@ All technical decisions align with the constitution and existing specifications.
 - Hard delete: Rejected - no recovery option
 - Separate archive table: Rejected - unnecessary complexity for MVP
 
-### AlpineJS for Client-Side State Management
+### AlpineJS for Client-Side State Management (Optional)
 
-**Decision**: Use AlpineJS for simple client-side state and interactions when server communication is not required
+**Decision**: AlpineJS is **optional** and should be used **only when explicitly requested** by the developer. This project prioritizes showcasing HTMX and hypermedia capabilities.
 
 **Rationale**:
-- Aligns with constitution principle XV (AlpineJS for Client-Side State Management)
-- Complements HTMX by handling UI state that doesn't need server communication
-- Lightweight (small bundle size) compared to larger JavaScript frameworks
-- Served from static files for better control and offline capability
-- Minimal usage maintains simplicity of HTMX hypermedia approach
+- This project is a showcase of HTMX and hypermedia power
+- AlpineJS should be used only when HTMX cannot elegantly solve a problem
+- Prioritize demonstrating server-driven interactions, HTML fragments, and hypermedia patterns
+- AlpineJS remains optional to showcase HTMX capabilities
+- Served from static files when used (not CDN) for better control and offline capability
 
-**Implementation Patterns** (based on clarifications):
-- **Sign-in popups**: AlpineJS (`x-show`/`x-if`) for toggle, HTMX for authentication flow
-- **Form validation**: AlpineJS for real-time client-side feedback (character count, validation), HTMX for submission
-- **Event selector**: AlpineJS for dropdown toggle, HTMX to load selected event content
-- **Confirmation dialogs**: AlpineJS for modal toggle, HTMX to execute confirmed actions
-- **Loading indicators**: HTMX native (`hx-indicator`) as default, AlpineJS optional for custom states
+**Implementation Patterns** (HTMX-first approach):
+- **Sign-in popups**: HTMX to load modal fragment from server. AlpineJS only if explicitly requested.
+- **Form validation**: HTMX for server-side validation with error fragments. Character count via HTML/CSS or vanilla JS. AlpineJS only if explicitly requested.
+- **Event selector**: HTMX with native HTML select (hx-get/hx-trigger) to load content. AlpineJS only if explicitly requested.
+- **Confirmation dialogs**: HTMX to load confirmation dialog fragment from server. AlpineJS only if explicitly requested.
+- **Loading indicators**: HTMX native (`hx-indicator`) as default. AlpineJS only if explicitly requested.
 
-**General Rule**: AlpineJS for client-side UI state (no server communication), HTMX for all server interactions.
+**General Rule**: **HTMX first, AlpineJS only when explicitly requested**. Showcase hypermedia and server-driven interactions.
 
 **Alternatives considered**:
-- Vanilla JavaScript: Rejected - AlpineJS provides better reactivity with less code
-- Larger frameworks (React, Vue): Rejected - too heavy for simple state management needs
-- HTMX for everything: Rejected - some UI interactions (popups, toggles) don't need server communication
+- HTMX for everything: **Preferred** - This is the project's primary goal
+- AlpineJS for client-side state: Optional - use only when explicitly requested
+- Vanilla JavaScript: Acceptable for simple interactions if HTMX cannot handle it
+- Larger frameworks (React, Vue): Rejected - too heavy, contradicts project goals
 
 ### Rate Limiting
 
