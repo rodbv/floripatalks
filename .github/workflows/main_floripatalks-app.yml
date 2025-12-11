@@ -36,12 +36,6 @@ jobs:
       run: |
         uv run pytest
 
-    - name: Generate requirements.txt for Azure
-      run: |
-        # Generate requirements.txt from uv.lock for Azure App Service auto-install
-        # Azure App Service auto-detects and installs from requirements.txt
-        uv export --format requirements-txt --no-dev -o requirements.txt
-
     - name: Collect static files
       run: |
         uv run python manage.py collectstatic --noinput

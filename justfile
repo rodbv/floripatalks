@@ -94,6 +94,15 @@ add package:
 remove package:
     uv remove {{package}}
 
+# Regenerate requirements.txt from uv.lock
+# This should be run after adding/removing dependencies to keep requirements.txt in sync
+# Usage: just update-requirements
+update-requirements:
+    @echo "Regenerating requirements.txt from uv.lock..."
+    uv export --format requirements-txt --no-dev -o requirements.txt
+    @echo "✅ requirements.txt updated!"
+    @echo "⚠️  Remember to commit this file to keep it in sync with uv.lock"
+
 # Create superuser
 superuser:
     uv run python manage.py createsuperuser

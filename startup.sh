@@ -11,17 +11,16 @@ echo "🚀 Starting FloripaTalks application..."
 # Change to app directory (Azure deploys to /home/site/wwwroot)
 cd /home/site/wwwroot || cd "$(dirname "$0")"
 
-# Install dependencies if requirements.txt exists and packages aren't installed
-# Azure usually auto-installs from requirements.txt, but this ensures they're present
+# Install dependencies from requirements.txt
+# Azure should auto-install, but we ensure it happens here
 if [ -f "requirements.txt" ]; then
-    echo "📦 Checking/installing dependencies from requirements.txt..."
-    # Check if Django is installed, if not, install all dependencies
-    if ! python -c "import django" 2>/dev/null; then
-        echo "   Installing dependencies (Django not found)..."
-        pip install --no-cache-dir -r requirements.txt
-    else
-        echo "   Dependencies already installed ✓"
-    fi
+    echo "📦 Installing dependencies from requirements.txt..."
+    pip install --no-cache-dir -r requirements.txt
+    echo "   Dependencies installed ✓"
+else
+    echo "⚠️  WARNING: requirements.txt not found! Dependencies may not be installed."
+    echo "   Attempting to install Django and Gunicorn as fallback..."
+    pip install --no-cache-dir django gunicorn || true
 fi
 
 # Run database migrations (required - not done in CI/CD)
