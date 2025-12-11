@@ -94,3 +94,6 @@ node_modules/
 package-lock.json
 yarn.lock
 docs/*secret*
+docs/azure-secrets.txt
+docs/azure-credentials.json
+docs/azure-secrets-template.json
