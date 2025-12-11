@@ -53,10 +53,24 @@ jobs:
 
     - name: Configure Azure App Service startup command
       run: |
-        az webapp config set \
+        # Get current startup command
+        CURRENT_STARTUP=$(az webapp config show \
           --resource-group ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} \
           --name ${{ env.AZURE_WEBAPP_NAME }} \
-          --startup-file "bash startup.sh"
+          --query "linuxFxVersion" -o tsv || echo "")
+
+        # Only set if it's not already set correctly
+        if [ "$CURRENT_STARTUP" != "bash startup.sh" ]; then
+          echo "Setting startup command to 'bash startup.sh'..."
+          az webapp config set \
+            --resource-group ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} \
+            --name ${{ env.AZURE_WEBAPP_NAME }} \
+            --startup-file "bash startup.sh"
+          echo "Waiting 10 seconds for SCM container to stabilize..."
+          sleep 10
+        else
+          echo "Startup command already configured correctly, skipping..."
+        fi
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
