@@ -43,6 +43,7 @@ class AzureProxyHeaderMiddleware:
             # Django's SECURE_PROXY_SSL_HEADER looks for HTTP_X_FORWARDED_PROTO in request.META
             # Azure should set this automatically, but if it's missing, we set it to prevent redirects
             # This is safe because Azure's httpsOnly ensures all external requests are HTTPS
+            # IMPORTANT: Check request.META, not request.headers (Django uses META for these headers)
             has_header = "x-forwarded-proto" in request.headers
             header_value = request.headers.get("x-forwarded-proto", "NOT SET")
             request_scheme = request.scheme
