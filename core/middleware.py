@@ -5,6 +5,7 @@ Sets X-Forwarded-Proto header if missing to prevent redirect loops with Azure Ap
 """
 
 import logging
+import sys
 from collections.abc import Callable
 
 from django.http import HttpRequest, HttpResponse
@@ -12,6 +13,8 @@ from django.http import HttpRequest, HttpResponse
 logger = logging.getLogger(__name__)
 
 # Print at module load to confirm middleware is being imported
+sys.stderr.write("✅ AzureProxyHeaderMiddleware module loaded\n")
+sys.stderr.flush()
 print("✅ AzureProxyHeaderMiddleware module loaded", flush=True)
 
 

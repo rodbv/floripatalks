@@ -4,10 +4,16 @@ Django production settings for Azure App Service.
 
 import os
 
-from .base import *
-
 # VERSION CHECK: This print confirms the latest code is deployed
 # If you see this in logs, the latest production.py is loaded
+import sys
+
+from .base import *
+
+sys.stderr.write("=" * 80 + "\n")
+sys.stderr.write("🚀 PRODUCTION SETTINGS LOADED - Latest version with middleware logging\n")
+sys.stderr.write("=" * 80 + "\n")
+sys.stderr.flush()
 print("=" * 80, flush=True)
 print("🚀 PRODUCTION SETTINGS LOADED - Latest version with middleware logging", flush=True)
 print("=" * 80, flush=True)
@@ -21,8 +27,28 @@ if "django_extensions" in INSTALLED_APPS:
 
 # Add Azure proxy header middleware (must be before SecurityMiddleware)
 print("🔧 Production settings: Adding AzureProxyHeaderMiddleware to MIDDLEWARE...", flush=True)
+sys.stderr.write("🔧 Production settings: Adding AzureProxyHeaderMiddleware to MIDDLEWARE...\n")
+sys.stderr.flush()
+
+# Test if middleware can be imported
+try:
+    from core.middleware import AzureProxyHeaderMiddleware  # noqa: F401
+
+    print("✅ Middleware import test: SUCCESS", flush=True)
+    sys.stderr.write("✅ Middleware import test: SUCCESS\n")
+    sys.stderr.flush()
+except Exception as e:
+    print(f"❌ Middleware import test: FAILED - {e}", flush=True)
+    sys.stderr.write(f"❌ Middleware import test: FAILED - {e}\n")
+    sys.stderr.flush()
+    import traceback
+
+    traceback.print_exc()
+
 MIDDLEWARE.insert(0, "core.middleware.AzureProxyHeaderMiddleware")
 print(f"✅ Production settings: Middleware added. First middleware: {MIDDLEWARE[0]}", flush=True)
+sys.stderr.write(f"✅ Production settings: Middleware added. First middleware: {MIDDLEWARE[0]}\n")
+sys.stderr.flush()
 
 # Security
 DEBUG = False
