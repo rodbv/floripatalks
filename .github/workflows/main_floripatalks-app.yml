@@ -51,6 +51,55 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Create optimized deployment package
+      run: |
+        # Create a deployment package excluding unnecessary files
+        # This significantly reduces upload time and deployment size
+        echo "Creating optimized deployment package..."
+
+        # Create temporary directory for deployment
+        mkdir -p deploy-package
+
+        # Copy only necessary files (exclude docs, tests, cache, etc.)
+        rsync -av \
+          --exclude='.git' \
+          --exclude='.github' \
+          --exclude='__pycache__' \
+          --exclude='*.pyc' \
+          --exclude='*.pyo' \
+          --exclude='.pytest_cache' \
+          --exclude='.coverage' \
+          --exclude='htmlcov' \
+          --exclude='.venv' \
+          --exclude='venv' \
+          --exclude='env' \
+          --exclude='.env' \
+          --exclude='.env.*' \
+          --exclude='docs' \
+          --exclude='tests' \
+          --exclude='specs' \
+          --exclude='.idea' \
+          --exclude='.vscode' \
+          --exclude='*.swp' \
+          --exclude='*.swo' \
+          --exclude='.DS_Store' \
+          --exclude='node_modules' \
+          --exclude='.uv' \
+          --exclude='db.sqlite3' \
+          --exclude='db.sqlite3-journal' \
+          --exclude='*.log' \
+          --exclude='.mypy_cache' \
+          --exclude='.ipynb_checkpoints' \
+          --exclude='zsh' \
+          . deploy-package/
+
+        # Create ZIP file for faster upload
+        cd deploy-package
+        zip -r ../deploy.zip . -q
+        cd ..
+
+        echo "Deployment package created: $(du -h deploy.zip | cut -f1)"
+
     - name: Configure Azure App Service startup command
       run: |
         # Get current startup command
@@ -77,4 +126,4 @@ jobs:
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         resource-group-name: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
-        package: .
+        package: deploy.zip
