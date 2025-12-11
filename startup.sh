@@ -17,6 +17,11 @@
 # Don't exit on error immediately - we want to log errors
 set +e
 
+# VERSION CHECK: This confirms the latest startup.sh is deployed
+echo "=================================================================================="
+echo "🚀 STARTUP.SH VERSION: Latest with middleware debugging (2025-12-11)"
+echo "=================================================================================="
+
 echo "🚀 Starting FloripaTalks application..."
 echo "📅 Timestamp: $(date)"
 

@@ -6,6 +6,12 @@ import os
 
 from .base import *
 
+# VERSION CHECK: This print confirms the latest code is deployed
+# If you see this in logs, the latest production.py is loaded
+print("=" * 80, flush=True)
+print("🚀 PRODUCTION SETTINGS LOADED - Latest version with middleware logging", flush=True)
+print("=" * 80, flush=True)
+
 # Remove development-only apps from INSTALLED_APPS if they were added
 # (This ensures clean production settings even if development.py was imported)
 if "django_browser_reload" in INSTALLED_APPS:

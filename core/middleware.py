@@ -26,7 +26,9 @@ class AzureProxyHeaderMiddleware:
     """
 
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
+        print("🔧 AzureProxyHeaderMiddleware.__init__ called", flush=True)
         self.get_response = get_response
+        print("✅ AzureProxyHeaderMiddleware.__init__ completed", flush=True)
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
         try:
