@@ -51,6 +51,13 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Configure Azure App Service startup command
+      run: |
+        az webapp config set \
+          --resource-group ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} \
+          --name ${{ env.AZURE_WEBAPP_NAME }} \
+          --startup-file "bash startup.sh"
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
       with:
