@@ -29,9 +29,23 @@ class AzureProxyHeaderMiddleware:
     """
 
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
-        print("🔧 AzureProxyHeaderMiddleware.__init__ called", flush=True)
-        self.get_response = get_response
-        print("✅ AzureProxyHeaderMiddleware.__init__ completed", flush=True)
+        try:
+            sys.stderr.write("🔧 AzureProxyHeaderMiddleware.__init__ called\n")
+            sys.stderr.flush()
+            print("🔧 AzureProxyHeaderMiddleware.__init__ called", flush=True)
+            self.get_response = get_response
+            sys.stderr.write("✅ AzureProxyHeaderMiddleware.__init__ completed\n")
+            sys.stderr.flush()
+            print("✅ AzureProxyHeaderMiddleware.__init__ completed", flush=True)
+        except Exception as e:
+            error_msg = f"❌ AzureProxyHeaderMiddleware.__init__ ERROR: {e}"
+            sys.stderr.write(error_msg + "\n")
+            sys.stderr.flush()
+            print(error_msg, flush=True)
+            import traceback
+
+            traceback.print_exc()
+            raise
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
         try:

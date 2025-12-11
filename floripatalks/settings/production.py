@@ -50,6 +50,11 @@ print(f"✅ Production settings: Middleware added. First middleware: {MIDDLEWARE
 sys.stderr.write(f"✅ Production settings: Middleware added. First middleware: {MIDDLEWARE[0]}\n")
 sys.stderr.flush()
 
+# Verify middleware is in the list
+print(f"📋 MIDDLEWARE list has {len(MIDDLEWARE)} items. First 3: {MIDDLEWARE[:3]}", flush=True)
+sys.stderr.write(f"📋 MIDDLEWARE list has {len(MIDDLEWARE)} items. First 3: {MIDDLEWARE[:3]}\n")
+sys.stderr.flush()
+
 # Security
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
