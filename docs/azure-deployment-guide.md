@@ -495,24 +495,41 @@ If you need a startup script, create `startup.sh` in the project root with comma
 
 **Configure Startup Command** (choose one method):
 
-**Option A: Using `startup.txt` file** (Recommended - automatic detection):
+**Option A: Explicitly in GitHub Actions Workflow** (Recommended - most reliable):
+- The GitHub Actions workflow explicitly sets the startup command using Azure CLI
+- This ensures the custom `startup.sh` script is always used, even if Azure's Oryx build system tries to auto-generate one
+- Includes idempotent check to avoid unnecessary SCM container restarts
+- Includes delay to prevent deployment conflicts
+- **Why**: More reliable than `startup.txt` because Azure's auto-detection can be overridden by Oryx
+
+**Option B: Using `startup.txt` file** (Fallback - automatic detection):
 - Azure App Service automatically detects a `startup.txt` file in your project root
 - The file is already created: [`startup.txt`](../startup.txt) contains `bash startup.sh`
-- No portal configuration needed - just deploy your code
+- **Note**: May be ignored if Azure's Oryx build system auto-generates a startup script
+- **When to use**: If explicit configuration in workflow doesn't work
 
-**Option B: Using Azure Portal** (if `startup.txt` doesn't work):
+**Option C: Using Azure Portal** (Manual configuration):
 - Navigate: [Azure Portal](https://portal.azure.com) → Resource Groups → `floripatalks-rg` → `floripatalks-app` → **Configuration** → **General settings**
 - Look for **Startup Command** field (may be under "Stack settings" or "Runtime settings")
 - Enter: `bash startup.sh`
 - Click **Save** → **Continue**
+- **Note**: This will cause SCM container restart - avoid doing this right before deployment
 
-**Option C: Using Azure CLI** (alternative):
+**Option D: Using Azure CLI** (Alternative):
 ```bash
 az webapp config set \
   --resource-group floripatalks-rg \
   --name floripatalks-app \
   --startup-file "bash startup.sh"
 ```
+- **Note**: This will cause SCM container restart - wait 10-15 seconds before deploying
+
+**Important**: The startup script (`startup.sh`) includes:
+- Environment variable validation (fails fast if secrets are missing)
+- Database migrations
+- Static file collection
+- Gunicorn server startup
+- Better error messages for debugging
 
 ### Step 7: Initial Deployment
 
@@ -814,16 +831,27 @@ ALLOWED_HOSTS=talks.example.com,floripatalks-app.azurewebsites.net
    - Check startup command in App Service settings
    - Review logs in Azure Portal → Log stream
    - Verify `DJANGO_SETTINGS_MODULE` is set
+   - Check that required environment variables are set (`SECRET_KEY`, `GOOGLE_CLIENT_ID`, etc.)
+   - Verify `startup.sh` is being used (check logs for custom error messages)
 
-2. **Static Files Not Loading**:
+2. **Deployment Fails with "SCM container restart" Error**:
+   - **Cause**: Configuration change (like setting startup command) causes SCM container restart, and deployment starts too soon
+   - **Fix**: The workflow now includes a delay after configuration changes. If this still happens, increase the delay or configure startup command separately from deployment
+
+3. **Azure Auto-Generates Startup Script Instead of Using Custom One**:
+   - **Cause**: Azure's Oryx build system detects Django and auto-generates a startup script, ignoring `startup.txt`
+   - **Fix**: Explicitly set startup command in GitHub Actions workflow (already done) or via Azure Portal/CLI
+
+4. **Static Files Not Loading**:
    - Ensure `collectstatic` runs during deployment
    - Check `STATIC_ROOT` and `STATIC_URL` settings
    - Verify files exist in `staticfiles/` directory
 
-4. **Environment Variables Not Working**:
+5. **Environment Variables Not Working**:
    - Restart App Service after adding variables
    - Check variable names match code
    - Verify no typos
+   - The startup script now validates required variables and provides clear error messages
 
 ---
 

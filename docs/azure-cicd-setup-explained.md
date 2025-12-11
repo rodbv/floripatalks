@@ -319,13 +319,33 @@ Configured `.github/workflows/main_floripatalks-app.yml` to automatically deploy
 - Uses the `AZURE_CREDENTIALS` secret we set up
 - Creates an authenticated session for subsequent steps
 
-#### Step 8: Deploy to Azure
+#### Step 8: Configure Startup Command
+```yaml
+- name: Configure Azure App Service startup command
+  run: |
+    # Check if startup command is already set correctly
+    CURRENT_STARTUP=$(az webapp config show ...)
+    if [ "$CURRENT_STARTUP" != "bash startup.sh" ]; then
+      az webapp config set --startup-file "bash startup.sh"
+      sleep 10  # Wait for SCM container to stabilize
+    fi
+```
+**What**: Explicitly sets the startup command to use our custom `startup.sh` script  
+**Why**:
+- Azure's Oryx build system may auto-generate a startup script, ignoring `startup.txt`
+- Explicit configuration ensures our custom script runs (with environment validation, migrations, etc.)
+- Idempotent check avoids unnecessary SCM container restarts
+- Delay prevents deployment conflicts when SCM container restarts
+
+**SCM Container Note**: The SCM (Source Control Manager/Kudu) container handles deployments and management operations. When you change app configuration, it restarts. If a deployment starts during this restart, it can fail. The delay gives the container time to stabilize.
+
+#### Step 9: Deploy to Azure
 ```yaml
 - name: Deploy to Azure Web App
   uses: azure/webapps-deploy@v3
   with:
     app-name: ${{ env.AZURE_WEBAPP_NAME }}
-    resource-group: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
+    resource-group-name: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
     package: .
 ```
 **What**: Uploads your code to Azure App Service  
@@ -377,8 +397,9 @@ Configured `.github/workflows/main_floripatalks-app.yml` to automatically deploy
   - `gunicorn` added to dependencies for production server
 
 - [x] **Startup Configuration**
-  - `startup.sh` created (runs migrations, starts Gunicorn)
-  - `startup.txt` created (tells Azure to run `startup.sh`)
+  - `startup.sh` created (validates environment variables, runs migrations, starts Gunicorn)
+  - Startup command explicitly configured in GitHub Actions workflow (more reliable than `startup.txt`)
+  - Idempotent check prevents unnecessary SCM container restarts
 
 - [x] **Production Settings**
   - `floripatalks/settings/production.py` configured
@@ -472,5 +493,5 @@ After successful deployment:
 
 ---
 
-**Last Updated**: 2025-12-10  
+**Last Updated**: 2025-12-11  
 **Maintained By**: Development Team
