@@ -4,19 +4,58 @@
 # This script runs when Azure App Service starts your application.
 # It ensures dependencies are installed, database migrations are applied, and starts the web server.
 
-set -e  # Exit on error
+# Don't exit on error immediately - we want to log errors
+set +e
 
 echo "🚀 Starting FloripaTalks application..."
+echo "📅 Timestamp: $(date)"
 
 # Change to app directory (Azure deploys to /home/site/wwwroot)
 cd /home/site/wwwroot || cd "$(dirname "$0")"
+echo "📂 Working directory: $(pwd)"
+
+# Check for required environment variables
+echo "🔍 Checking environment variables..."
+if [ -z "$SECRET_KEY" ]; then
+    echo "❌ ERROR: SECRET_KEY environment variable is not set!"
+    echo "   Please set SECRET_KEY in Azure App Service Configuration → Application settings"
+    exit 1
+fi
+
+if [ -z "$GOOGLE_CLIENT_ID" ] || [ -z "$GOOGLE_CLIENT_SECRET" ]; then
+    echo "❌ ERROR: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET environment variable is not set!"
+    echo "   Please set these in Azure App Service Configuration → Application settings"
+    exit 1
+fi
+
+if [ -z "$DJANGO_SETTINGS_MODULE" ]; then
+    echo "⚠️  WARNING: DJANGO_SETTINGS_MODULE not set, defaulting to production"
+    export DJANGO_SETTINGS_MODULE=floripatalks.settings.production
+fi
+
+echo "✅ Environment variables check passed"
+
+# Determine Python command
+if command -v python3 &> /dev/null; then
+    PYTHON_CMD=python3
+elif command -v python &> /dev/null; then
+    PYTHON_CMD=python
+else
+    echo "❌ ERROR: Python not found!"
+    exit 1
+fi
+echo "🐍 Using Python: $PYTHON_CMD ($($PYTHON_CMD --version))"
 
 # Install dependencies from requirements.txt
 # Azure should auto-install, but we ensure it happens here
 if [ -f "requirements.txt" ]; then
     echo "📦 Installing dependencies from requirements.txt..."
     pip install --no-cache-dir -r requirements.txt
-    echo "   Dependencies installed ✓"
+    if [ $? -eq 0 ]; then
+        echo "   ✅ Dependencies installed successfully"
+    else
+        echo "   ⚠️  WARNING: Some dependencies may have failed to install"
+    fi
 else
     echo "⚠️  WARNING: requirements.txt not found! Dependencies may not be installed."
     echo "   Attempting to install Django and Gunicorn as fallback..."
@@ -25,15 +64,31 @@ fi
 
 # Run database migrations (required - not done in CI/CD)
 echo "📦 Running database migrations..."
-python manage.py migrate --noinput
+$PYTHON_CMD manage.py migrate --noinput
+if [ $? -ne 0 ]; then
+    echo "❌ ERROR: Database migrations failed!"
+    echo "   Check the error messages above for details"
+    exit 1
+fi
+echo "   ✅ Migrations completed"
 
 # Collect static files (already done in CI/CD, but ensures they're present on restart)
 echo "📁 Collecting static files..."
-python manage.py collectstatic --noinput
+$PYTHON_CMD manage.py collectstatic --noinput
+if [ $? -ne 0 ]; then
+    echo "❌ ERROR: Static file collection failed!"
+    echo "   Check the error messages above for details"
+    exit 1
+fi
+echo "   ✅ Static files collected"
 
 # Start Gunicorn web server (production-ready WSGI server)
-# Note: Gunicorn should be added to pyproject.toml dependencies for production
 echo "🌐 Starting Gunicorn web server..."
+echo "   Binding to: 0.0.0.0:8000"
+echo "   Workers: 2"
+echo "   Timeout: 120s"
+
+# Use exec to replace shell process with Gunicorn
 exec gunicorn floripatalks.wsgi:application \
     --bind 0.0.0.0:8000 \
     --workers 2 \
