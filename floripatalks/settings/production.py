@@ -14,7 +14,9 @@ if "django_extensions" in INSTALLED_APPS:
     INSTALLED_APPS.remove("django_extensions")
 
 # Add Azure proxy header middleware (must be before SecurityMiddleware)
+print("🔧 Production settings: Adding AzureProxyHeaderMiddleware to MIDDLEWARE...", flush=True)
 MIDDLEWARE.insert(0, "core.middleware.AzureProxyHeaderMiddleware")
+print(f"✅ Production settings: Middleware added. First middleware: {MIDDLEWARE[0]}", flush=True)
 
 # Security
 DEBUG = False
