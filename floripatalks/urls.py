@@ -4,6 +4,7 @@ URL configuration for floripatalks project.
 
 import importlib.util
 
+from django.conf import settings
 from django.contrib import admin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -33,7 +34,8 @@ urlpatterns = [
 ]
 
 # django-browser-reload (only active when DEBUG=True and app is installed)
-if importlib.util.find_spec("django_browser_reload") is not None:
+# Only include in development - not available in production
+if settings.DEBUG and importlib.util.find_spec("django_browser_reload") is not None:
     urlpatterns += [
         path("__reload__/", include("django_browser_reload.urls")),
     ]
