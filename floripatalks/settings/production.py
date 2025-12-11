@@ -6,6 +6,13 @@ import os
 
 from .base import *
 
+# Remove development-only apps from INSTALLED_APPS if they were added
+# (This ensures clean production settings even if development.py was imported)
+if "django_browser_reload" in INSTALLED_APPS:
+    INSTALLED_APPS.remove("django_browser_reload")
+if "django_extensions" in INSTALLED_APPS:
+    INSTALLED_APPS.remove("django_extensions")
+
 # Security
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY")

@@ -51,4 +51,8 @@ def is_browser_reload_available() -> bool:
     Returns:
         True if DEBUG is enabled and django_browser_reload is installed
     """
-    return settings.DEBUG and importlib.util.find_spec("django_browser_reload") is not None
+    return (
+        settings.DEBUG
+        and "django_browser_reload" in settings.INSTALLED_APPS
+        and importlib.util.find_spec("django_browser_reload") is not None
+    )
