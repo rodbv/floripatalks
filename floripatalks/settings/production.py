@@ -14,7 +14,6 @@ if "django_extensions" in INSTALLED_APPS:
     INSTALLED_APPS.remove("django_extensions")
 
 # Add Azure proxy header middleware (must be before SecurityMiddleware)
-# This ensures X-Forwarded-Proto header is set correctly for Azure requests
 MIDDLEWARE.insert(0, "core.middleware.AzureProxyHeaderMiddleware")
 
 # Security
