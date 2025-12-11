@@ -4,9 +4,12 @@ Custom middleware for FloripaTalks.
 Handles Azure App Service proxy headers for health checks that don't include X-Forwarded-Proto.
 """
 
+import logging
 from collections.abc import Callable
 
 from django.http import HttpRequest, HttpResponse
+
+logger = logging.getLogger(__name__)
 
 
 class AzureProxyHeaderMiddleware:
@@ -22,26 +25,26 @@ class AzureProxyHeaderMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
-        # Azure internal health check IPs (link-local addresses)
-        # These are safe to allow as they're only accessible from within Azure's network
-        azure_internal_ips = [
-            "169.254.129.1",
-            "169.254.129.3",
-            "169.254.129.4",
-            "169.254.129.5",
-        ]
+        # Set X-Forwarded-Proto header if missing
+        # Django's SECURE_PROXY_SSL_HEADER looks for HTTP_X_FORWARDED_PROTO in request.META
+        # Azure should set this automatically, but if it's missing, we set it to prevent redirects
+        # This is safe because Azure's httpsOnly ensures all external requests are HTTPS
+        has_header = "x-forwarded-proto" in request.headers
+        header_value = request.headers.get("x-forwarded-proto", "NOT SET")
+        request_scheme = request.scheme
+        is_secure = request.is_secure()
 
-        # Get the client IP from META (Django's standard way)
-        client_ip = (
-            request.headers.get("x-forwarded-for", "").split(",")[0].strip()
-            or request.headers.get("x-real-ip", "")
-            or request.META.get("REMOTE_ADDR", "")
-        )
-
-        # Only set X-Forwarded-Proto header for Azure health checks (internal IPs)
-        # Azure should set this automatically for regular requests, but health checks may not include it
-        if "x-forwarded-proto" not in request.headers and client_ip in azure_internal_ips:
+        if not has_header:
             request.META["HTTP_X_FORWARDED_PROTO"] = "https"
+            logger.info(
+                f"🔧 AzureProxyHeaderMiddleware: Set HTTP_X_FORWARDED_PROTO=https for {request.path} "
+                f"(scheme={request_scheme}, is_secure={is_secure}, REMOTE_ADDR={request.META.get('REMOTE_ADDR', 'N/A')})"
+            )
+        else:
+            logger.debug(
+                f"✅ AzureProxyHeaderMiddleware: Header already set for {request.path} "
+                f"(value={header_value}, scheme={request_scheme}, is_secure={is_secure})"
+            )
 
         response = self.get_response(request)
         return response
