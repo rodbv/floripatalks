@@ -139,3 +139,4 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         resource-group-name: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
         package: deploy.zip
+        clean: true  # Clean deployment: removes old files before deploying new ones

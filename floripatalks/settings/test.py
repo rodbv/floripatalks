@@ -48,3 +48,15 @@ LOGGING = {
         "handlers": ["null"],
     },
 }
+
+# Use simple static files storage for tests (no manifest required)
+# WhiteNoise's CompressedManifestStaticFilesStorage requires collectstatic to run,
+# which is unnecessary for tests
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
