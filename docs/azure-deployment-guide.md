@@ -1,6 +1,6 @@
 # Azure Deployment Guide for FloripaTalks
 
-**Created**: 2025-01-XX  
+**Created**: 2025-12-10  
 **Purpose**: Hands-on guide for deploying FloripaTalks Django application to Azure with CI/CD
 
 ## AZ-204 Exam Topics Covered
