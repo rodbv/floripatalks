@@ -1,59 +1,12 @@
 """
 Django production settings for Azure App Service.
+
+Follows official Microsoft Azure App Service recommendations for Django.
 """
 
 import os
 
-# VERSION CHECK: This print confirms the latest code is deployed
-# If you see this in logs, the latest production.py is loaded
-import sys
-
 from .base import *
-
-sys.stderr.write("=" * 80 + "\n")
-sys.stderr.write("🚀 PRODUCTION SETTINGS LOADED - Latest version with middleware logging\n")
-sys.stderr.write("=" * 80 + "\n")
-sys.stderr.flush()
-print("=" * 80, flush=True)
-print("🚀 PRODUCTION SETTINGS LOADED - Latest version with middleware logging", flush=True)
-print("=" * 80, flush=True)
-
-# Remove development-only apps from INSTALLED_APPS if they were added
-# (This ensures clean production settings even if development.py was imported)
-if "django_browser_reload" in INSTALLED_APPS:
-    INSTALLED_APPS.remove("django_browser_reload")
-if "django_extensions" in INSTALLED_APPS:
-    INSTALLED_APPS.remove("django_extensions")
-
-# Add Azure proxy header middleware (must be before SecurityMiddleware)
-print("🔧 Production settings: Adding AzureProxyHeaderMiddleware to MIDDLEWARE...", flush=True)
-sys.stderr.write("🔧 Production settings: Adding AzureProxyHeaderMiddleware to MIDDLEWARE...\n")
-sys.stderr.flush()
-
-# Test if middleware can be imported
-try:
-    from core.middleware import AzureProxyHeaderMiddleware  # noqa: F401
-
-    print("✅ Middleware import test: SUCCESS", flush=True)
-    sys.stderr.write("✅ Middleware import test: SUCCESS\n")
-    sys.stderr.flush()
-except Exception as e:
-    print(f"❌ Middleware import test: FAILED - {e}", flush=True)
-    sys.stderr.write(f"❌ Middleware import test: FAILED - {e}\n")
-    sys.stderr.flush()
-    import traceback
-
-    traceback.print_exc()
-
-MIDDLEWARE.insert(0, "core.middleware.AzureProxyHeaderMiddleware")
-print(f"✅ Production settings: Middleware added. First middleware: {MIDDLEWARE[0]}", flush=True)
-sys.stderr.write(f"✅ Production settings: Middleware added. First middleware: {MIDDLEWARE[0]}\n")
-sys.stderr.flush()
-
-# Verify middleware is in the list
-print(f"📋 MIDDLEWARE list has {len(MIDDLEWARE)} items. First 3: {MIDDLEWARE[:3]}", flush=True)
-sys.stderr.write(f"📋 MIDDLEWARE list has {len(MIDDLEWARE)} items. First 3: {MIDDLEWARE[:3]}\n")
-sys.stderr.flush()
 
 # Security
 DEBUG = False
@@ -61,47 +14,29 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY environment variable must be set in production")
 
-# ALLOWED_HOSTS from environment variable
-# Format: "host1.com,host2.com" or single host
-allowed_hosts_str = os.environ.get("ALLOWED_HOSTS", "").strip()
-ALLOWED_HOSTS = (
-    [host.strip() for host in allowed_hosts_str.split(",") if host.strip()]
-    if allowed_hosts_str
-    else []
-)
-
-# Always allow Azure internal IPs for health checks
-# Azure health checks use internal IPs in the 169.254.x.x range (link-local addresses)
-# These are safe to allow as they're only accessible from within Azure's network
-azure_internal_ips = [
-    "169.254.129.1",  # Common Azure health check IP
-    "169.254.129.3",  # Common Azure health check IP (from error)
-    "169.254.129.4",  # Common Azure health check IP
-    "169.254.129.5",  # Common Azure health check IP
+# ALLOWED_HOSTS - Official Azure pattern using WEBSITE_HOSTNAME
+# Azure sets WEBSITE_HOSTNAME automatically (e.g., 'floripatalks-app.azurewebsites.net')
+ALLOWED_HOSTS = [
+    os.environ.get("WEBSITE_HOSTNAME", "127.0.0.1"),
 ]
-ALLOWED_HOSTS.extend(azure_internal_ips)
-ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))  # Remove duplicates
 
-if not allowed_hosts_str:
-    print("⚠️  WARNING: ALLOWED_HOSTS not set in environment variables!")
-    print("   Please set ALLOWED_HOSTS in Azure App Service Configuration → Application settings")
-else:
-    print(
-        f"✅ ALLOWED_HOSTS configured: {len(ALLOWED_HOSTS)} host(s) (includes Azure health check IPs)"
-    )
+# Add any additional hosts from environment variable (comma-separated)
+# This allows custom domains to be added via Azure App Settings
+additional_hosts = os.environ.get("ALLOWED_HOSTS", "").strip()
+if additional_hosts:
+    ALLOWED_HOSTS.extend([host.strip() for host in additional_hosts.split(",") if host.strip()])
+
+# Remove duplicates
+ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
 
 # Security settings for production
-# Azure App Service terminates SSL at the load balancer, so we need to trust proxy headers
-# This tells Django that Azure's load balancer is handling HTTPS termination
+# Azure App Service terminates SSL at the load balancer, so we trust proxy headers
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-# Redirect HTTP to HTTPS
-# NOTE: Azure App Service has "HTTPS Only" enabled, which redirects HTTP to HTTPS at the platform level
-# We disable Django's redirect to avoid double-redirects and redirect loops
-# Azure's redirect happens before requests reach Django, so this is safe
-SECURE_SSL_REDIRECT = False  # Azure handles HTTPS redirection via httpsOnly setting
-SESSION_COOKIE_SECURE = True  # Only send cookies over HTTPS
-CSRF_COOKIE_SECURE = True  # Only send CSRF cookies over HTTPS
+# Azure handles HTTPS redirection at the platform level (via httpsOnly setting)
+# Disable Django's redirect to avoid double-redirects
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
@@ -115,14 +50,10 @@ DATABASES = {
     }
 }
 
-# Note: Azure App Service persistent storage ensures database survives restarts
+# Static files - WhiteNoise handles serving in production
+# STATICFILES_STORAGE is set in base.py
 
-# Static files
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-# Don't use STATICFILES_DIRS in production - all static files should be collected to STATIC_ROOT
-
-# Media files (use Azure Blob Storage in production)
+# Media files (use Azure Blob Storage in production if needed)
 # Install: django-storages[azure]
 # DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
 # AZURE_ACCOUNT_NAME = os.environ.get("AZURE_STORAGE_ACCOUNT_NAME")
