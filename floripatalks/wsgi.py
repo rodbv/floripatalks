@@ -11,6 +11,8 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "floripatalks.settings")
+# Use production settings by default, but allow override via environment variable
+# This ensures production settings are used even if DJANGO_SETTINGS_MODULE isn't set
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "floripatalks.settings.production")
 
 application = get_wsgi_application()

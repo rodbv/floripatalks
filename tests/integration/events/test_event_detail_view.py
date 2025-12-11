@@ -103,9 +103,9 @@ class TestEventDetailView:
         response = client.get(url)
 
         # Should return OK, not 500
-        assert response.status_code == HTTPStatus.OK, (
-            f"Expected {HTTPStatus.OK}, got {response.status_code}. Error: {response.content.decode()[:500]}"
-        )
+        assert (
+            response.status_code == HTTPStatus.OK
+        ), f"Expected {HTTPStatus.OK}, got {response.status_code}. Error: {response.content.decode()[:500]}"
 
         # Should render template without errors
         content = response.content.decode()

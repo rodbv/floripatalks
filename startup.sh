@@ -89,6 +89,7 @@ fi
 
 # Run database migrations (required - not done in CI/CD)
 echo "📦 Running database migrations..."
+echo "   Using DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-floripatalks.settings.production}"
 $PYTHON_CMD manage.py migrate --noinput
 if [ $? -ne 0 ]; then
     echo "❌ ERROR: Database migrations failed!"
@@ -99,6 +100,7 @@ echo "   ✅ Migrations completed"
 
 # Collect static files (already done in CI/CD, but ensures they're present on restart)
 echo "📁 Collecting static files..."
+echo "   Using DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-floripatalks.settings.production}"
 $PYTHON_CMD manage.py collectstatic --noinput
 if [ $? -ne 0 ]; then
     echo "❌ ERROR: Static file collection failed!"
