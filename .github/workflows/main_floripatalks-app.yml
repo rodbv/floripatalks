@@ -36,6 +36,12 @@ jobs:
       run: |
         uv run pytest
 
+    - name: Generate requirements.txt for Azure
+      run: |
+        # Generate requirements.txt from uv.lock for Azure App Service auto-install
+        # Azure App Service auto-detects and installs from requirements.txt
+        uv export --format requirements-txt --no-dev -o requirements.txt
+
     - name: Collect static files
       run: |
         uv run python manage.py collectstatic --noinput
@@ -55,5 +61,5 @@ jobs:
       uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        resource-group: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
+        resource-group-name: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
         package: .

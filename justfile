@@ -105,3 +105,22 @@ collectstatic:
 # Show Django version
 version:
     uv run python manage.py --version
+
+# SSH into Azure App Service
+# Requires: Azure CLI installed and logged in (az login)
+# Requires: SSH enabled in Azure Portal (Configuration → General settings → SSH → On)
+# Usage: just ssh
+ssh:
+    @echo "Connecting to Azure App Service via SSH..."
+    @echo "Note: If this fails, try: just logs (to check startup issues)"
+    az webapp ssh \
+        --resource-group floripatalks-rg \
+        --name floripatalks-app
+
+# View Azure App Service logs (startup, application, etc.)
+# Usage: just logs
+azlogs:
+    @echo "Streaming Azure App Service logs (Ctrl+C to stop)..."
+    az webapp log tail \
+        --resource-group floripatalks-rg \
+        --name floripatalks-app
