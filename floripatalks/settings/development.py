@@ -10,7 +10,6 @@ from .base import *
 
 # Add development-only apps
 INSTALLED_APPS += [
-    "django_browser_reload",  # Hot-reload for development
     "django_extensions",  # Enhanced Django management commands (shell_plus, etc.)
 ]
 

@@ -724,13 +724,6 @@
 
     {% csrf_token %}
     <script src="{% static 'js/htmx.min.js' %}"></script>
-    {# django-browser-reload: Only load in development (not installed in production) #}
-    {% load core_tags %}
-    {% is_browser_reload_available as browser_reload_available %}
-    {% if browser_reload_available %}
-    {% load django_browser_reload %}
-    {% django_browser_reload_script %}
-    {% endif %}
     <script>
         // Configure HTMX to include CSRF token in all requests
         document.body.addEventListener('htmx:configRequest', function(event) {

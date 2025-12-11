@@ -98,7 +98,6 @@ markers = [
 
 [dependency-groups]
 dev = [
-    "django-browser-reload>=1.21.0",
     "django-extensions>=4.1",
     "faker>=38.2.0",
     "ipython>=9.8.0",
