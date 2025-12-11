@@ -1,7 +1,7 @@
 """
 Custom middleware for FloripaTalks.
 
-Handles Azure App Service proxy headers for health checks that don't include X-Forwarded-Proto.
+Sets X-Forwarded-Proto header if missing to prevent redirect loops with Azure App Service.
 """
 
 import logging
@@ -14,11 +14,12 @@ logger = logging.getLogger(__name__)
 
 class AzureProxyHeaderMiddleware:
     """
-    Sets X-Forwarded-Proto header for Azure health checks that don't include it.
+    Sets X-Forwarded-Proto header if missing to prevent redirect loops.
 
-    Azure health checks from internal IPs (169.254.x.x) may not include the
-    X-Forwarded-Proto header, causing Django's SECURE_PROXY_SSL_HEADER to fail.
-    This middleware sets the header for health checks only.
+    Azure App Service terminates SSL at the load balancer. Azure should set
+    X-Forwarded-Proto automatically, but if it's missing, Django may treat
+    HTTPS requests as HTTP and redirect, causing loops. This middleware sets
+    the header for all requests if missing.
     """
 
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
@@ -33,17 +34,18 @@ class AzureProxyHeaderMiddleware:
         header_value = request.headers.get("x-forwarded-proto", "NOT SET")
         request_scheme = request.scheme
         is_secure = request.is_secure()
+        client_ip = request.META.get("REMOTE_ADDR", "N/A")
 
         if not has_header:
             request.META["HTTP_X_FORWARDED_PROTO"] = "https"
             logger.info(
                 f"🔧 AzureProxyHeaderMiddleware: Set HTTP_X_FORWARDED_PROTO=https for {request.path} "
-                f"(scheme={request_scheme}, is_secure={is_secure}, REMOTE_ADDR={request.META.get('REMOTE_ADDR', 'N/A')})"
+                f"(client_ip={client_ip}, scheme={request_scheme}, is_secure={is_secure})"
             )
         else:
             logger.debug(
                 f"✅ AzureProxyHeaderMiddleware: Header already set for {request.path} "
-                f"(value={header_value}, scheme={request_scheme}, is_secure={is_secure})"
+                f"(value={header_value}, client_ip={client_ip}, scheme={request_scheme}, is_secure={is_secure})"
             )
 
         response = self.get_response(request)
