@@ -3,6 +3,16 @@
 #
 # This script runs when Azure App Service starts your application.
 # It ensures dependencies are installed, database migrations are applied, and starts the web server.
+#
+# Based on Microsoft's recommended startup.sh for Django on Azure App Service:
+# https://learn.microsoft.com/en-us/azure/developer/python/configure-python-web-app-on-app-service
+#
+# Key differences from Microsoft's basic example:
+# - Environment variable validation (SECRET_KEY, GOOGLE_CLIENT_ID, etc.)
+# - Conditional dependency installation (only if missing, for faster restarts)
+# - Better error handling and logging
+# - Python command detection (python3 vs python)
+# - Uses exec for proper process management
 
 # Don't exit on error immediately - we want to log errors
 set +e
@@ -48,9 +58,15 @@ echo "🐍 Using Python: $PYTHON_CMD ($($PYTHON_CMD --version))"
 
 # Check if Django is installed (dependencies should be installed during deployment)
 # Only install if missing (fallback for cases where Azure didn't install them)
+# This follows Microsoft's recommendation but optimizes for fast restarts
 if ! $PYTHON_CMD -c "import django" 2>/dev/null; then
     echo "⚠️  Django not found - installing dependencies from requirements.txt..."
     if [ -f "requirements.txt" ]; then
+        # Upgrade pip first (Microsoft's recommendation)
+        echo "   📦 Upgrading pip..."
+        $PYTHON_CMD -m pip install --upgrade pip --quiet
+        # Install dependencies (Microsoft's recommendation)
+        echo "   📦 Installing dependencies from requirements.txt..."
         pip install --no-cache-dir -r requirements.txt
         if [ $? -eq 0 ]; then
             echo "   ✅ Dependencies installed successfully"
@@ -63,7 +79,7 @@ if ! $PYTHON_CMD -c "import django" 2>/dev/null; then
         exit 1
     fi
 else
-    echo "✅ Dependencies already installed (skipping installation)"
+    echo "✅ Dependencies already installed (skipping installation for faster startup)"
 fi
 
 # Run database migrations (required - not done in CI/CD)
@@ -86,17 +102,18 @@ if [ $? -ne 0 ]; then
 fi
 echo "   ✅ Static files collected"
 
-# Start Gunicorn web server (production-ready WSGI server)
+# Start Gunicorn web server (following Microsoft's recommended configuration)
+# Use exec to replace shell process with Gunicorn (prevents zombie processes)
+# Microsoft recommends: --bind=0.0.0.0 --timeout 600 --workers=4
+# We use 2 workers for smaller apps and timeout 600 for long-running requests
 echo "🌐 Starting Gunicorn web server..."
 echo "   Binding to: 0.0.0.0:8000"
 echo "   Workers: 2"
-echo "   Timeout: 120s"
-
-# Use exec to replace shell process with Gunicorn
+echo "   Timeout: 600s (Microsoft recommended)"
 exec gunicorn floripatalks.wsgi:application \
-    --bind 0.0.0.0:8000 \
+    --bind=0.0.0.0:8000 \
+    --timeout 600 \
     --workers 2 \
-    --timeout 120 \
     --access-logfile - \
     --error-logfile - \
     --log-level info

@@ -48,7 +48,12 @@ else:
     )
 
 # Security settings for production
-SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+# Azure App Service terminates SSL at the load balancer, so we need to trust proxy headers
+# This tells Django that Azure's load balancer is handling HTTPS termination
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Redirect HTTP to HTTPS (Azure handles this, but this is a safety measure)
+SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True  # Only send cookies over HTTPS
 CSRF_COOKIE_SECURE = True  # Only send CSRF cookies over HTTPS
 SECURE_BROWSER_XSS_FILTER = True

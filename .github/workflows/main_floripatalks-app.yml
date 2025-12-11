@@ -61,6 +61,7 @@ jobs:
         mkdir -p deploy-package
 
         # Copy only necessary files (exclude docs, tests, cache, etc.)
+        # This minimizes package size for faster OneDeploy upload
         rsync -av \
           --exclude='.git' \
           --exclude='.github' \
@@ -85,12 +86,23 @@ jobs:
           --exclude='.DS_Store' \
           --exclude='node_modules' \
           --exclude='.uv' \
+          --exclude='uv.lock' \
           --exclude='db.sqlite3' \
           --exclude='db.sqlite3-journal' \
           --exclude='*.log' \
           --exclude='.mypy_cache' \
           --exclude='.ipynb_checkpoints' \
           --exclude='zsh' \
+          --exclude='*.md' \
+          --exclude='README*' \
+          --exclude='LICENSE*' \
+          --exclude='.gitignore' \
+          --exclude='.gitattributes' \
+          --exclude='justfile' \
+          --exclude='.pre-commit-config.yaml' \
+          --exclude='pyproject.toml' \
+          --exclude='.python-version' \
+          --exclude='.tool-versions' \
           . deploy-package/
 
         # Create ZIP file for faster upload
