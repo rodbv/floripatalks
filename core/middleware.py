@@ -26,6 +26,15 @@ class AzureProxyHeaderMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
+        # Log that middleware is running (to confirm it's being called)
+        # Use both logger and print to ensure we see it
+        log_msg = (
+            f"🚀 AzureProxyHeaderMiddleware: Processing {request.method} {request.path} "
+            f"(REMOTE_ADDR={request.META.get('REMOTE_ADDR', 'N/A')})"
+        )
+        logger.info(log_msg)
+        print(log_msg)  # Also print to stdout (Azure logs stdout/stderr)
+
         # Set X-Forwarded-Proto header if missing
         # Django's SECURE_PROXY_SSL_HEADER looks for HTTP_X_FORWARDED_PROTO in request.META
         # Azure should set this automatically, but if it's missing, we set it to prevent redirects
@@ -35,17 +44,21 @@ class AzureProxyHeaderMiddleware:
         request_scheme = request.scheme
         is_secure = request.is_secure()
         client_ip = request.META.get("REMOTE_ADDR", "N/A")
+        forwarded_for = request.headers.get("x-forwarded-for", "NOT SET")
 
+        # Always log at INFO level so we can see what's happening
         if not has_header:
             request.META["HTTP_X_FORWARDED_PROTO"] = "https"
             logger.info(
                 f"🔧 AzureProxyHeaderMiddleware: Set HTTP_X_FORWARDED_PROTO=https for {request.path} "
-                f"(client_ip={client_ip}, scheme={request_scheme}, is_secure={is_secure})"
+                f"(REMOTE_ADDR={client_ip}, X-Forwarded-For={forwarded_for}, "
+                f"scheme={request_scheme}, is_secure={is_secure})"
             )
         else:
-            logger.debug(
+            logger.info(
                 f"✅ AzureProxyHeaderMiddleware: Header already set for {request.path} "
-                f"(value={header_value}, client_ip={client_ip}, scheme={request_scheme}, is_secure={is_secure})"
+                f"(value={header_value}, REMOTE_ADDR={client_ip}, X-Forwarded-For={forwarded_for}, "
+                f"scheme={request_scheme}, is_secure={is_secure})"
             )
 
         response = self.get_response(request)
