@@ -13,6 +13,10 @@ if "django_browser_reload" in INSTALLED_APPS:
 if "django_extensions" in INSTALLED_APPS:
     INSTALLED_APPS.remove("django_extensions")
 
+# Add Azure proxy header middleware (must be before SecurityMiddleware)
+# This ensures X-Forwarded-Proto header is set correctly for Azure requests
+MIDDLEWARE.insert(0, "core.middleware.AzureProxyHeaderMiddleware")
+
 # Security
 DEBUG = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -35,6 +39,7 @@ azure_internal_ips = [
     "169.254.129.1",  # Common Azure health check IP
     "169.254.129.3",  # Common Azure health check IP (from error)
     "169.254.129.4",  # Common Azure health check IP
+    "169.254.129.5",  # Common Azure health check IP
 ]
 ALLOWED_HOSTS.extend(azure_internal_ips)
 ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))  # Remove duplicates
