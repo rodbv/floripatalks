@@ -19,9 +19,33 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY environment variable must be set in production")
 
-ALLOWED_HOSTS = [
-    host.strip() for host in os.environ.get("ALLOWED_HOSTS", "").split(",") if host.strip()
+# ALLOWED_HOSTS from environment variable
+# Format: "host1.com,host2.com" or single host
+allowed_hosts_str = os.environ.get("ALLOWED_HOSTS", "").strip()
+ALLOWED_HOSTS = (
+    [host.strip() for host in allowed_hosts_str.split(",") if host.strip()]
+    if allowed_hosts_str
+    else []
+)
+
+# Always allow Azure internal IPs for health checks
+# Azure health checks use internal IPs in the 169.254.x.x range (link-local addresses)
+# These are safe to allow as they're only accessible from within Azure's network
+azure_internal_ips = [
+    "169.254.129.1",  # Common Azure health check IP
+    "169.254.129.3",  # Common Azure health check IP (from error)
+    "169.254.129.4",  # Common Azure health check IP
 ]
+ALLOWED_HOSTS.extend(azure_internal_ips)
+ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))  # Remove duplicates
+
+if not allowed_hosts_str:
+    print("⚠️  WARNING: ALLOWED_HOSTS not set in environment variables!")
+    print("   Please set ALLOWED_HOSTS in Azure App Service Configuration → Application settings")
+else:
+    print(
+        f"✅ ALLOWED_HOSTS configured: {len(ALLOWED_HOSTS)} host(s) (includes Azure health check IPs)"
+    )
 
 # Security settings for production
 SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS

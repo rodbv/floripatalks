@@ -46,21 +46,9 @@ else
 fi
 echo "🐍 Using Python: $PYTHON_CMD ($($PYTHON_CMD --version))"
 
-# Install dependencies from requirements.txt
-# Azure should auto-install, but we ensure it happens here
-if [ -f "requirements.txt" ]; then
-    echo "📦 Installing dependencies from requirements.txt..."
-    pip install --no-cache-dir -r requirements.txt
-    if [ $? -eq 0 ]; then
-        echo "   ✅ Dependencies installed successfully"
-    else
-        echo "   ⚠️  WARNING: Some dependencies may have failed to install"
-    fi
-else
-    echo "⚠️  WARNING: requirements.txt not found! Dependencies may not be installed."
-    echo "   Attempting to install Django and Gunicorn as fallback..."
-    pip install --no-cache-dir django gunicorn || true
-fi
+# Note: Dependencies are installed during deployment by Azure's deployment process
+# (via requirements.txt detection or Oryx build system)
+# We don't install them here to avoid slow restarts and potential conflicts
 
 # Run database migrations (required - not done in CI/CD)
 echo "📦 Running database migrations..."
