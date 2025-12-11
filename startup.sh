@@ -46,9 +46,25 @@ else
 fi
 echo "🐍 Using Python: $PYTHON_CMD ($($PYTHON_CMD --version))"
 
-# Note: Dependencies are installed during deployment by Azure's deployment process
-# (via requirements.txt detection or Oryx build system)
-# We don't install them here to avoid slow restarts and potential conflicts
+# Check if Django is installed (dependencies should be installed during deployment)
+# Only install if missing (fallback for cases where Azure didn't install them)
+if ! $PYTHON_CMD -c "import django" 2>/dev/null; then
+    echo "⚠️  Django not found - installing dependencies from requirements.txt..."
+    if [ -f "requirements.txt" ]; then
+        pip install --no-cache-dir -r requirements.txt
+        if [ $? -eq 0 ]; then
+            echo "   ✅ Dependencies installed successfully"
+        else
+            echo "   ❌ ERROR: Failed to install dependencies!"
+            exit 1
+        fi
+    else
+        echo "   ❌ ERROR: requirements.txt not found!"
+        exit 1
+    fi
+else
+    echo "✅ Dependencies already installed (skipping installation)"
+fi
 
 # Run database migrations (required - not done in CI/CD)
 echo "📦 Running database migrations..."

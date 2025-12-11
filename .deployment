@@ -1,7 +1,9 @@
 [config]
-# Disable Oryx build (we build in CI/CD)
-SCM_DO_BUILD_DURING_DEPLOYMENT=false
+# Disable Oryx build process (we build in CI/CD)
+# But allow dependency installation during deployment
+SCM_DO_BUILD_DURING_DEPLOYMENT=true
 ENABLE_ORYX_BUILD=false
 
-# Note: Dependencies are still installed automatically by Azure
-# when it detects requirements.txt, even with Oryx disabled
+# Note: SCM_DO_BUILD_DURING_DEPLOYMENT=true allows Azure to install dependencies
+# from requirements.txt during deployment, but ENABLE_ORYX_BUILD=false prevents
+# the full build process. This gives us dependency installation without Oryx build.
