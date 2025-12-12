@@ -9,7 +9,7 @@ set -e
 # Run database migrations
 python manage.py migrate --noinput
 
-# Collect static files (WhiteNoise will serve them)
+# Collect static files (Azure App Service serves them directly)
 # Note: Oryx build system may do this automatically, but explicit is cleaner
 python manage.py collectstatic --noinput
 

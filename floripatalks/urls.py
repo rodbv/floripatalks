@@ -2,6 +2,7 @@
 URL configuration for floripatalks project.
 """
 
+from django.conf import settings
 from django.contrib import admin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -29,3 +30,10 @@ urlpatterns = [
     # django-allauth URLs
     path("accounts/", include("allauth.urls")),
 ]
+
+# Serve static files in production (Azure App Service)
+# In development, Django's runserver handles this automatically
+if not settings.DEBUG:
+    from django.conf.urls.static import static
+
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

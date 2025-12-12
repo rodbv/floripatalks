@@ -13,7 +13,6 @@ dependencies = [
     "pyjwt>=2.10.1",
     "cryptography>=46.0.3",
     "uuid6>=2025.0.1",
-    "whitenoise>=6.11.0",
     "requests>=2.32.5",
 ]
 
