@@ -105,6 +105,15 @@ jobs:
           --exclude='.tool-versions' \
           . deploy-package/
 
+        # Ensure requirements.txt is included (Azure needs it for dependency installation)
+        # Copy requirements.txt if it exists
+        if [ -f "requirements.txt" ]; then
+          cp requirements.txt deploy-package/
+          echo "✅ requirements.txt included in deployment package"
+        else
+          echo "⚠️  WARNING: requirements.txt not found - Azure may not install dependencies"
+        fi
+
         # Create ZIP file for faster upload
         cd deploy-package
         zip -r ../deploy.zip . -q
@@ -139,4 +148,13 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         resource-group-name: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
         package: deploy.zip
-        clean: true  # Clean deployment: removes old files before deploying new ones
+        # Note: clean option may not be supported by webapps-deploy@v3
+        # Azure should handle cleanup, but if old files persist, we may need to add a pre-deployment cleanup step
+
+    - name: Restart Azure App Service
+      run: |
+        echo "Restarting Azure App Service to ensure new code is loaded..."
+        az webapp restart \
+          --resource-group ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} \
+          --name ${{ env.AZURE_WEBAPP_NAME }}
+        echo "✅ App Service restarted"
