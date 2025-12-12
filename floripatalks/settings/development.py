@@ -4,7 +4,13 @@ Django development settings for floripatalks project.
 
 import os
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv  # noqa
+except ImportError:
+    # python-dotenv is only in dev dependencies, skip if not available
+    def load_dotenv() -> None:
+        pass
+
 
 from .base import *
 
