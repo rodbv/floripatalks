@@ -6,6 +6,11 @@
 
 set -e
 
+# Ensure /home/data/ directory exists with correct permissions
+# This directory persists across deployments and is where we store the SQLite database
+mkdir -p /home/data
+chmod 755 /home/data
+
 # Run database migrations (only unapplied migrations will run)
 # Django's migrate command is idempotent - it only applies migrations that haven't been applied yet
 # If all migrations are already applied, this command does nothing

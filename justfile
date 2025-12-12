@@ -121,7 +121,25 @@ version:
 # Usage: just ssh
 ssh:
     @echo "Connecting to Azure App Service via SSH..."
-    @echo "Note: If this fails, try: just logs (to check startup issues)"
+    @echo "Note: If this fails, try: just azlogs (to check startup issues)"
+    az webapp ssh \
+        --resource-group floripatalks-rg \
+        --name floripatalks-app
+
+# SSH into Azure App Service and create Django superuser
+# Requires: Azure CLI installed and logged in (az login)
+# Requires: SSH enabled in Azure Portal (Configuration → General settings → SSH → On)
+# Usage: just ssh-createsuperuser
+# Note: Once connected via SSH, run: cd /home/site/wwwroot && python manage.py createsuperuser
+ssh-createsuperuser:
+    @echo "🔐 Connecting to Azure App Service..."
+    @echo ""
+    @echo "Once connected, run these commands:"
+    @echo "  cd /home/site/wwwroot"
+    @echo "  python manage.py createsuperuser"
+    @echo ""
+    @echo "You'll be prompted for username, email, and password."
+    @echo ""
     az webapp ssh \
         --resource-group floripatalks-rg \
         --name floripatalks-app
