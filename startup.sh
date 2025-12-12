@@ -9,7 +9,9 @@ set -e
 # Run database migrations (only unapplied migrations will run)
 # Django's migrate command is idempotent - it only applies migrations that haven't been applied yet
 # If all migrations are already applied, this command does nothing
-python manage.py migrate --noinput
+# Note: Database file stored in /home/data/ which persists across deployments
+# /home/site/wwwroot/ gets overwritten on each deployment, so database must be in /home/data/
+python manage.py migrate --noinput --verbosity=0
 
 # Collect static files (WhiteNoise will serve them)
 # Note: Oryx build system may do this automatically, but explicit is cleaner

@@ -59,6 +59,15 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Check Azure App Service configuration
+      run: |
+        echo "Checking Azure App Service app settings..."
+        az webapp config appsettings list \
+          --resource-group ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} \
+          --name ${{ env.AZURE_WEBAPP_NAME }} \
+          --query "[?name=='SCM_DO_BUILD_DURING_DEPLOYMENT' || name=='ENABLE_ORYX_BUILD' || name=='WEBSITE_RUN_FROM_PACKAGE' || name=='WEBSITE_LOCAL_CACHE_OPTION'].{name:name, value:value}" \
+          -o table || echo "No relevant settings found"
+
     - name: Create optimized deployment package
       run: |
         # Create temporary directory for deployment
