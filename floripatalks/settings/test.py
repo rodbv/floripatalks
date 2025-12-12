@@ -60,3 +60,7 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+# Remove WhiteNoise middleware in tests - it requires a manifest file
+# Use Django's default static file serving instead
+MIDDLEWARE = [mw for mw in MIDDLEWARE if mw != "whitenoise.middleware.WhiteNoiseMiddleware"]
