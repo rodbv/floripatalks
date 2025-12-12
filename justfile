@@ -34,9 +34,9 @@ dev:
 run:
     just dev
 
-# Run Django shell_plus with IPython
+# Run Django shell
 shell:
-    uv run python manage.py shell_plus --ipython
+    uv run python manage.py shell
 
 # Run tests
 test *args:

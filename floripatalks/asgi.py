@@ -11,6 +11,7 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "floripatalks.settings")
+# Use production settings by default, but allow override via environment variable
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "floripatalks.settings.production")
 
 application = get_asgi_application()
