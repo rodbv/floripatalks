@@ -38,7 +38,7 @@ jobs:
             fi
           }
         env:
-          DJANGO_SETTINGS_MODULE: floripatalks.settings.development
+          DJANGO_SETTINGS_MODULE: floripatalks.settings.test
 
       - name: Run linting (ruff)
         run: uv run ruff check . || true

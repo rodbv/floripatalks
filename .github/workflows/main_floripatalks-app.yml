@@ -34,12 +34,6 @@ jobs:
 
     - name: Run tests
       run: |
-        # Force test settings - unset any existing value first
-        unset DJANGO_SETTINGS_MODULE
-        export DJANGO_SETTINGS_MODULE=floripatalks.settings.test
-        echo "🔍 DJANGO_SETTINGS_MODULE is now: $DJANGO_SETTINGS_MODULE"
-        # Verify test settings are being used (should show DEBUG=False and StaticFilesStorage, not WhiteNoise)
-        uv run python -c "import os; print(f'🔍 Python sees DJANGO_SETTINGS_MODULE: {os.environ.get(\"DJANGO_SETTINGS_MODULE\", \"NOT SET\")}'); os.environ['DJANGO_SETTINGS_MODULE'] = 'floripatalks.settings.test'; import django; django.setup(); from django.conf import settings; print(f'✅ Settings module: {settings.SETTINGS_MODULE}'); print(f'✅ DEBUG: {settings.DEBUG}'); print(f'✅ Static storage: {settings.STORAGES[\"staticfiles\"][\"BACKEND\"]}'); print(f'✅ WhiteNoise in middleware: {\"whitenoise.middleware.WhiteNoiseMiddleware\" in settings.MIDDLEWARE}')"
         uv run pytest
       env:
         DJANGO_SETTINGS_MODULE: floripatalks.settings.test
@@ -49,7 +43,6 @@ jobs:
         # Regenerate requirements.txt from pyproject.toml to ensure it's up to date
         # Azure needs requirements.txt to install dependencies during deployment
         uv pip compile pyproject.toml -o requirements.txt
-        echo "✅ Generated requirements.txt with $(wc -l < requirements.txt) packages"
 
     - name: Collect static files
       run: |
@@ -68,10 +61,6 @@ jobs:
 
     - name: Create optimized deployment package
       run: |
-        # Create a deployment package excluding unnecessary files
-        # This significantly reduces upload time and deployment size
-        echo "Creating optimized deployment package..."
-
         # Create temporary directory for deployment
         mkdir -p deploy-package
 
@@ -121,39 +110,14 @@ jobs:
           . deploy-package/
 
         # Ensure requirements.txt is included (Azure needs it for dependency installation)
-        # Copy requirements.txt if it exists
         if [ -f "requirements.txt" ]; then
           cp requirements.txt deploy-package/
-          echo "✅ requirements.txt included in deployment package"
-        else
-          echo "⚠️  WARNING: requirements.txt not found - Azure may not install dependencies"
-        fi
-
-        # Ensure staticfiles directory is included (collected in CI/CD step above)
-        if [ -d "staticfiles" ]; then
-          echo "✅ staticfiles directory found, verifying contents..."
-          ls -la staticfiles/ | head -5
-          # staticfiles should already be included by rsync (not excluded)
-        else
-          echo "⚠️  WARNING: staticfiles directory not found - static files may not be served"
-        fi
-
-        # Verify key files are in deployment package
-        echo "Verifying deployment package contents..."
-        ls -la deploy-package/ | head -10
-        if [ -d "deploy-package/staticfiles" ]; then
-          echo "✅ staticfiles directory included in deployment package"
-          ls -la deploy-package/staticfiles/ | head -5
-        else
-          echo "❌ ERROR: staticfiles directory NOT in deployment package!"
         fi
 
         # Create ZIP file for faster upload
         cd deploy-package
         zip -r ../deploy.zip . -q
         cd ..
-
-        echo "Deployment package created: $(du -h deploy.zip | cut -f1)"
 
     - name: Configure Azure App Service startup command
       run: |
@@ -165,15 +129,11 @@ jobs:
 
         # Only set if it's not already set correctly
         if [ "$CURRENT_STARTUP" != "bash startup.sh" ]; then
-          echo "Setting startup command to 'bash startup.sh'..."
           az webapp config set \
             --resource-group ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} \
             --name ${{ env.AZURE_WEBAPP_NAME }} \
             --startup-file "bash startup.sh"
-          echo "Waiting 10 seconds for SCM container to stabilize..."
           sleep 10
-        else
-          echo "Startup command already configured correctly, skipping..."
         fi
 
     - name: Deploy to Azure Web App
@@ -182,13 +142,9 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         resource-group-name: ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }}
         package: deploy.zip
-        # Note: clean option may not be supported by webapps-deploy@v3
-        # Azure should handle cleanup, but if old files persist, we may need to add a pre-deployment cleanup step
 
     - name: Restart Azure App Service
       run: |
-        echo "Restarting Azure App Service to ensure new code is loaded..."
         az webapp restart \
           --resource-group ${{ env.AZURE_WEBAPP_RESOURCE_GROUP }} \
           --name ${{ env.AZURE_WEBAPP_NAME }}
-        echo "✅ App Service restarted"
