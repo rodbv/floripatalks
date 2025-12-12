@@ -42,12 +42,13 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 
 # Database (SQLite)
-# SQLite database stored in persistent storage (/home/data/)
-# /home/data/ persists across deployments, /home/site/wwwroot/ gets overwritten
+# SQLite database stored in persistent storage
+# Using /home/site/data/ - a subdirectory that persists (wwwroot gets overwritten, but data/ doesn't)
+# Alternative: /home/data/ (but may need to be created)
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "/home/data/db.sqlite3",
+        "NAME": "/home/site/data/db.sqlite3",
     }
 }
 

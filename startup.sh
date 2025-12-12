@@ -6,16 +6,37 @@
 
 set -e
 
-# Ensure /home/data/ directory exists with correct permissions
+# Ensure /home/site/data/ directory exists with correct permissions
 # This directory persists across deployments and is where we store the SQLite database
-mkdir -p /home/data
-chmod 755 /home/data
+# /home/site/wwwroot/ gets overwritten on each deployment, but /home/site/data/ persists
+# Using /home/site/data/ (within /home/site/ which exists by default) instead of /home/data/
+echo "Checking /home/site/data directory..."
+if [ ! -d "/home/site/data" ]; then
+    echo "Creating /home/site/data directory..."
+    mkdir -p /home/site/data
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed to create /home/site/data directory"
+        exit 1
+    fi
+    chmod 755 /home/site/data
+    echo "✅ Created /home/site/data directory for SQLite database"
+else
+    echo "✅ /home/site/data directory already exists"
+fi
+
+# Verify we can write to the directory
+if [ ! -w "/home/site/data" ]; then
+    echo "ERROR: Cannot write to /home/site/data directory"
+    ls -ld /home/site/data
+    exit 1
+fi
+echo "✅ /home/site/data is writable"
 
 # Run database migrations (only unapplied migrations will run)
 # Django's migrate command is idempotent - it only applies migrations that haven't been applied yet
 # If all migrations are already applied, this command does nothing
-# Note: Database file stored in /home/data/ which persists across deployments
-# /home/site/wwwroot/ gets overwritten on each deployment, so database must be in /home/data/
+# Note: Database file stored in /home/site/data/ which persists across deployments
+# /home/site/wwwroot/ gets overwritten on each deployment, but /home/site/data/ persists
 python manage.py migrate --noinput --verbosity=0
 
 # Collect static files (WhiteNoise will serve them)
