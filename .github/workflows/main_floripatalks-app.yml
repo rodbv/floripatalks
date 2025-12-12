@@ -34,10 +34,8 @@ jobs:
 
     - name: Run tests
       run: |
-        uv run pytest
-      env:
-        # Explicitly use test settings (pytest.ini should handle this, but be explicit)
-        DJANGO_SETTINGS_MODULE: floripatalks.settings.test
+        # Explicitly set test settings - this overrides any other DJANGO_SETTINGS_MODULE
+        DJANGO_SETTINGS_MODULE=floripatalks.settings.test uv run pytest
 
     - name: Generate requirements.txt
       run: |
