@@ -24,10 +24,15 @@ elif explicit_settings.endswith(".production"):
 elif explicit_settings.endswith(".development"):
     from .development import *  # noqa: F403, F401
 # Auto-detect environment (cloud platform pattern)
-elif os.environ.get("WEBSITE_HOSTNAME") or os.environ.get("DJANGO_ENV") == "production":
+elif (
+    os.environ.get("WEBSITE_HOSTNAME")  # Azure App Service
+    or os.environ.get("WEBSITE_SITE_NAME")  # Azure App Service (alternative)
+    or os.environ.get("DJANGO_ENV") == "production"  # Explicit production flag
+    or os.environ.get("ENVIRONMENT") == "production"  # Alternative env var
+):
     # Azure App Service sets WEBSITE_HOSTNAME automatically
     # Heroku, AWS, and other platforms use similar patterns
-    # Or explicitly set DJANGO_ENV=production
+    # Or explicitly set DJANGO_ENV=production or ENVIRONMENT=production
     from .production import *  # noqa: F403, F401
 else:
     # Default to development (local development)
