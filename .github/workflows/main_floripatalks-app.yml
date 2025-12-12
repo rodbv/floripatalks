@@ -34,8 +34,11 @@ jobs:
 
     - name: Run tests
       run: |
-        # Explicitly set test settings - this overrides any other DJANGO_SETTINGS_MODULE
-        DJANGO_SETTINGS_MODULE=floripatalks.settings.test uv run pytest
+        # Verify test settings are being used (should show DEBUG=False and StaticFilesStorage, not WhiteNoise)
+        uv run python -c "import os; os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'floripatalks.settings.test'); import django; django.setup(); from django.conf import settings; print(f'✅ Settings module: {settings.SETTINGS_MODULE}'); print(f'✅ DEBUG: {settings.DEBUG}'); print(f'✅ Static storage: {settings.STORAGES[\"staticfiles\"][\"BACKEND\"]}'); print(f'✅ WhiteNoise in middleware: {\"whitenoise.middleware.WhiteNoiseMiddleware\" in settings.MIDDLEWARE}')"
+        uv run pytest
+      env:
+        DJANGO_SETTINGS_MODULE: floripatalks.settings.test
 
     - name: Generate requirements.txt
       run: |

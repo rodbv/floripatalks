@@ -6,6 +6,17 @@ Uses in-memory SQLite for faster test execution.
 
 from .base import *
 
+# Override STORAGES FIRST before any other imports that might use it
+# This ensures WhiteNoise storage is not used in tests
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 # Use in-memory SQLite for tests - much faster than disk-based
 DATABASES = {
     "default": {
@@ -49,17 +60,7 @@ LOGGING = {
     },
 }
 
-# Use simple static files storage for tests (no manifest required)
-# WhiteNoise's CompressedManifestStaticFilesStorage requires collectstatic to run,
-# which is unnecessary for tests
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
+# STORAGES already overridden above to use StaticFilesStorage (not WhiteNoise)
 
 # Remove WhiteNoise middleware in tests - it requires a manifest file
 # Use Django's default static file serving instead
