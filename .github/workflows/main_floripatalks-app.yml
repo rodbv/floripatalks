@@ -36,6 +36,13 @@ jobs:
       run: |
         uv run pytest
 
+    - name: Generate requirements.txt
+      run: |
+        # Regenerate requirements.txt from pyproject.toml to ensure it's up to date
+        # Azure needs requirements.txt to install dependencies during deployment
+        uv pip compile pyproject.toml -o requirements.txt
+        echo "✅ Generated requirements.txt with $(wc -l < requirements.txt) packages"
+
     - name: Collect static files
       run: |
         uv run python manage.py collectstatic --noinput
