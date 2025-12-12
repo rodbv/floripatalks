@@ -130,15 +130,18 @@ ssh:
 # Requires: Azure CLI installed and logged in (az login)
 # Requires: SSH enabled in Azure Portal (Configuration → General settings → SSH → On)
 # Usage: just ssh-createsuperuser
-# Note: Once connected via SSH, run: cd /home/site/wwwroot && python manage.py createsuperuser
+# Note: Once connected via SSH, run: cd /home/site/wwwroot && DJANGO_SETTINGS_MODULE=floripatalks.settings.production python manage.py createsuperuser
 ssh-createsuperuser:
     @echo "🔐 Connecting to Azure App Service..."
     @echo ""
     @echo "Once connected, run these commands:"
     @echo "  cd /home/site/wwwroot"
+    @echo "  export DJANGO_SETTINGS_MODULE=floripatalks.settings.production"
     @echo "  python manage.py createsuperuser"
     @echo ""
     @echo "You'll be prompted for username, email, and password."
+    @echo ""
+    @echo "Note: DJANGO_SETTINGS_MODULE must be set to avoid loading development settings."
     @echo ""
     az webapp ssh \
         --resource-group floripatalks-rg \
