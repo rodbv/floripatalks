@@ -114,6 +114,25 @@ jobs:
           echo "⚠️  WARNING: requirements.txt not found - Azure may not install dependencies"
         fi
 
+        # Ensure staticfiles directory is included (collected in CI/CD step above)
+        if [ -d "staticfiles" ]; then
+          echo "✅ staticfiles directory found, verifying contents..."
+          ls -la staticfiles/ | head -5
+          # staticfiles should already be included by rsync (not excluded)
+        else
+          echo "⚠️  WARNING: staticfiles directory not found - static files may not be served"
+        fi
+
+        # Verify key files are in deployment package
+        echo "Verifying deployment package contents..."
+        ls -la deploy-package/ | head -10
+        if [ -d "deploy-package/staticfiles" ]; then
+          echo "✅ staticfiles directory included in deployment package"
+          ls -la deploy-package/staticfiles/ | head -5
+        else
+          echo "❌ ERROR: staticfiles directory NOT in deployment package!"
+        fi
+
         # Create ZIP file for faster upload
         cd deploy-package
         zip -r ../deploy.zip . -q

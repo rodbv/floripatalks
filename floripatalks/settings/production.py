@@ -50,7 +50,8 @@ DATABASES = {
     }
 }
 
-# Static files - Django's default storage (Azure App Service serves static files directly)
+# Static files - WhiteNoise handles serving in production
+# STATICFILES_STORAGE is set in base.py
 
 # Media files (use Azure Blob Storage in production if needed)
 # Install: django-storages[azure]
