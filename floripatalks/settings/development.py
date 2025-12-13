@@ -14,8 +14,15 @@ except ImportError:
 
 from .base import *
 
-# Development-only apps removed to reduce moving parts
-# If needed, add back django_extensions for shell_plus and other dev tools
+# Development-only apps
+INSTALLED_APPS += [
+    "django_browser_reload",  # Hot reload for development - NOT in production
+]
+
+# Development-only middleware (must be after StaticFilesMiddleware)
+MIDDLEWARE += [
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+]
 
 # Load environment variables from .env file
 # This allows using .env file for local development
