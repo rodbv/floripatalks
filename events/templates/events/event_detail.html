@@ -78,6 +78,62 @@
     .inline-topic-form-auth-prompt {
         margin-bottom: 1.5rem;
     }
+
+    /* Expandable form container */
+    .topic-form-expandable {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Collapsed trigger button - elegant and inviting */
+    .topic-form-trigger {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 1rem 1.25rem;
+        background: #ffffff;
+        border: 2px dashed var(--color-border);
+        border-radius: 12px;
+        color: var(--color-text-dark);
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        text-align: left;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .topic-form-trigger:hover {
+        border-color: var(--color-primary);
+        background: var(--color-bg-warm);
+        color: var(--color-primary);
+        box-shadow: 0 2px 8px rgba(7, 60, 165, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .topic-form-trigger:active {
+        transform: translateY(0);
+    }
+
+    .topic-form-trigger svg {
+        flex-shrink: 0;
+        stroke: currentColor;
+        transition: transform 0.2s ease;
+    }
+
+    .topic-form-trigger:hover svg {
+        transform: rotate(90deg);
+    }
+
+    .topic-form-trigger span {
+        flex: 1;
+    }
+
+    /* Smooth expansion animation */
+    [x-cloak] {
+        display: none !important;
+    }
 </style>
 {% endblock %}
 
@@ -91,13 +147,43 @@
     </header>
 
     <section class="topics-section">
-        <div class="topics-section-header">
-            <h2>Sugira um tópico!</h2>
-        </div>
-
         {% if user.is_authenticated %}
-        <div id="inline-topic-form-container">
-            {% include "events/partials/inline_topic_form.html" with event=event %}
+        <div id="inline-topic-form-container" x-data="{ expanded: false }" class="topic-form-expandable" @htmx:after-swap.window="if ($event.detail.target.id === 'topics-list') { expanded = false; }">
+            <!-- Collapsed trigger button -->
+            <button
+                type="button"
+                @click="expanded = true; setTimeout(() => { const input = document.querySelector('.form-input-title'); if (input) input.focus(); }, 100)"
+                x-show="!expanded"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="topic-form-trigger"
+                aria-label="Sugerir um novo tópico"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Sugira um tópico</span>
+            </button>
+
+            <!-- Expanded form -->
+            <div
+                x-show="expanded"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-95"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-95"
+                @close-form.window="expanded = false"
+                style="display: none;"
+                id="inline-topic-form-wrapper"
+            >
+                {% include "events/partials/inline_topic_form.html" with event=event %}
+            </div>
         </div>
         {% else %}
         <div class="inline-topic-form-auth-prompt">

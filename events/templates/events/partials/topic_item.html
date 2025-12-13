@@ -8,7 +8,7 @@
         title="{{ topic.title }}"
         description="{{ topic.description|default:'' }}"
         vote_count="{{ topic.vote_count }}"
-        has_voted="{{ topic.has_voted|yesno:'true,false' }}"
+        has_voted="{% if topic.has_voted %}true{% else %}false{% endif %}"
         creator_username="{{ topic.creator_username }}"
         creator_display_name="{{ topic.creator_display_name|default:topic.creator_username }}"
         creator_avatar_url="{{ topic.creator_avatar_url|default:'' }}"

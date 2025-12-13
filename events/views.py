@@ -104,8 +104,8 @@ def vote_topic_view(request: HttpRequest, slug: str) -> HttpResponse:
     vote_count = Vote.objects.filter(topic=topic).count()
 
     context = {
-        "topic": topic,
-        "has_voted": has_voted,
+        "topic_slug": topic.slug,
+        "has_voted": "true" if has_voted else "false",
         "vote_count": vote_count,
     }
 
@@ -162,7 +162,7 @@ def create_topic_view(request: HttpRequest) -> HttpResponse:
                             "user": request.user,
                         },
                     )
-                    # Add OOB swap to reset form
+                    # Add OOB swap to reset form (only the form wrapper, not the container)
                     form_html = render(
                         request,
                         "events/partials/inline_topic_form.html",
@@ -171,7 +171,7 @@ def create_topic_view(request: HttpRequest) -> HttpResponse:
                             "event": event,
                         },
                     ).content.decode()
-                    topic_response.content += f'<div id="inline-topic-form-container" hx-swap-oob="innerHTML">{form_html}</div>'.encode()
+                    topic_response.content += f'<div id="inline-topic-form-wrapper" hx-swap-oob="innerHTML">{form_html}</div>'.encode()
                     return topic_response
                 else:
                     # Regular request: redirect to event page

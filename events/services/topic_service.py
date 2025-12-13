@@ -52,8 +52,10 @@ def get_topics_for_event(
     event = Event.objects.get(slug=event_slug)
 
     # Check if user has voted on each topic
+    # Only create subquery if user is authenticated (not AnonymousUser)
     has_voted_subquery = None
-    if user and hasattr(user, "is_authenticated") and user.is_authenticated:
+    if user is not None and user.is_authenticated:
+        # Filter votes by the specific user - this ensures we only check votes from this user
         has_voted_subquery = Exists(Vote.objects.filter(topic=OuterRef("pk"), user=user))
 
     try:
@@ -86,23 +88,36 @@ def get_topics_for_event(
     if not topics:
         return []
 
-    return [
-        TopicDTO(
-            id=topic.id,
-            slug=topic.slug,
-            title=topic.title,
-            description=topic.description,
-            vote_count=getattr(topic, "vote_count", 0),
-            has_voted=bool(getattr(topic, "has_voted", False)),
-            creator_username=topic.creator.username,
-            creator_display_name=get_user_display_name(topic.creator),
-            creator_avatar_url=get_user_avatar_url(topic.creator),
-            event_slug=topic.event.slug,
-            event_name=topic.event.name,
-            created_at=topic.created_at,
+    result = []
+    for topic in topics:
+        # Determine has_voted status
+        # Exists annotation returns a boolean directly from the database
+        if has_voted_subquery is not None and hasattr(topic, "has_voted"):
+            # has_voted was annotated - Exists returns True/False directly
+            # The Exists subquery checks: "Does a Vote exist for this topic AND this user?"
+            # So topic.has_voted is True only if THIS user voted on THIS topic
+            has_voted_bool = bool(topic.has_voted)
+        else:
+            # has_voted was not annotated (user not authenticated or not logged in)
+            has_voted_bool = False
+
+        result.append(
+            TopicDTO(
+                id=topic.id,
+                slug=topic.slug,
+                title=topic.title,
+                description=topic.description,
+                vote_count=getattr(topic, "vote_count", 0),
+                has_voted=has_voted_bool,
+                creator_username=topic.creator.username,
+                creator_display_name=get_user_display_name(topic.creator),
+                creator_avatar_url=get_user_avatar_url(topic.creator),
+                event_slug=topic.event.slug,
+                event_name=topic.event.name,
+                created_at=topic.created_at,
+            )
         )
-        for topic in topics
-    ]
+    return result
 
 
 def create_topic(
