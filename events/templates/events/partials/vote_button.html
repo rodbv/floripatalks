@@ -1,9 +1,9 @@
 {% load cotton %}
 {% load core_tags %}
 
-{# Vote button with +1, +2 style - number is shown in the button itself #}
+{# Vote button with up arrow icon - wrapper with button and count below #}
 <c-topic.vote-button
-    topic-slug="{{ topic.slug }}"
-    has-voted="{{ has_voted|yesno:'true,false' }}"
+    topic-slug="{{ topic_slug }}"
+    has-voted="{{ has_voted }}"
     vote-count="{{ vote_count }}"
 ></c-topic.vote-button>

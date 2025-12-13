@@ -1,5 +1,5 @@
 {% comment %}
-Django-Cotton component for vote button with +1, +2 style.
+Django-Cotton component for vote button with up arrow icon.
 
 Props:
 - topic-slug: Topic slug (becomes topic_slug in template)
@@ -7,21 +7,26 @@ Props:
 - vote-count: Number of votes
 
 Button logic:
-- Shows "+1", "+2", etc. based on vote count
+- Shows up arrow icon in a square button
+- Vote count is displayed below the button
 - If user has voted, button has active/voted styling
-- Uses primary color (#073CA5)
 {% endcomment %}
 
 {% load core_tags %}
 
-<button
-    class="vote-plus-button {% if has_voted == 'true' %}voted{% endif %}"
-    hx-post="{% url 'events:vote_topic' slug=topic_slug %}"
-    hx-target="this"
-    hx-swap="outerHTML"
-    data-requires-auth="true"
-    aria-label="{% if has_voted == 'true' %}Remover voto{% else %}Votar neste tópico{% endif %}"
-    id="vote-icon-{{ topic_slug }}"
->
-    <span class="vote-plus-text">+{{ vote_count|default:"0" }}</span>
-</button>
+<div class="vote-button-wrapper {% if has_voted == 'true' %}voted{% endif %}">
+    <button
+        class="vote-plus-button {% if has_voted == 'true' %}voted{% endif %}"
+        hx-post="{% url 'events:vote_topic' slug=topic_slug %}"
+        hx-target="closest .vote-button-wrapper"
+        hx-swap="outerHTML"
+        data-requires-auth="true"
+        aria-label="{% if has_voted == 'true' %}Remover voto{% else %}Votar neste tópico{% endif %}"
+        id="vote-icon-{{ topic_slug }}"
+    >
+        <svg class="vote-arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <div class="vote-count-display">{{ vote_count|default:"0" }}</div>
+</div>

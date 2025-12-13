@@ -10,7 +10,7 @@ This is used when form validation fails and needs to be swapped back into the fo
     hx-post="{% url 'events:create_topic' %}"
     hx-target="#topics-list"
     hx-swap="afterbegin"
-    hx-on::after-request="if(event.detail.successful) { this.reset(); }"
+    hx-on::after-request="if(event.detail.successful) { this.reset(); window.dispatchEvent(new CustomEvent('close-form')); }"
 >
     {% csrf_token %}
     <input type="hidden" name="event" value="{{ event.slug }}">
@@ -40,7 +40,17 @@ This is used when form validation fails and needs to be swapped back into the fo
             rows="2"
             class="form-input-description {% if form and form.description.errors %}error{% endif %}"
         >{% if form %}{{ form.description.value|default:'' }}{% endif %}</textarea>
-        <button type="submit" class="button button-submit">Enviar</button>
+        <div class="form-actions">
+            <button
+                type="button"
+                class="button button-cancel-form"
+                @click="$dispatch('close-form')"
+                aria-label="Cancelar"
+            >
+                Cancelar
+            </button>
+            <button type="submit" class="button button-submit">Enviar</button>
+        </div>
         {% if form and form.description.errors %}
             <div class="form-error" role="alert">
                 {% for error in form.description.errors %}
@@ -89,6 +99,12 @@ This is used when form validation fails and needs to be swapped back into the fo
         align-items: flex-end;
     }
 
+    .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
     .form-input-title,
     .form-input-description {
         width: 100%;
@@ -120,7 +136,33 @@ This is used when form validation fails and needs to be swapped back into the fo
 
     .button-submit {
         white-space: nowrap;
-        margin-left: auto;
+    }
+
+    .button-cancel-form {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #ffffff;
+        color: var(--color-text-dark);
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        white-space: nowrap;
+        min-height: 44px;
+    }
+
+    .button-cancel-form:hover {
+        background: var(--color-bg-light);
+        border-color: var(--color-border);
+    }
+
+    .button-cancel-form:active {
+        transform: scale(0.98);
     }
 
     .form-error {
