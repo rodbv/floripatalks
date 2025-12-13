@@ -313,8 +313,11 @@ def delete_topic_view(request: HttpRequest, slug: str) -> HttpResponse:
 
     try:
         delete_topic(user=request.user, topic_slug=slug)
-        # Return empty response for HTMX to remove element
-        return HttpResponse(status=200)
+        # Return empty string - HTMX outerHTML swap with empty string removes the target element
+        # The target is "closest .topic-item" which will be removed from the DOM
+        response = HttpResponse("", status=200)
+        response["HX-Trigger"] = "topicDeleted"
+        return response
     except PermissionError:
         from django.http import HttpResponseForbidden
 

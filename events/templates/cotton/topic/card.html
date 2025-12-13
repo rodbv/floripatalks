@@ -32,16 +32,6 @@ Props:
         {% endif %}
 
         <footer class="topic-card-footer">
-            <div class="topic-stats">
-                <span class="vote-count" id="vote-count-{{ slug }}">{{ vote_count|format_vote_count }}</span>
-                {% load cotton %}
-                <c-topic.vote-button
-                    topic-slug="{{ slug }}"
-                    has-voted="{{ has_voted|yesno:'true,false' }}"
-                    vote-count="{{ vote_count }}"
-                ></c-topic.vote-button>
-                <span class="comment-count">0 comentários</span>
-            </div>
             <div class="topic-creator-info">
                 {% if creator_avatar_url %}
                     <img src="{{ creator_avatar_url }}" alt="{{ creator_display_name|default:creator_username }}" class="creator-avatar" loading="lazy">
@@ -70,7 +60,7 @@ Props:
                     </button>
                     <button
                         class="topic-action-icon topic-action-delete"
-                        hx-delete="{% url 'events:delete_topic' slug=slug %}"
+                        hx-post="{% url 'events:delete_topic' slug=slug %}"
                         hx-confirm="Tem certeza que deseja excluir este tópico?"
                         hx-target="closest .topic-item"
                         hx-swap="outerHTML"
@@ -87,6 +77,15 @@ Props:
                     </button>
                 </div>
                 {% endif %}
+            </div>
+            <div class="topic-stats">
+                {% load cotton %}
+                <c-topic.vote-button
+                    topic-slug="{{ slug }}"
+                    has-voted="{{ has_voted|yesno:'true,false' }}"
+                    vote-count="{{ vote_count }}"
+                ></c-topic.vote-button>
+                <span class="comment-count">0 comentários</span>
             </div>
         </footer>
     </div>
