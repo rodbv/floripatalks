@@ -4,6 +4,83 @@
 
 {% block title %}{{ event.name }} - FloripaTalks{% endblock %}
 
+{% block extra_css %}
+<style>
+    .topics-section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .topics-section-header h2 {
+        margin: 0;
+    }
+
+    .inline-topic-form {
+        background: var(--color-bg-warm);
+        border: 2px solid var(--color-accent);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(213, 161, 12, 0.15);
+    }
+
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .form-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-row-title {
+        flex-direction: column;
+    }
+
+    .form-row-description {
+        align-items: flex-end;
+    }
+
+    .form-input-title,
+    .form-input-description {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .form-input-title:focus,
+    .form-input-description:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(7, 60, 165, 0.1);
+    }
+
+    .form-input-description {
+        flex: 1;
+        resize: vertical;
+        min-height: 60px;
+    }
+
+    .button-submit {
+        white-space: nowrap;
+        margin-left: auto;
+    }
+
+    .inline-topic-form-auth-prompt {
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="event-detail">
     <header class="event-header">
@@ -14,7 +91,20 @@
     </header>
 
     <section class="topics-section">
-        <h2>Tópicos</h2>
+        <div class="topics-section-header">
+            <h2>Sugira um tópico!</h2>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div id="inline-topic-form-container">
+            {% include "events/partials/inline_topic_form.html" with event=event %}
+        </div>
+        {% else %}
+        <div class="inline-topic-form-auth-prompt">
+            <a href="{% url 'account_login' %}?next={% url 'events:event_detail' slug=event.slug %}" class="button">Fazer login para adicionar tópico</a>
+        </div>
+        {% endif %}
+
         <div id="topics-list" class="topics-list">
             {% if topics %}
                 {% for topic in topics %}

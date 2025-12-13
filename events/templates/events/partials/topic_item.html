@@ -14,5 +14,6 @@
         creator_avatar_url="{{ topic.creator_avatar_url|default:'' }}"
         event_slug="{{ topic.event_slug }}"
         created_at="{{ topic.created_at|date:'d/m/Y H:i' }}"
+        current_user_username="{% if user.is_authenticated %}{{ user.username }}{% endif %}"
     />
 </div>

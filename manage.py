@@ -7,8 +7,9 @@ import sys
 
 def main() -> None:
     """Run administrative tasks."""
-    # Use production settings by default, but allow override via environment variable
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "floripatalks.settings.production")
+    # Auto-detect environment (production if WEBSITE_HOSTNAME is set, otherwise development)
+    # Can be overridden via DJANGO_SETTINGS_MODULE environment variable
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "floripatalks.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

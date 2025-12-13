@@ -170,27 +170,27 @@
 
 ### Tests for User Story 3 (TDD - Write First)
 
-- [ ] T064 [P] [US3] Unit test for Vote model in `tests/unit/events/test_models.py`
-- [ ] T065 [P] [US3] Unit test for vote_topic service function in `tests/unit/events/test_services/test_vote_service.py`
-- [ ] T066 [P] [US3] Unit test for unvote_topic service function in `tests/unit/events/test_services/test_vote_service.py`
-- [ ] T067 [P] [US3] Unit test for vote_topic function in `tests/unit/events/test_use_cases/test_vote_topic.py`
-- [ ] T068 [P] [US3] Unit test for unvote_topic function in `tests/unit/events/test_use_cases/test_unvote_topic.py`
-- [ ] T069 [P] [US3] Integration test for vote/unvote flow in `tests/integration/events/test_vote_flow.py`
+- [x] T064 [P] [US3] Unit test for Vote model in `tests/unit/events/test_models.py`
+- [x] T065 [P] [US3] Unit test for vote_topic service function in `tests/unit/events/test_services/test_vote_service.py`
+- [x] T066 [P] [US3] Unit test for unvote_topic service function in `tests/unit/events/test_services/test_vote_service.py`
+- [x] T067 [P] [US3] Unit test for vote_topic function in `tests/unit/events/test_use_cases/test_vote_topic.py`
+- [x] T068 [P] [US3] Unit test for unvote_topic function in `tests/unit/events/test_use_cases/test_unvote_topic.py`
+- [x] T069 [P] [US3] Integration test for vote/unvote flow in `tests/integration/events/test_vote_flow.py`
 
 ### Implementation for User Story 3
 
-- [ ] T070 [US3] Create Vote model in `events/models.py` inheriting from `BaseModel` with topic FK, user FK, unique constraint (topic, user)
-- [ ] T071 [US3] Create migration for Vote model: `events/migrations/0002_vote.py`
-- [ ] T072 [US3] Create vote service functions in `events/services/vote_service.py`: vote_topic, unvote_topic, get_user_vote_status
-- [ ] T073 [US3] Create vote_topic function in `events/use_cases/vote_topic.py` (validates, creates Vote record, returns status DTO)
-- [ ] T074 [US3] Create unvote_topic function in `events/use_cases/unvote_topic.py` (validates, hard-deletes Vote record, returns status DTO)
-- [ ] T075 [US3] Create vote/unvote HTMX view in `events/views.py` for POST `/topics/<slug>/vote/` (toggles vote/unvote)
-- [ ] T076 [US3] Add URL pattern in `events/urls.py` for vote endpoint
-- [ ] T077 [US3] Create vote button partial template `events/templates/events/partials/vote_button.html` with HTMX attributes
-- [ ] T078 [US3] Create Django-Cotton vote button component `events/cotton/topic/vote_button.html`
+- [x] T070 [US3] Create Vote model in `events/models.py` inheriting from `BaseModel` with topic FK, user FK, unique constraint (topic, user)
+- [x] T071 [US3] Create migration for Vote model: `events/migrations/0002_vote.py`
+- [x] T072 [US3] Create vote service functions in `events/services/vote_service.py`: vote_topic, unvote_topic, get_user_vote_status
+- [x] T073 [US3] Create vote_topic function in `events/use_cases/vote_topic.py` (validates, creates Vote record, returns status DTO)
+- [x] T074 [US3] Create unvote_topic function in `events/use_cases/unvote_topic.py` (validates, hard-deletes Vote record, returns status DTO)
+- [x] T075 [US3] Create vote/unvote HTMX view in `events/views.py` for POST `/topics/<slug>/vote/` (toggles vote/unvote)
+- [x] T076 [US3] Add URL pattern in `events/urls.py` for vote endpoint
+- [x] T077 [US3] Create vote button partial template `events/templates/events/partials/vote_button.html` with HTMX attributes
+- [x] T078 [US3] Create Django-Cotton vote button component `events/cotton/topic/vote_button.html`
 - [x] T079 [US3] Integrate vote button in topic card component (redirects to login for non-authenticated users via `@require_authentication` decorator)
-- [ ] T080 [US3] Update get_topics_for_event function to include user vote status in TopicDTO
-- [ ] T081 [US3] Update get_event_topics function to pass user context for vote status
+- [x] T080 [US3] Update get_topics_for_event function to include user vote status in TopicDTO
+- [x] T081 [US3] Update get_event_topics function to pass user context for vote status
 
 **Checkpoint**: At this point, User Stories 1 AND 3 should work independently. Users can view topics and vote on them (output-first approach).
 
@@ -249,16 +249,16 @@
 - [ ] T102 [US2] Add create_topic function to `events/services/topic_service.py` (slug generation with uniqueness)
 - [ ] T103 [US2] Add update_topic function to `events/services/topic_service.py`
 - [ ] T104 [US2] Add soft_delete_topic function to `events/services/topic_service.py`
-- [ ] T105 [US2] Create topic creation view in `events/views.py` for GET/POST `/topics/create/`
-- [ ] T106 [US2] Create topic edit view in `events/views.py` for GET/POST `/topics/<slug>/edit/`
-- [ ] T107 [US2] Create topic delete view in `events/views.py` for POST `/topics/<slug>/delete/` (HTMX, returns success response)
-- [ ] T108 [US2] Add URL patterns in `events/urls.py` for create, edit, delete endpoints
-- [ ] T109 [US2] Create topic form template `events/templates/events/topic_form.html` with HTML5 native validation and/or vanilla JS for character count (AlpineJS only if explicitly requested)
-- [ ] T110 [US2] Create topic edit template `events/templates/events/topic_edit.html` with HTMX form submission
+- [x] T105 [US2] Create topic creation view in `events/views.py` for GET/POST `/topics/create/`
+- [x] T106 [US2] Create topic edit view in `events/views.py` for GET/POST `/topics/<slug>/edit/`
+- [x] T107 [US2] Create topic delete view in `events/views.py` for POST `/topics/<slug>/delete/` (HTMX, returns success response)
+- [x] T108 [US2] Add URL patterns in `events/urls.py` for create, edit, delete endpoints
+- [x] T109 [US2] Create topic form template `events/templates/events/topic_form.html` with HTML5 native validation and/or vanilla JS for character count (AlpineJS only if explicitly requested)
+- [x] T110 [US2] Create topic edit template `events/templates/events/topic_edit.html` with HTMX form submission
 - [ ] T111 [US2] Create HTMX confirmation modal component for delete in `events/templates/events/partials/delete_confirm_modal.html` (HTMX-first: load dialog fragment from server, AlpineJS only if explicitly requested)
 - [ ] T112 [US2] Integrate delete confirmation modal in topic detail/card (HTMX to load dialog fragment, AlpineJS only if explicitly requested)
-- [ ] T113 [US2] Add "Add Topic" button/link in event detail template (redirects to login for non-authenticated users)
-- [ ] T114 [US2] Add edit/delete buttons in topic card (only visible to topic creator)
+- [x] T113 [US2] Add inline topic creation form in event detail template (2-row form: title row 1, description+submit row 2, HTMX submission, returns cotton component, inserts as first row)
+- [x] T114 [US2] Add edit/delete buttons in topic card (only visible to topic creator)
 - [ ] T115 [US2] Implement rate limiting for topic creation: 10 topics/hour per user in `core/middleware.py`
 
 **Checkpoint**: At this point, User Stories 1, 3, 6, AND 2 should work independently. Users can view, vote on, and create topics.

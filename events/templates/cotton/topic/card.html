@@ -13,44 +13,129 @@ Props:
 - creator_avatar_url: Avatar URL of topic creator (optional)
 - event_slug: Event slug
 - created_at: Creation timestamp
+- current_user_username: Username of current user (optional, for showing edit/delete buttons)
 {% endcomment %}
 
 {% load core_tags %}
 
-<article class="topic-card">
-    <header class="topic-card-header">
-        <h3 class="topic-title">{{ title }}</h3>
-    </header>
+<article class="topic-card" data-topic-slug="{{ slug }}" x-data="{ editing: false }">
+    <!-- View mode -->
+    <div class="topic-view-mode" x-show="!editing">
+        <header class="topic-card-header">
+            <h3 class="topic-title">{{ title }}</h3>
+        </header>
 
-    {% if description %}
-    <div class="topic-description">
-        <p>{{ description|truncatewords:50 }}</p>
-    </div>
-    {% endif %}
-
-    <footer class="topic-card-footer">
-        <div class="topic-stats">
-            <span class="vote-count" id="vote-count-{{ slug }}">{{ vote_count|format_vote_count }}</span>
-            {% load cotton %}
-            <c-topic.vote-button
-                topic-slug="{{ slug }}"
-                has-voted="{{ has_voted|yesno:'true,false' }}"
-                vote-count="{{ vote_count }}"
-            ></c-topic.vote-button>
-            <span class="comment-count">0 comentários</span>
+        {% if description %}
+        <div class="topic-description">
+            <p>{{ description|truncatewords:50 }}</p>
         </div>
-        <div class="topic-creator-info">
-            {% if creator_avatar_url %}
-                <img src="{{ creator_avatar_url }}" alt="{{ creator_display_name|default:creator_username }}" class="creator-avatar" loading="lazy">
-            {% else %}
-                <div class="creator-avatar creator-avatar-placeholder">
-                    <span class="avatar-initial">{{ creator_display_name|default:creator_username|first|upper }}</span>
-                </div>
-            {% endif %}
-            <div class="creator-details">
-                <span class="creator-name">{{ creator_display_name|default:creator_username }}</span>
-                <time class="topic-date" datetime="{{ created_at }}">{{ created_at|date:"d/m/Y H:i" }}</time>
+        {% endif %}
+
+        <footer class="topic-card-footer">
+            <div class="topic-stats">
+                <span class="vote-count" id="vote-count-{{ slug }}">{{ vote_count|format_vote_count }}</span>
+                {% load cotton %}
+                <c-topic.vote-button
+                    topic-slug="{{ slug }}"
+                    has-voted="{{ has_voted|yesno:'true,false' }}"
+                    vote-count="{{ vote_count }}"
+                ></c-topic.vote-button>
+                <span class="comment-count">0 comentários</span>
             </div>
+            <div class="topic-creator-info">
+                {% if creator_avatar_url %}
+                    <img src="{{ creator_avatar_url }}" alt="{{ creator_display_name|default:creator_username }}" class="creator-avatar" loading="lazy">
+                {% else %}
+                    <div class="creator-avatar creator-avatar-placeholder">
+                        <span class="avatar-initial">{{ creator_display_name|default:creator_username|first|upper }}</span>
+                    </div>
+                {% endif %}
+                <div class="creator-details">
+                    <span class="creator-name">{{ creator_display_name|default:creator_username }}</span>
+                    <time class="topic-date" datetime="{{ created_at }}">{{ created_at|date:"d/m/Y H:i" }}</time>
+                </div>
+                {% if current_user_username and current_user_username == creator_username %}
+                <div class="topic-actions-icons" role="group" aria-label="Ações do tópico">
+                    <button
+                        type="button"
+                        class="topic-action-icon topic-action-edit"
+                        aria-label="Editar tópico"
+                        title="Editar tópico"
+                        @click="editing = true; $nextTick(() => $refs.titleInput?.focus())"
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button
+                        class="topic-action-icon topic-action-delete"
+                        hx-delete="{% url 'events:delete_topic' slug=slug %}"
+                        hx-confirm="Tem certeza que deseja excluir este tópico?"
+                        hx-target="closest .topic-item"
+                        hx-swap="outerHTML"
+                        aria-label="Excluir tópico"
+                        title="Excluir tópico"
+                        type="button"
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </footer>
+    </div>
+
+    <!-- Edit mode (hidden by default) -->
+    <form
+        class="topic-edit-mode"
+        method="post"
+        action="{% url 'events:edit_topic' slug=slug %}"
+        hx-post="{% url 'events:edit_topic' slug=slug %}"
+        hx-target="closest .topic-item"
+        hx-swap="outerHTML"
+        x-show="editing"
+        @htmx:after-swap="editing = false"
+    >
+        {% csrf_token %}
+        <input type="hidden" name="event" value="{{ event_slug }}">
+        <div class="topic-edit-header">
+            <input
+                type="text"
+                name="title"
+                value="{{ title }}"
+                class="topic-edit-title"
+                placeholder="Título do tópico"
+                maxlength="200"
+                required
+                x-ref="titleInput"
+            >
         </div>
-    </footer>
+        <div class="topic-edit-description">
+            <textarea
+                name="description"
+                class="topic-edit-description-textarea"
+                placeholder="Descrição do tópico (opcional)"
+                maxlength="2000"
+                rows="3"
+            >{{ description|default:'' }}</textarea>
+        </div>
+        <div class="topic-edit-actions">
+            <button type="submit" class="button button-small button-primary">Salvar</button>
+            <button
+                type="button"
+                class="button button-small button-secondary"
+                aria-label="Cancelar edição"
+                @click="$event.target.closest('form').reset(); editing = false"
+            >
+                Cancelar
+            </button>
+        </div>
+    </form>
+
 </article>

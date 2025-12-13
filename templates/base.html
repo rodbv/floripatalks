@@ -207,6 +207,7 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            position: relative;
         }
 
         /* Avatar styling - circular with placeholder */
@@ -253,6 +254,142 @@
         .topic-date {
             font-size: 0.85rem;
             color: var(--color-text-light);
+        }
+
+        /* Topic action icons - subtle, in bottom right */
+        .topic-actions-icons {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+            opacity: 0.4;
+            transition: opacity 0.2s ease;
+        }
+
+        .topic-card:hover .topic-actions-icons,
+        .topic-actions-icons:focus-within {
+            opacity: 1;
+        }
+
+        .topic-action-icon {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-light);
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            min-width: 32px;
+            min-height: 32px;
+            text-decoration: none;
+        }
+
+        .topic-action-icon:hover,
+        .topic-action-icon:focus {
+            color: var(--color-text-dark);
+            background-color: var(--color-bg-light);
+            outline: none;
+        }
+
+        .topic-action-icon:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .topic-action-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2;
+        }
+
+        .topic-action-delete:hover,
+        .topic-action-delete:focus {
+            color: var(--color-accent-red);
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Inline edit mode */
+        .topic-edit-mode {
+            margin-bottom: 1rem;
+        }
+
+        .topic-edit-header {
+            margin-bottom: 1rem;
+        }
+
+        .topic-edit-title {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--color-primary);
+            border-radius: 6px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: inherit;
+            box-sizing: border-box;
+            color: var(--color-text-dark);
+        }
+
+        .topic-edit-title:focus {
+            outline: none;
+            border-color: var(--color-primary-dark);
+            box-shadow: 0 0 0 3px rgba(7, 60, 165, 0.1);
+        }
+
+        .topic-edit-description {
+            margin-bottom: 1rem;
+        }
+
+        .topic-edit-description-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            box-sizing: border-box;
+            color: var(--color-text);
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .topic-edit-description-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(7, 60, 165, 0.1);
+        }
+
+        .topic-edit-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .button-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            min-height: 44px;
+        }
+
+        .button-primary {
+            background-color: var(--color-primary);
+            color: #ffffff;
+        }
+
+        .button-primary:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        .button-secondary {
+            background-color: var(--color-bg-light);
+            color: var(--color-text-dark);
+            border: 1px solid var(--color-border);
+        }
+
+        .button-secondary:hover {
+            background-color: var(--color-border-light);
         }
 
         .topic-title {
