@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Tópico - FloripaTalks{% endblock %}
+
+{% block content %}
+<div class="topic-form-container">
+    <header class="form-header">
+        <h1>Editar Tópico</h1>
+        <p class="form-subtitle">{{ topic.title }}</p>
+    </header>
+
+    <form method="post" class="topic-form" novalidate>
+        {% csrf_token %}
+        {{ form.event }}
+
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="form-error" role="alert">
+                    {% for error in form.title.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <small class="form-help">{{ form.title.help_text }}</small>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="form-error" role="alert">
+                    {% for error in form.description.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <small class="form-help">{{ form.description.help_text }}</small>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="form-error" role="alert">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <button type="submit" class="button">Salvar Alterações</button>
+            <a href="{% url 'events:event_detail' slug=event.slug %}" class="button-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .topic-form-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .form-header {
+        margin-bottom: 2rem;
+    }
+
+    .form-header h1 {
+        margin: 0 0 0.5rem 0;
+    }
+
+    .form-subtitle {
+        color: var(--color-text-light);
+        margin: 0;
+    }
+
+    .topic-form {
+        background: #ffffff;
+        border: 1px solid var(--color-border-light);
+        border-radius: 12px;
+        padding: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--color-text-dark);
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(7, 60, 165, 0.1);
+    }
+
+    .form-error {
+        margin-top: 0.5rem;
+        padding: 0.75rem;
+        background: #fee;
+        border: 1px solid var(--color-accent-red);
+        border-radius: 6px;
+        color: var(--color-accent-red);
+    }
+
+    .form-error p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .form-help {
+        display: block;
+        margin-top: 0.5rem;
+        color: var(--color-text-light);
+        font-size: 0.85rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .button-secondary {
+        background: var(--color-bg-light);
+        color: var(--color-text-dark);
+        border: 1px solid var(--color-border);
+        padding: 15px 30px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .button-secondary:hover {
+        background: var(--color-border-light);
+    }
+</style>
+{% endblock %}

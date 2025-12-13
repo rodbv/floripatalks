@@ -1,0 +1,139 @@
+{% comment %}
+Inline topic form partial for HTMX error handling.
+This is used when form validation fails and needs to be swapped back into the form container.
+{% endcomment %}
+
+<form
+    method="post"
+    action="{% url 'events:create_topic' %}"
+    class="inline-topic-form"
+    hx-post="{% url 'events:create_topic' %}"
+    hx-target="#topics-list"
+    hx-swap="afterbegin"
+    hx-on::after-request="if(event.detail.successful) { this.reset(); }"
+>
+    {% csrf_token %}
+    <input type="hidden" name="event" value="{{ event.slug }}">
+    <div class="form-row form-row-title">
+        <input
+            type="text"
+            name="title"
+            placeholder="Título do tópico (máximo 200 caracteres)"
+            maxlength="200"
+            required
+            class="form-input-title {% if form and form.title.errors %}error{% endif %}"
+            value="{% if form %}{{ form.title.value|default:'' }}{% endif %}"
+        >
+        {% if form and form.title.errors %}
+            <div class="form-error" role="alert">
+                {% for error in form.title.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="form-row form-row-description">
+        <textarea
+            name="description"
+            placeholder="Descrição do tópico (opcional, máximo 2000 caracteres)"
+            maxlength="2000"
+            rows="2"
+            class="form-input-description {% if form and form.description.errors %}error{% endif %}"
+        >{% if form %}{{ form.description.value|default:'' }}{% endif %}</textarea>
+        <button type="submit" class="button button-submit">Enviar</button>
+        {% if form and form.description.errors %}
+            <div class="form-error" role="alert">
+                {% for error in form.description.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    {% if form and form.non_field_errors %}
+        <div class="form-error" role="alert">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</form>
+
+<style>
+    .inline-topic-form {
+        background: var(--color-bg-warm);
+        border: 2px solid var(--color-accent);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(213, 161, 12, 0.15);
+    }
+
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+        flex-direction: column;
+    }
+
+    .form-row:last-child {
+        margin-bottom: 0;
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
+    .form-row-title {
+        flex-direction: column;
+    }
+
+    .form-row-description {
+        align-items: flex-end;
+    }
+
+    .form-input-title,
+    .form-input-description {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+
+    .form-input-title:focus,
+    .form-input-description:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(7, 60, 165, 0.1);
+    }
+
+    .form-input-title.error,
+    .form-input-description.error {
+        border-color: var(--color-accent-red);
+    }
+
+    .form-input-description {
+        flex: 1;
+        resize: vertical;
+        min-height: 60px;
+    }
+
+    .button-submit {
+        white-space: nowrap;
+        margin-left: auto;
+    }
+
+    .form-error {
+        margin-top: 0.5rem;
+        padding: 0.75rem;
+        background: #fee;
+        border: 1px solid var(--color-accent-red);
+        border-radius: 6px;
+        color: var(--color-accent-red);
+        font-size: 0.9rem;
+    }
+
+    .form-error p {
+        margin: 0;
+    }
+</style>
