@@ -8,7 +8,7 @@
     {% load static %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/pure-css/pure-min.css' %}">
     <style>
         /* Color palette inspired by Python Floripa branding */
@@ -132,32 +132,69 @@
             min-width: 44px;
         }
 
-        /* Vote icon button - icon style, not regular button */
-        .vote-icon-button {
-            background: none;
+        /* Vote plus button - sticker style with +1, +2, etc. - Arcade font */
+        .vote-plus-button {
+            background: transparent;
             border: none;
-            padding: 8px;
+            border-radius: 8px;
+            padding: 8px 14px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: var(--color-text);
-            transition: transform 0.2s, opacity 0.2s;
+            color: rgba(7, 60, 165, 0.5);
+            font-weight: normal;
+            font-size: 0.75rem;
+            font-family: "Press Start 2P", "Courier New", monospace;
+            transition: all 0.2s ease;
             min-height: 44px;
             min-width: 44px;
+            position: relative;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
         }
 
-        .vote-icon-button:hover {
-            transform: scale(1.1);
-            opacity: 0.8;
+        .vote-plus-button:hover {
+            transform: translateY(-2px);
         }
 
-        .vote-icon-button:active {
-            transform: scale(0.95);
+        .vote-plus-button:hover .vote-plus-text {
+            text-shadow: 0 0 10px rgba(7, 60, 165, 0.8),
+                         0 0 20px rgba(7, 60, 165, 0.6),
+                         0 0 30px rgba(7, 60, 165, 0.4);
         }
 
-        .vote-icon-button.voted svg {
-            filter: drop-shadow(0 0 2px rgba(213, 161, 12, 0.5));
+        .vote-plus-button:active {
+            transform: translateY(0);
+        }
+
+        .vote-plus-button.voted {
+            background: transparent;
+            color: var(--color-primary);
+            filter: drop-shadow(0 0 8px rgba(213, 161, 12, 0.6))
+                    drop-shadow(0 0 12px rgba(213, 161, 12, 0.4))
+                    drop-shadow(0 0 16px rgba(213, 161, 12, 0.2));
+        }
+
+        .vote-plus-button.voted:hover {
+            background: transparent;
+            color: var(--color-primary-dark);
+            filter: drop-shadow(0 0 10px rgba(213, 161, 12, 0.7))
+                    drop-shadow(0 0 15px rgba(213, 161, 12, 0.5))
+                    drop-shadow(0 0 20px rgba(213, 161, 12, 0.3));
+        }
+
+        .vote-plus-button.voted:hover .vote-plus-text {
+            text-shadow: 0 0 10px rgba(7, 60, 165, 0.8),
+                         0 0 20px rgba(7, 60, 165, 0.6),
+                         0 0 30px rgba(7, 60, 165, 0.4);
+        }
+
+        .vote-plus-text {
+            display: inline-block;
+            line-height: 1.4;
+            letter-spacing: 0;
         }
 
         /* Topic card footer layout */
@@ -169,6 +206,7 @@
             margin-top: 1rem;
             padding-top: 1rem;
             border-top: 1px solid var(--color-border-light);
+            overflow: hidden;
         }
 
         .topic-stats {
@@ -188,6 +226,7 @@
             margin-bottom: 1.5rem;
             transition: all 0.2s ease;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
 
         .topic-card:hover {
@@ -208,6 +247,8 @@
             align-items: center;
             gap: 0.75rem;
             position: relative;
+            min-width: 0;
+            flex: 1;
         }
 
         /* Avatar styling - circular with placeholder */
@@ -243,12 +284,17 @@
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
+            min-width: 0;
+            flex-shrink: 1;
         }
 
         .creator-name {
             font-weight: 500;
             color: var(--color-text-dark);
             font-size: 0.95rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .topic-date {
@@ -264,6 +310,7 @@
             margin-left: auto;
             opacity: 0.4;
             transition: opacity 0.2s ease;
+            flex-shrink: 0;
         }
 
         .topic-card:hover .topic-actions-icons,
@@ -860,6 +907,7 @@
     {% load static %}
 
     {% csrf_token %}
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <script src="{% static 'js/htmx.min.js' %}"></script>
     <script>
         // Configure HTMX to include CSRF token in all requests
@@ -870,6 +918,88 @@
                 event.detail.headers['X-CSRFToken'] = csrfInput.value;
             }
         });
+
+        // Helper function to trigger confetti celebration
+        function triggerConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            const originX = x / window.innerWidth;
+            const originY = y / window.innerHeight;
+
+            // Main confetti burst - more particles, wider spread
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { x: originX, y: originY },
+                colors: ['#073CA5', '#D5A10C', '#ffffff', '#0a4fd4', '#052d7a'],
+                gravity: 0.8,
+                ticks: 300,
+                decay: 0.92,
+                startVelocity: 30,
+            });
+
+            // Second burst - golden celebration
+            setTimeout(() => {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { x: originX, y: originY },
+                    colors: ['#D5A10C', '#f5b814', '#ffffff'],
+                    gravity: 0.6,
+                    ticks: 250,
+                    startVelocity: 25,
+                });
+            }, 200);
+
+            // Third burst - blue stars
+            setTimeout(() => {
+                confetti({
+                    particleCount: 60,
+                    spread: 50,
+                    origin: { x: originX, y: originY },
+                    colors: ['#073CA5', '#0a4fd4', '#ffffff'],
+                    gravity: 0.7,
+                    ticks: 200,
+                    startVelocity: 20,
+                    shapes: ['star'],
+                });
+            }, 400);
+        }
+
+        // Confetti on click (before POST/submit)
+        document.body.addEventListener('click', function(event) {
+            // Confetti on vote button upvote (only if not voted yet)
+            const voteButton = event.target.closest('.vote-plus-button');
+            if (voteButton && !voteButton.classList.contains('voted')) {
+                // Upvote - trigger confetti before POST
+                triggerConfetti(voteButton);
+                // Add shake animation
+                voteButton.style.animation = 'none';
+                setTimeout(() => {
+                    voteButton.style.animation = 'celebrate 0.5s ease';
+                }, 10);
+            }
+
+            // Confetti on submit button click (create topic)
+            const submitButton = event.target.closest('.button-submit');
+            if (submitButton && submitButton.type === 'submit') {
+                // Trigger confetti on the submit button
+                triggerConfetti(submitButton);
+            }
+        });
+
+        // Add celebrate animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes celebrate {
+                0%, 100% { transform: translateY(0) rotate(0deg); }
+                25% { transform: translateY(-5px) rotate(-2deg); }
+                50% { transform: translateY(-8px) rotate(2deg); }
+                75% { transform: translateY(-5px) rotate(-1deg); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
     <script src="{% static 'js/alpine.min.js' %}" defer></script>
 
